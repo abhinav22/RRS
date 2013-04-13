@@ -1,0 +1,48 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	class="offset3 span6" style="padding-top: 20px;">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION.message}">
+		<div class="alert alert-error">
+			${SPRING_SECURITY_LAST_EXCEPTION.message}</div>
+	</c:if>
+	<spring:url value="/resources/j_spring_security_check" var="form_url" />
+	<spring:url value="/register" var="register_url" />
+
+	<form name="f" action="${fn:escapeXml(form_url)}" method="POST"
+		class="form-horizontal">
+		<fieldset>
+			<legend>Login</legend>
+			<div class="control-group">
+				<label class="control-label" for="j_username">Username:</label>
+				<div class="controls">
+					<input id="j_username" type='text' name='j_username'
+						style="width: 150px" />
+					<div class="help-block"></div>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="j_password">Password:</label>
+				<div class="controls">
+					<input id="j_password" type='password' name='j_password'
+						style="width: 150px" />
+					<div class="help-block"></div>
+				</div>
+			</div>
+
+
+		</fieldset>
+
+		<div class="form-actions">
+			<input id="proceed" type="submit" value="Login"
+				class="btn btn-success btn-large" /> or <a
+				href="${fn:escapeXml(register_url)}">Resister </a>
+		</div>
+	</form>
+</div>
+

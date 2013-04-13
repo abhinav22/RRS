@@ -1,0 +1,23 @@
+<div id="header" class="masthead"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:security="http://www.springframework.org/security/tags"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<spring:url var="home" value="/" />
+	<ul class="nav nav-pills pull-right">
+		<!--  <li class="active"><a href="${home}">Home</a></li> -->
+		<c:if test="${pageContext.request.userPrincipal == null}">
+			<spring:url value="/login" var="login_url" />
+			<li><a href="${login_url}" class="btn btn-success btn-large">Signin</a></li>
+		</c:if>
+		<c:if test="${pageContext.request.userPrincipal != null}">
+			<spring:url value="/resources/j_spring_security_logout"
+				var="logout_url" />
+			<li><a href="${logout_url}" class="btn btn-success">Logout</a></li>
+		</c:if>
+	</ul>
+	<h2 class="muted">RSS</h2>
+</div>
