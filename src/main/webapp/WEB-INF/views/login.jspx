@@ -3,11 +3,11 @@
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-	class="offset3 span6" style="padding-top: 20px;">
+	class="offset3 span6 well-small" style="padding-top: 20px;">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 
-	<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION.message}">
+	<c:if test="${login_error!=null and not empty SPRING_SECURITY_LAST_EXCEPTION.message}">
 		<div class="alert alert-error">
 			${SPRING_SECURITY_LAST_EXCEPTION.message}</div>
 	</c:if>

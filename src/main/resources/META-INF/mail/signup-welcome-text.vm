@@ -1,0 +1,10 @@
+Dear ${email},
+
+Welcome to RSS.
+
+Please click the link to activate you account using the following url.
+${url}
+
+
+Regards, 
+RRS(${appUrl}) 

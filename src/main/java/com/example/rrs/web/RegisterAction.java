@@ -47,7 +47,7 @@ public class RegisterAction {
 	@Inject
 	MailService emailService;
 
-	@Value("${app.baseUrl}")
+	@Value("${appUrl}")
 	String appUrl;
 
 	@Inject

@@ -19,5 +19,5 @@
 			<li><a href="${logout_url}" class="btn btn-success">Logout</a></li>
 		</c:if>
 	</ul>
-	<h2 class="muted">RSS</h2>
+	<h2 class="muted">RRS</h2>
 </div>

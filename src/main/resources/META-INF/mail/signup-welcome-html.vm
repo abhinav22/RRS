@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body style="padding: 12px">
+        <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
+            Dear ${email},
+        </p>
+
+        <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
+            Welcome to RSS.
+        </p>
+
+        <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
+            Please click the link to activate you account,<a style="color: #000000;" href="${url}">${url}</a> .
+        </p>
+
+        <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
+            Or copy the following url to your browser.
+        </p>
+        
+        <pre>
+        	${url}
+        </pre> 
+
+        <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
+            <a style="color: #000000;" href="${appUrl}">${appUrl}</a>
+        </p>
+    </body>
+</html>

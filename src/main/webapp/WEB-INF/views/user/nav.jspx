@@ -20,7 +20,7 @@
 			<spring:url value="/user/invite" var="profile_url" />
 			<div class="nav-collapse collapse">
 				<ul class="nav">
-					<li><a href="${invite_url}">Invite</a></li>
+					<li><a href="${invite_url}" class="icon-sign">Invite</a></li>
 				</ul>
 				<spring:url value="/search" var="form_url" />
 				<form name="f" action="${fn:escapeXml(form_url)}" method="POST"

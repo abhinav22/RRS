@@ -1,50 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
-
-	<definition extends="default" name="index">
+<!-- 	<definition extends="public" name="index">
 		<put-attribute name="body" value="/WEB-INF/views/index.jspx" />
-	</definition>
+	</definition> -->
 
 	<definition extends="public" name="dataAccessFailure">
+		<put-attribute name="pageTitle" value="Data Access Failure"></put-attribute>
 		<put-attribute name="body"
 			value="/WEB-INF/views/dataAccessFailure.jspx" />
 	</definition>
 
 	<definition extends="public" name="resourceNotFound">
+		<put-attribute name="pageTitle" value="Resource Not Found"></put-attribute>
 		<put-attribute name="body"
 			value="/WEB-INF/views/resourceNotFound.jspx" />
 	</definition>
 
 	<definition extends="public" name="uncaughtException">
+		<put-attribute name="pageTitle" value="UncaughtException"></put-attribute>
 		<put-attribute name="body"
 			value="/WEB-INF/views/uncaughtException.jspx" />
 	</definition>
 
 	<definition extends="public" name="login">
-	    <put-attribute name="body" value="/WEB-INF/views/login.jspx" />
+		<put-attribute name="pageTitle" value="Login"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/login.jspx" />
 	</definition>
 
 	<definition extends="public" name="register">
+		<put-attribute name="pageTitle" value="Welcome to RRS"></put-attribute>
 		<put-attribute name="body" value="/WEB-INF/views/register.jspx" />
 	</definition>
-	
+
 	<definition extends="public" name="registerOk">
+		<put-attribute name="pageTitle" value="Registered Successfully"></put-attribute>
 		<put-attribute name="body" value="/WEB-INF/views/registerOk.jspx" />
 	</definition>
-	
+
 	<definition extends="public" name="activateFailed">
+		<put-attribute name="pageTitle" value="Activation Failed"></put-attribute>
 		<put-attribute name="body" value="/WEB-INF/views/activateFailed.jspx" />
-	</definition>
-	
-	<definition extends="default" name="home">
-		<put-attribute name="submenu" value="/WEB-INF/views/searchBar.jspx" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/searchSideBar.jspx" />
-		<put-attribute name="body" value="/WEB-INF/views/search.jspx" />
-	</definition>
-	
-	<definition extends="default" name="profile">
-		<put-attribute name="sidebar" value="/WEB-INF/views/profileSideBar.jspx" />
-		<put-attribute name="body" value="/WEB-INF/views/profile.jspx" />
 	</definition>
 </tiles-definitions>
