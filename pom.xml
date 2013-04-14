@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.example.rrs</groupId>
-	<artifactId>pcd</artifactId>
+	<artifactId>rrs-webapp</artifactId>
 	<packaging>war</packaging>
 	<version>0.1.0.BUILD-SNAPSHOT</version>
 	<name>rss-webapp</name>
-	<description> Resource Recommendation System </description>
+	<description>Resource Recommendation System </description>
 	<properties>
 		<aspectj.version>1.7.0</aspectj.version>
 		<java.version>1.6</java.version>
@@ -112,12 +112,8 @@
 			<version>3.1</version>
 		</dependency>
 		<!-- ROO dependencies -->
-	<!-- 	<dependency>
-			<groupId>org.springframework.roo</groupId>
-			<artifactId>org.springframework.roo.annotations</artifactId>
-			<version>${roo.version}</version>
-			<scope>provided</scope>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.springframework.roo</groupId> <artifactId>org.springframework.roo.annotations</artifactId> 
+			<version>${roo.version}</version> <scope>provided</scope> </dependency> -->
 		<!-- Spring dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -310,8 +306,94 @@
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>${spring-security.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-tools</artifactId>
+			<version>2.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>struts-core</artifactId>
+					<groupId>org.apache.struts</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>struts-taglib</artifactId>
+					<groupId>org.apache.struts</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>struts-tiles</artifactId>
+					<groupId>org.apache.struts</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-validator</artifactId>
+					<groupId>commons-validator</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>sslext</artifactId>
+					<groupId>sslext</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>oro</artifactId>
+					<groupId>oro</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>dom4j</artifactId>
+					<groupId>dom4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-chain</artifactId>
+					<groupId>commons-chain</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-digester</artifactId>
+					<groupId>commons-digester</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 	<build>
+		<finalName>${project.artifactId}</finalName>
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		
 		<plugins>
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
@@ -491,5 +573,90 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
 	</build>
+
+	<profiles>
+		<profile>
+			<!-- Profile for development -->
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- database config -->
+				<db.host>127.0.0.1</db.host>
+				<db.port>27017</db.port>
+				<db.name>rss-webapp</db.name>
+				<db.username></db.username>
+				<db.password></db.password>
+
+				<!-- app base url -->
+				<app.baseUrl>http://localhost:8080/rrs-webapp/</app.baseUrl>
+
+				<!-- log4j logging level -->
+				<log4j.level>DEBUG</log4j.level>
+
+				<!-- mail config -->
+				<mail.host>smtp.gmail.com</mail.host>
+				<mail.port>587</mail.port>
+				<mail.username>frankouz.ramirez@gmail.com</mail.username>
+				<mail.password>abcd2010</mail.password>
+				<mail.from>no-reply@example.com</mail.from>
+				<mail.debug>true</mail.debug>
+			</properties>
+		</profile>
+
+		<!-- Profile for continuous intergration and test -->
+		<profile>
+			<id>staging</id>
+			<properties>
+				<!-- database config -->
+				<db.host>127.0.0.1</db.host>
+				<db.port>27017</db.port>
+				<db.name>rss-webapp</db.name>
+				<db.username></db.username>
+				<db.password></db.password>
+
+				<!-- app base url -->
+				<app.baseUrl>http://localhost:8080/rrs-webapp/</app.baseUrl>
+
+				<!-- log4j logging level -->
+				<log4j.level>DEBUG</log4j.level>
+				<!-- mail config -->
+				<mail.host>smtp.gmail.com</mail.host>
+				<mail.port>587</mail.port>
+				<mail.username>frankouz.ramirez@gmail.com</mail.username>
+				<mail.password>abcd2010</mail.password>
+				<mail.from>no-reply@example.com</mail.from>
+				<mail.debug>true</mail.debug>
+			</properties>
+		</profile>
+
+		<!-- Profile for production -->
+		<profile>
+			<id>prod</id>
+			<properties>
+				<!-- database config -->
+				<db.host>127.0.0.1</db.host>
+				<db.port>27017</db.port>
+				<db.name>rss-webapp</db.name>
+				<db.username></db.username>
+				<db.password></db.password>
+
+				<!-- app base url -->
+				<app.baseUrl>http://localhost:8080/rrs-webapp/</app.baseUrl>
+
+				<!-- log4j logging level -->
+				<log4j.level>INFO</log4j.level>
+				<!-- mail config -->
+				<mail.host>smtp.gmail.com</mail.host>
+				<mail.port>587</mail.port>
+				<mail.username>frankouz.ramirez@gmail.com</mail.username>
+				<mail.password>abcd2010</mail.password>
+				<mail.from>no-reply@example.com</mail.from>
+				<mail.debug>false</mail.debug>
+			</properties>
+		</profile>
+	</profiles>
 </project>

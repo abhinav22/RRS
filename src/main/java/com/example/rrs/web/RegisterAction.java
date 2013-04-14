@@ -2,21 +2,28 @@ package com.example.rrs.web;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.UriUtils;
@@ -24,6 +31,7 @@ import org.springframework.web.util.WebUtils;
 
 import com.example.rrs.model.User;
 import com.example.rrs.security.SecurityUtils;
+import com.example.rrs.service.MailService;
 import com.example.rrs.service.UserService;
 
 @RequestMapping("/register")
@@ -33,11 +41,17 @@ public class RegisterAction {
 	private static final Logger log = LoggerFactory
 			.getLogger(RegisterAction.class);
 
-	@Autowired
+	@Inject
 	UserService userService;
 
-	@Autowired
-	@Qualifier("passwordEncoder")
+	@Inject
+	MailService emailService;
+
+	@Value("${app.baseUrl}")
+	String appUrl;
+
+	@Inject
+	@Named("passwordEncoder")
 	PasswordEncoder passwordEncoder;
 
 	void addDateTimeFormatPatterns(Model uiModel) {
@@ -65,7 +79,9 @@ public class RegisterAction {
 			return "register";
 		}
 
-		if (null != userService.findUserByEmail(registerForm.getEmail())) {
+		String email = registerForm.getEmail();
+
+		if (null != userService.findUserByEmail(email)) {
 			bindingResult.rejectValue("email", "email is existed",
 					"email is exsited!");
 			populateEditForm(uiModel, registerForm);
@@ -75,14 +91,39 @@ public class RegisterAction {
 		uiModel.asMap().clear();
 		User user = new User();
 
-		BeanUtils.copyProperties(registerForm, user, new String[] { "address",
-				"gender", "phone" });
+		BeanUtils.copyProperties(registerForm, user);
 
 		user.setCreationDate(new Date());
 		user.setPassword(passwordEncoder.encodePassword(user.getPassword(),
-				user.getSalt()));
+				user.salt()));
+
+		// generating the confirmation code.
+		String confirmationCode = KeyGenerators.string().generateKey();
+		user.setConfirmationCode(confirmationCode);
+
+		// save user data
 		user = userService.saveUser(user);
-		return "redirect:/user/home";
+
+		// sending the activation email to user.
+		if (log.isDebugEnabled()) {
+			log.debug("sending activatation emal@" + email + ",code@"
+					+ confirmationCode + ",baseUrl@" + appUrl);
+		}
+
+		Map emailModel = new HashMap();
+		emailModel.put("email", email);
+		emailModel.put("url", appUrl + "register/activate/"
+				+ encodeUrlPathSegment(email, httpServletRequest) + "-"
+				+ confirmationCode);
+		emailModel.put("appUrl", appUrl);
+
+		try {
+			emailService.sendEmail(email, "Welcome to RSS", "signup-welcome",
+					emailModel);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/registerOk";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { "text/html" })
@@ -94,6 +135,30 @@ public class RegisterAction {
 
 		populateEditForm(uiModel, new RegisterForm());
 		return "register";
+	}
+
+	@RequestMapping(value = "/activate/{email}-{confirmationCode}", method = RequestMethod.GET, produces = { "text/html" })
+	public String activate(
+			@PathVariable("email") @NotNull @NotEmpty String email,
+			@PathVariable("confirmationCode") @NotNull @NotEmpty String confirmationCode) {
+
+		if (log.isDebugEnabled()) {
+			log.debug("Activate the user account.");
+		}
+
+		User user = userService.findUserByEmail(email);
+
+		if (user != null && confirmationCode.equals(user.getConfirmationCode())) {
+
+			user.setEnabled(true);
+			user.setConfirmationCode(null);
+			userService.saveUser(user);
+
+			return "redirect:/login";
+		}
+
+		return "redirect:/acitivateFailed";
+
 	}
 
 	String encodeUrlPathSegment(String pathSegment,

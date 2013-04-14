@@ -25,23 +25,20 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import flexjson.JSONSerializer;
-
 @Document
 @Persistent
 public class User implements UserDetails, Serializable {
 
+	@Id
+	@Indexed
+	private String id;
 
 	@NotNull
-	private Boolean active = true;
+	private boolean enabled = false;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(style = "M-")
 	private Date creationDate;
-
-	@Id
-	@Indexed
-	private String id;
 
 	@Size(max = 20)
 	private String firstName;
@@ -59,17 +56,24 @@ public class User implements UserDetails, Serializable {
 	private String password;
 
 	@NotNull
-	@Column(unique = true)
 	@Size(min = 3, max = 40)
 	@Email
 	private String email;
-
+	
+	private String confirmationCode;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
 	}
 
+	public String getConfirmationCode() {
+		return confirmationCode;
+	}
+
+	public void setConfirmationCode(String confirmationCode) {
+		this.confirmationCode = confirmationCode;
+	}
 
 	public Date getCreationDate() {
 		return this.creationDate;
@@ -96,7 +100,6 @@ public class User implements UserDetails, Serializable {
 		return this.password;
 	}
 
-
 	@Override
 	@javax.persistence.Transient
 	public boolean isAccountNonExpired() {
@@ -116,15 +119,13 @@ public class User implements UserDetails, Serializable {
 	}
 
 	@Override
-	@javax.persistence.Transient
 	public boolean isEnabled() {
-		return true;
+		return this.enabled;
 	}
 
-	public void setActive(Boolean active) {
-		this.active = active;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
-
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
@@ -162,14 +163,10 @@ public class User implements UserDetails, Serializable {
 	public String getUsername() {
 		return this.email;
 	}
-	
+
 	public String getName() {
 		return (this.firstName == null ? "" : this.firstName)
-				+ (this.lastName == null ? "" : " "+this.lastName);
-	}
-
-	public String toJson() {
-		return new JSONSerializer().exclude("*.class").serialize(this);
+				+ (this.lastName == null ? "" : " " + this.lastName);
 	}
 
 	@Override
@@ -178,8 +175,7 @@ public class User implements UserDetails, Serializable {
 				ToStringStyle.SHORT_PREFIX_STYLE);
 	}
 
-	@javax.persistence.Transient
-	public String getSalt() {
+	public String salt() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 		return sdf.format(this.getCreationDate());
 	}

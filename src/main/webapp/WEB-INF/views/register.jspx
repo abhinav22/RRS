@@ -8,10 +8,10 @@
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 	<div class="span6">
-		<spring:url value="/resources/js/holder.js" var="holderjs_url" />
+		<spring:url value="/resources/img/holder64.png" var="holder_url" />
 		<div class="media">
 			<a class="pull-left" href="#"> <img class="media-object"
-				data-src="${holderjs_url}/64x64"></img></a>
+				data-src="${holder_url}"></img></a>
 			<div class="media-body">
 				<h3 class="media-heading">Connection</h3>
 				<p>Connection Connection Connection Connection Connection
@@ -20,7 +20,7 @@
 		</div>
 		<div class="media">
 			<a class="pull-left" href="#"> <img class="media-object"
-				data-src="resources/js/holder.js/64x64"></img></a>
+				data-src="${holder_url}"></img></a>
 			<div class="media-body">
 				<h3 class="media-heading">Discovery</h3>
 				<p>Discovery Discovery Discovery Discovery Discovery Discovery
@@ -30,7 +30,7 @@
 
 		<div class="media">
 			<a class="pull-left" href="#"> <img class="media-object"
-				data-src="holder.js/64x64"></img></a>
+				data-src="${holder_url}"></img></a>
 			<div class="media-body">
 				<h3 class="media-heading">Share</h3>
 				<p>Share Share Share Share Share Share Share Share Share Share

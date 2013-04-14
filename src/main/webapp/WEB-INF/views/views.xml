@@ -29,6 +29,14 @@
 		<put-attribute name="body" value="/WEB-INF/views/register.jspx" />
 	</definition>
 	
+	<definition extends="public" name="registerOk">
+		<put-attribute name="body" value="/WEB-INF/views/registerOk.jspx" />
+	</definition>
+	
+	<definition extends="public" name="activateFailed">
+		<put-attribute name="body" value="/WEB-INF/views/activateFailed.jspx" />
+	</definition>
+	
 	<definition extends="default" name="home">
 		<put-attribute name="submenu" value="/WEB-INF/views/searchBar.jspx" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/searchSideBar.jspx" />
