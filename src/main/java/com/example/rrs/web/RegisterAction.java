@@ -26,9 +26,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
+import com.example.rrs.Constants;
 import com.example.rrs.model.User;
 import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.service.MailService;
@@ -42,17 +44,17 @@ public class RegisterAction {
 			.getLogger(RegisterAction.class);
 
 	@Inject
-	UserService userService;
+	private UserService userService;
 
 	@Inject
-	MailService emailService;
+	private MailService emailService;
 
-	@Value("${appUrl}")
+	@Value("${app.baseUrl}")
 	String appUrl;
 
 	@Inject
 	@Named("passwordEncoder")
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 
 	void addDateTimeFormatPatterns(Model uiModel) {
 		uiModel.addAttribute(
@@ -80,6 +82,15 @@ public class RegisterAction {
 		}
 
 		String email = registerForm.getEmail();
+		
+		if(!registerForm.getPassword().equals(registerForm.getRepeatPassword())){
+			bindingResult.rejectValue("password", "password mismatch",
+					"password mismatch");
+			registerForm.setPassword(null);
+			registerForm.setRepeatPassword(null);
+			populateEditForm(uiModel, registerForm);
+			return "register";
+		}
 
 		if (null != userService.findUserByEmail(email)) {
 			bindingResult.rejectValue("email", "email is existed",
@@ -104,6 +115,9 @@ public class RegisterAction {
 		// save user data
 		user = userService.saveUser(user);
 
+		//get configured property: app.baseUrl.
+		//String appUrl=env.getProperty("app.baseUrl");
+		
 		// sending the activation email to user.
 		if (log.isDebugEnabled()) {
 			log.debug("sending activatation emal@" + email + ",code@"
@@ -140,7 +154,7 @@ public class RegisterAction {
 	@RequestMapping(value = "/activate/{email}-{confirmationCode}", method = RequestMethod.GET, produces = { "text/html" })
 	public String activate(
 			@PathVariable("email") @NotNull @NotEmpty String email,
-			@PathVariable("confirmationCode") @NotNull @NotEmpty String confirmationCode) {
+			@PathVariable("confirmationCode") @NotNull @NotEmpty String confirmationCode, RedirectAttributes  attrs) {
 
 		if (log.isDebugEnabled()) {
 			log.debug("Activate the user account.");
@@ -154,6 +168,8 @@ public class RegisterAction {
 			user.setConfirmationCode(null);
 			userService.saveUser(user);
 
+			attrs.addFlashAttribute(Constants.GLOBAL_MESSAGE, "User account is activated successfully.");
+			
 			return "redirect:/login";
 		}
 

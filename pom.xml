@@ -17,6 +17,7 @@
 		<querydsl.version>2.9.0</querydsl.version>
 		<spring.version>3.2.2.RELEASE</spring.version>
 		<spring-security.version>3.1.1.RELEASE</spring-security.version>
+		<org.cloudfoundry-version>0.8.2</org.cloudfoundry-version>
 	</properties>
 	<repositories>
 		<repository>
@@ -115,6 +116,15 @@
 		<!-- <dependency> <groupId>org.springframework.roo</groupId> <artifactId>org.springframework.roo.annotations</artifactId> 
 			<version>${roo.version}</version> <scope>provided</scope> </dependency> -->
 		<!-- Spring dependencies -->
+		
+		<!-- CloudFoundry -->
+		<dependency>
+  			<groupId>org.cloudfoundry</groupId>
+  			<artifactId>cloudfoundry-runtime</artifactId>
+  			<version>${org.cloudfoundry-version}</version>
+		</dependency>
+		<!-- Spring -->
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>

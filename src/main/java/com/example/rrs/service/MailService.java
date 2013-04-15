@@ -55,9 +55,9 @@ public class MailService {
 			final String subject, final String velocityTemplateName,
 			final Map model) throws MailException {
 		if (log.isDebugEnabled()) {
-			log.debug("send email @ to ->" + to + ", subject->" + subject
-					+ ", template path->" + velocityTemplateName + ", model->"
-					+ model);
+			log.debug("send email from @" + from + "@ to ->" + to
+					+ ", subject->" + subject + ", template path->"
+					+ velocityTemplateName + ", model->" + model);
 		}
 
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
@@ -67,7 +67,7 @@ public class MailService {
 						true, "UTF-8");
 				message.setTo(to);
 				message.setSubject(subject);
-				message.setFrom(new InternetAddress(from, "RSS"));
+				message.setFrom(new InternetAddress(from, "RRS Team"));
 				if (replyTo != null) {
 					message.setReplyTo(replyTo);
 				}
@@ -92,6 +92,55 @@ public class MailService {
 			}
 		};
 		this.mailSender.send(preparator);
+	}
+
+	@Async("myExecutor")
+	public void sendEmail(final String to, final String subject,
+			final String htmlContent, final String plainContent)
+			throws MailException {
+
+		MimeMessagePreparator preparator = new MimeMessagePreparator() {
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				MimeMessageHelper message = new MimeMessageHelper(mimeMessage,
+						true, "UTF-8");
+				message.setTo(to);
+				message.setSubject(subject);
+				message.setFrom(new InternetAddress(from, "RRS Team"));
+				message.setSentDate(new Date());
+				message.setText(plainContent, htmlContent);
+			}
+		};
+		this.mailSender.send(preparator);
+	}
+
+	public String renderMailTemplate(String velocityTemplateName,
+			Map<String, Object> model, boolean textMail) {
+
+		String result = "";
+		String templatePath = "";
+
+		if (textMail) {
+			templatePath = TEMPLATE_PATH_PREFIX + velocityTemplateName
+					+ TEXT_TEMPLATE_SUFFIX + TEMPLATE_EXTENSION;
+
+		} else {
+			templatePath = TEMPLATE_PATH_PREFIX + velocityTemplateName
+					+ HTML_TEMPLATE_SUFFIX + TEMPLATE_EXTENSION;
+		}
+		if (log.isDebugEnabled()) {
+			log.debug(">>>>>>>message content @" + result);
+
+		}
+		result = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
+				templatePath, "UTF-8", model);
+
+		if (log.isDebugEnabled()) {
+			log.debug(" text mail@" + textMail);
+			log.debug(" message content @" + result);
+		}
+
+		return result;
 	}
 
 }

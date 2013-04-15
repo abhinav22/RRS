@@ -98,19 +98,25 @@ body {
 <body>
 	<div class="container-narrow">
 		<tiles:insertAttribute name="header" ignore="true" />
-		<div class="page-header">
-			<h1>
-				<tiles:getAsString name="pageTitle" ignore="true">
-				</tiles:getAsString>
-			</h1>
-		</div>
-		<tiles:insertAttribute name="menu"/>
-		
-		<c:if test="${globalMessage!=null}">
-			<div class="alert">${globalMessage}</div>
+
+		<tiles:insertAttribute name="menu" ignore="true" />
+
+		<tiles:importAttribute name="pageTitle" ignore="true"
+			toName="title" />
+		<c:if test="${not empty title}">
+			<div class="page-header">
+				<h1>
+					${title}
+				</h1>
+			</div>
 		</c:if>
+
+		<c:if test="${GLOBAL_MESSAGE!=null}">
+			<div class="alert">${GLOBAL_MESSAGE}</div>
+		</c:if>
+
 		<div class="row-fluid">
-			<tiles:insertAttribute name="body"/>
+			<tiles:insertAttribute name="body" />
 		</div>
 		<hr />
 		<tiles:insertAttribute name="footer" ignore="true" />
@@ -122,9 +128,9 @@ body {
 	<spring:url value="/resources/js/jquery.js" var="jquery_js_url" />
 	<spring:url value="/resources/js/bootstrap.min.js"
 		var="bootstrap_js_url" />
-	<spring:url value="/resources/js/holder.js" var="holder_js_url" />
+
 	<script src="${jquery_js_url}"></script>
 	<script src="${bootstrap_js_url}"></script>
-	<script src="${holder_js_url}"></script>
+
 </body>
 </html>

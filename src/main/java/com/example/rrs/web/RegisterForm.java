@@ -11,17 +11,17 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class RegisterForm {
 
 	@NotNull
-	@Size(max = 20)
+	@Size(min=6, max = 20)
 	@NotEmpty
 	private String password;
 
 	@NotNull
-	@Size(max = 20)
+	@Size(min=6, max = 20)
 	@NotEmpty
 	private String repeatPassword;
 
 	@NotNull
-	@Size(min = 3, max = 40)
+	@Size(min = 3, max = 100)
 	@Email
 	private String email;
 

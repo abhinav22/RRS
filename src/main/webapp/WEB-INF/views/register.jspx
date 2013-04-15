@@ -11,18 +11,18 @@
 		<spring:url value="/resources/img/holder64.png" var="holder_url" />
 		<div class="media">
 			<a class="pull-left" href="#"> <img class="media-object"
-				data-src="${holder_url}"></img></a>
+				src="${holder_url}"></img></a>
 			<div class="media-body">
-				<h3 class="media-heading">Connection</h3>
+				<h4 class="media-heading">Connection</h4>
 				<p>Connection Connection Connection Connection Connection
 					connection connection connection connection</p>
 			</div>
 		</div>
 		<div class="media">
 			<a class="pull-left" href="#"> <img class="media-object"
-				data-src="${holder_url}"></img></a>
+				src="${holder_url}"></img></a>
 			<div class="media-body">
-				<h3 class="media-heading">Discovery</h3>
+				<h4 class="media-heading">Discovery</h4>
 				<p>Discovery Discovery Discovery Discovery Discovery Discovery
 					Discovery Discovery Discovery Discovery</p>
 			</div>
@@ -30,9 +30,9 @@
 
 		<div class="media">
 			<a class="pull-left" href="#"> <img class="media-object"
-				data-src="${holder_url}"></img></a>
+				src="${holder_url}"></img></a>
 			<div class="media-body">
-				<h3 class="media-heading">Share</h3>
+				<h4 class="media-heading">Share</h4>
 				<p>Share Share Share Share Share Share Share Share Share Share
 					Share Share Share Share Share Share</p>
 			</div>
@@ -53,7 +53,7 @@
 					class="control-group ${requestScope['org.springframework.validation.BindingResult.registerForm'].hasFieldErrors('email') ? 'error' : ''}">
 					<label class="control-label" for="email">Email*:</label>
 					<div class="controls">
-						<form:input path="email" />
+						<form:input path="email" class="input-block-level"/>
 						<div class="help-block">
 							<form:errors path="email" />
 						</div>
@@ -63,7 +63,7 @@
 					class="control-group ${requestScope['org.springframework.validation.BindingResult.registerForm'].hasFieldErrors('password') ? 'error' : ''}">
 					<label class="control-label" for="password">Password*:</label>
 					<div class="controls">
-						<form:input path="password" type="password" />
+						<form:input path="password" type="password" class="input-block-level"/>
 						<div class="help-block">
 							<form:errors path="password" />
 						</div>
@@ -74,7 +74,7 @@
 					<label class="control-label" for="repeatPassword">Confirm
 						Password*:</label>
 					<div class="controls">
-						<form:input path="repeatPassword" type="password" />
+						<form:input path="repeatPassword" type="password" class="input-block-level"/>
 						<div class="help-block">
 							<form:errors path="repeatPassword" />
 						</div>

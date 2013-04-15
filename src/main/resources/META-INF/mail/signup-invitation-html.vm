@@ -5,23 +5,23 @@
     </head>
     <body style="padding: 12px">
         <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
-            Dear ${email},
+            Dear Friends,
         </p>
 
         <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
-            Welcome to RSS.
+            Your friend ${inviter} is inviting you to join <a style="color: #000000;" href="${appUrl}"> RRS (${appUrl})</a>.
         </p>
 
         <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
-            Please click the link to activate you account,<a style="color: #000000;" href="${url}">${url}</a> .
+            Please click the link to register, <a style="color: #000000;" href="${url}">${url}</a> .
         </p>
 
         <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
-            Or copy the following url to your browser.
+            Or copy the following url to your browser and anvigate it directly.
         </p>
         
         <pre>
-        	${url}
+   ${url}
         </pre> 
 
         <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">

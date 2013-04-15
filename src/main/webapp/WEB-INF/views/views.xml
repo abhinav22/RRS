@@ -24,7 +24,7 @@
 	</definition>
 
 	<definition extends="public" name="login">
-		<put-attribute name="pageTitle" value="Login"></put-attribute>
+		<!-- <put-attribute name="pageTitle" value="Login"></put-attribute> -->
 		<put-attribute name="body" value="/WEB-INF/views/login.jspx" />
 	</definition>
 
