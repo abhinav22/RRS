@@ -30,7 +30,7 @@ public class Email {
 	@NotNull
 	@Size(max = 20)
 	private String type;
-
+	
 	public String getContent() {
 		return this.content;
 	}

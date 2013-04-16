@@ -8,6 +8,10 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath*:META-INF/spring/applicationContext*.xml</param-value>
 	</context-param>
+<!-- 	<context-param>
+		<param-name>contextInitializerClasses</param-name>
+		<param-value>com.example.rrs.CloudApplicationContextInitializer</param-value>
+	</context-param> -->
 	<context-param>
 		<param-name>defaultHtmlEscape</param-name>
 		<param-value>true</param-value>

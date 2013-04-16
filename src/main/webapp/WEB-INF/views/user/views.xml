@@ -4,8 +4,14 @@
 	<definition extends="default" name="user/home">	
 		<put-attribute name="body" value="/WEB-INF/views/user/home.jspx" />
 	</definition>
+	
 	<definition extends="default" name="user/invite">
 		<put-attribute name="pageTitle" value="Invite Friends to Join RRS"></put-attribute>
 		<put-attribute name="body" value="/WEB-INF/views/user/invite.jspx" />
+	</definition>
+	
+	<definition extends="default" name="user/setname">
+		<put-attribute name="pageTitle" value="Setup Name"/>
+		<put-attribute name="body" value="/WEB-INF/views/user/setname.jspx" />
 	</definition>
 </tiles-definitions>

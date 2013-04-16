@@ -668,5 +668,31 @@
 				<mail.debug>false</mail.debug>
 			</properties>
 		</profile>
+		
+		<!-- Profile for CloudFoundry.com , DOES NOT WORK NOW-->
+		<profile>
+			<id>cloud</id>
+			<properties>
+				<!-- database config -->
+				<db.host><![CDATA[${cloud.services.mongodb-rss.connection.host}]]></db.host>
+				<db.port><![CDATA[${cloud.services.mongodb-rss.connection.port}]]></db.port>
+				<db.name><![CDATA[${cloud.services.mongodb-rss.connection.dbname}]]></db.name>
+				<db.username><![CDATA[${cloud.services.mongodb-rss.connection.username}]]></db.username>
+				<db.password><![CDATA[${cloud.services.mongodb-rss.connection.password}]]></db.password>
+
+				<!-- app base url -->
+				<app.baseUrl>http://hantsy-rss.cloudfoundry.com/</app.baseUrl>
+
+				<!-- log4j logging level -->
+				<log4j.level>INFO</log4j.level>
+				<!-- mail config -->
+				<mail.host>smtp.gmail.com</mail.host>
+				<mail.port>587</mail.port>
+				<mail.username>frankouz.ramirez@gmail.com</mail.username>
+				<mail.password>abcd2010</mail.password>
+				<mail.from>no-reply@example.com</mail.from>
+				<mail.debug>false</mail.debug>
+			</properties>
+		</profile>
 	</profiles>
 </project>

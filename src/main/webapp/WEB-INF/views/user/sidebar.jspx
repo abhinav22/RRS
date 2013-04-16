@@ -8,11 +8,15 @@
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 	<ul class="nav nav-list">
-		<li class="nav-header">Index</li>
+		<li class="nav-header">Message Box</li>
 		<spring:url value="/user/messages" var="messages_url"></spring:url>
 		<spring:url value="/user/invitations" var="invitations_url"></spring:url>
 		<li><div><a href="${messages_url} ">Messages</a> <span class="badge">4</span></div></li>
 		<li><div><a href="${invitation_url} ">Invitations<span class="badge">3</span></a></div></li>
 		<li class="divider"></li>
+		<spring:url value="/user/profile" var="profile_url"></spring:url>
+		<spring:url value="/user/password" var="password_url"></spring:url>
+		<li><div><a href="${profile_url}">Profile</a></div></li>
+		<li><div><a href="${password_url}">Change Password</a></div></li>
 	</ul>
 </div>

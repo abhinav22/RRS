@@ -32,6 +32,10 @@
 		<put-attribute name="pageTitle" value="Welcome to RRS"></put-attribute>
 		<put-attribute name="body" value="/WEB-INF/views/register.jspx" />
 	</definition>
+	
+	<definition extends="public" name="resetpwd">
+		<put-attribute name="body" value="/WEB-INF/views/resetpwd.jspx" />
+	</definition>
 
 	<definition extends="public" name="registerOk">
 		<put-attribute name="pageTitle" value="Registered Successfully"></put-attribute>

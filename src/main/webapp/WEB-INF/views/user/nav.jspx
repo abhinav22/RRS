@@ -15,7 +15,7 @@
 			</a>
 
 			<spring:url value="/user/profile" var="profile_url" />
-			<a class="brand" href="${profile_url}">${pageContext.request.userPrincipal.name}</a>
+			<a class="brand" href="${profile_url}">${sessionScope['SPRING_SECURITY_CONTEXT'].authentication.principal.name}</a>
 
 			<spring:url value="/user/invite" var="invite_url" />
 			<div class="nav-collapse collapse">

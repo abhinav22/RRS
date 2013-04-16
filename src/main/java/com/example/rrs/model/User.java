@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -46,6 +45,8 @@ public class User implements UserDetails, Serializable {
 	@Size(max = 20)
 	private String lastName;
 
+	private SalutationLine salutationLine = SalutationLine.NONE;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(style = "M-")
 	private Date lastUpdateDate;
@@ -59,8 +60,19 @@ public class User implements UserDetails, Serializable {
 	@Size(min = 3, max = 40)
 	@Email
 	private String email;
-	
+
 	private String confirmationCode;
+
+	public SalutationLine getSalutationLine() {
+		if (salutationLine == null) {
+			this.salutationLine = SalutationLine.NONE;
+		}
+		return salutationLine;
+	}
+
+	public void setSalutationLine(SalutationLine salutationLine) {
+		this.salutationLine = salutationLine;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -165,8 +177,21 @@ public class User implements UserDetails, Serializable {
 	}
 
 	public String getName() {
-		return (this.firstName == null ? "" : this.firstName)
-				+ (this.lastName == null ? "" : " " + this.lastName);
+		switch (this.getSalutationLine()) {
+		case FIRSTNAME:
+			return this.firstName;
+
+		case FIRSTNAME_AND_LASTNAME:
+			return this.firstName + " " + this.lastName;
+
+		case FIRSTNAME_FIRST_CHAR_OF_LASTNAME:
+			return this.firstName + " "
+					+ String.valueOf(this.lastName.charAt(0)).toUpperCase();
+		case NONE:
+			return this.getEmail();
+		default:
+			return this.getEmail();
+		}
 	}
 
 	@Override

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:cloud="http://schema.cloudfoundry.org/spring"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cloud="http://schema.cloudfoundry.org/spring" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.xsd
 		http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
@@ -14,11 +12,11 @@
 	<mongo:repositories base-package="com.example.rrs.repository" />
 
 	<!-- To translate any MongoExceptions thrown in @Repository annotated classes -->
-	<bean class="org.springframework.data.mongodb.core.MongoExceptionTranslator" />
-
+	<!-- <bean class="org.springframework.data.mongodb.core.MongoExceptionTranslator" 
+		/> -->
 	<context:annotation-config />
-	
-	
+
+
 	<bean class="org.springframework.data.mongodb.core.MongoTemplate"
 		id="mongoTemplate">
 		<constructor-arg ref="mongoDbFactory" />
@@ -26,13 +24,11 @@
 
 	<bean
 		class="org.springframework.data.mongodb.core.mapping.event.LoggingEventListener" />
-	
-	<beans profile="default">
-		<mongo:db-factory host="${mongo.host}" id="mongoDbFactory"
-			port="${mongo.port}" />
-	</beans>
 
-	<beans profile="cloud">
-		<cloud:mongo-db-factory id="mongoDbFactory" />
-	</beans>
+	<mongo:db-factory id="mongoDbFactory" host="${mongo.host}"
+		port="${mongo.port}" dbname="${mongo.dbname}" username="${mongo.username}"
+		password="${mongo.password}" />
+
+
+
 </beans>

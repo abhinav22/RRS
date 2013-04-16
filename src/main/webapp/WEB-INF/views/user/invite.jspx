@@ -31,7 +31,7 @@
 				<div class="controls">
 					<form:input id="title" type="text" path='title' class="input-block-level" />
 					<div class="help-block">
-						<form:errors path="emails" />
+						<form:errors path="title" />
 					</div>
 				</div>
 			</div>
