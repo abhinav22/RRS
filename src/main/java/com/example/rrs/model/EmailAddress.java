@@ -5,22 +5,29 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.validator.constraints.Email;
 
-public class Phone {
 
-	@NotNull
-	@Size(max = 20)
-	private String type;
+public class EmailAddress {
 	
 	@NotNull
-	@Size(min = 3, max = 40)
-	private String content;
+	@Size(max = 20)
+	private String type="default";
 
-	public Phone() {
+	@NotNull
+	@Size(min = 3, max = 40)
+	@Email
+	private String content;
+	
+	private boolean verified=false;
+	
+	private String confirmationCode;
+	
+	public EmailAddress() {
 		super();
 	}
 
-	public Phone(String type, String content) {
+	public EmailAddress(String type, String content) {
 		super();
 		this.type = type;
 		this.content = content;
@@ -38,9 +45,24 @@ public class Phone {
 		this.content = content;
 	}
 
-
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
+
+	public String getConfirmationCode() {
+		return confirmationCode;
+	}
+
+	public void setConfirmationCode(String confirmationCode) {
+		this.confirmationCode = confirmationCode;
 	}
 
 	@Override
@@ -59,7 +81,7 @@ public class Phone {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Phone other = (Phone) obj;
+		EmailAddress other = (EmailAddress) obj;
 		if (content == null) {
 			if (other.content != null)
 				return false;

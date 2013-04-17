@@ -3,27 +3,18 @@ package com.example.rrs.web;
 import java.math.BigInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 
-import com.example.rrs.model.Email;
+import com.example.rrs.model.EmailAddress;
+import com.example.rrs.model.Link;
 import com.example.rrs.model.Phone;
-import com.example.rrs.model.URL;
 import com.example.rrs.model.User;
-import com.example.rrs.repository.PhoneRepository;
-import com.example.rrs.repository.URLRepository;
 import com.example.rrs.service.UserService;
 
 public class ApplicationConversionServiceFactoryBean extends
 		FormattingConversionServiceFactoryBean {
-
-	@Autowired
-	PhoneRepository phoneRepository;
-
-	@Autowired
-	URLRepository uRLRepository;
 
 	@Autowired
 	UserService userService;
@@ -34,33 +25,16 @@ public class ApplicationConversionServiceFactoryBean extends
 		installLabelConverters(getObject());
 	}
 
-	public Converter<Email, String> getEmailToStringConverter() {
-		return new org.springframework.core.convert.converter.Converter<com.example.rrs.model.Email, java.lang.String>() {
+	public Converter<EmailAddress, String> getEmailToStringConverter() {
+		return new org.springframework.core.convert.converter.Converter<com.example.rrs.model.EmailAddress, java.lang.String>() {
 			@Override
-			public String convert(Email email) {
+			public String convert(EmailAddress email) {
 				return new StringBuilder().append(email.getType()).append(' ')
 						.append(email.getContent()).toString();
 			}
 		};
 	}
 
-	public Converter<BigInteger, Phone> getIdToPhoneConverter() {
-		return new org.springframework.core.convert.converter.Converter<java.math.BigInteger, com.example.rrs.model.Phone>() {
-			@Override
-			public com.example.rrs.model.Phone convert(java.math.BigInteger id) {
-				return phoneRepository.findOne(id);
-			}
-		};
-	}
-
-	public Converter<BigInteger, URL> getIdToURLConverter() {
-		return new org.springframework.core.convert.converter.Converter<java.math.BigInteger, com.example.rrs.model.URL>() {
-			@Override
-			public com.example.rrs.model.URL convert(java.math.BigInteger id) {
-				return uRLRepository.findOne(id);
-			}
-		};
-	}
 
 	public Converter<String, User> getIdToUserConverter() {
 		return new org.springframework.core.convert.converter.Converter<String, com.example.rrs.model.User>() {
@@ -81,12 +55,12 @@ public class ApplicationConversionServiceFactoryBean extends
 		};
 	}
 
-	public Converter<String, Email> getStringToEmailConverter() {
-		return new org.springframework.core.convert.converter.Converter<java.lang.String, com.example.rrs.model.Email>() {
+	public Converter<String, EmailAddress> getStringToEmailConverter() {
+		return new org.springframework.core.convert.converter.Converter<java.lang.String, com.example.rrs.model.EmailAddress>() {
 			@Override
-			public com.example.rrs.model.Email convert(String id) {
+			public com.example.rrs.model.EmailAddress convert(String id) {
 				return getObject().convert(
-						getObject().convert(id, BigInteger.class), Email.class);
+						getObject().convert(id, BigInteger.class), EmailAddress.class);
 			}
 		};
 	}
@@ -101,12 +75,12 @@ public class ApplicationConversionServiceFactoryBean extends
 		};
 	}
 
-	public Converter<String, URL> getStringToURLConverter() {
-		return new org.springframework.core.convert.converter.Converter<java.lang.String, com.example.rrs.model.URL>() {
+	public Converter<String, Link> getStringToURLConverter() {
+		return new org.springframework.core.convert.converter.Converter<java.lang.String, com.example.rrs.model.Link>() {
 			@Override
-			public com.example.rrs.model.URL convert(String id) {
+			public com.example.rrs.model.Link convert(String id) {
 				return getObject().convert(
-						getObject().convert(id, BigInteger.class), URL.class);
+						getObject().convert(id, BigInteger.class), Link.class);
 			}
 		};
 	}
@@ -121,10 +95,10 @@ public class ApplicationConversionServiceFactoryBean extends
 		};
 	}
 
-	public Converter<URL, String> getURLToStringConverter() {
-		return new org.springframework.core.convert.converter.Converter<com.example.rrs.model.URL, java.lang.String>() {
+	public Converter<Link, String> getURLToStringConverter() {
+		return new org.springframework.core.convert.converter.Converter<com.example.rrs.model.Link, java.lang.String>() {
 			@Override
-			public String convert(URL uRL) {
+			public String convert(Link uRL) {
 				return new StringBuilder().append(uRL.getType()).append(' ')
 						.append(uRL.getContent()).toString();
 			}
@@ -152,10 +126,8 @@ public class ApplicationConversionServiceFactoryBean extends
 		registry.addConverter(getEmailToStringConverter());
 		registry.addConverter(getStringToEmailConverter());
 		registry.addConverter(getPhoneToStringConverter());
-		registry.addConverter(getIdToPhoneConverter());
 		registry.addConverter(getStringToPhoneConverter());
 		registry.addConverter(getURLToStringConverter());
-		registry.addConverter(getIdToURLConverter());
 		registry.addConverter(getStringToURLConverter());
 		registry.addConverter(getUserToStringConverter());
 		registry.addConverter(getIdToUserConverter());

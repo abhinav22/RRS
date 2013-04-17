@@ -20,15 +20,27 @@
 	<bean class="org.springframework.data.mongodb.core.MongoTemplate"
 		id="mongoTemplate">
 		<constructor-arg ref="mongoDbFactory" />
+		<constructor-arg ref="mappingMongoConverter"/>
 	</bean>
 
+	<bean
+		class="org.springframework.data.mongodb.core.convert.MappingMongoConverter"
+		id="mappingMongoConverter">
+		<constructor-arg ref="mongoDbFactory" />
+		<constructor-arg>
+			<bean
+				class="org.springframework.data.mongodb.core.mapping.MongoMappingContext" />
+
+		</constructor-arg>
+		<property name="mapKeyDotReplacement" value="#"></property>
+	</bean>
+	
 	<bean
 		class="org.springframework.data.mongodb.core.mapping.event.LoggingEventListener" />
 
 	<mongo:db-factory id="mongoDbFactory" host="${mongo.host}"
 		port="${mongo.port}" dbname="${mongo.dbname}" username="${mongo.username}"
 		password="${mongo.password}" />
-
 
 
 </beans>

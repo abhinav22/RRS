@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
+
 
 	@Override
 	public long countAllUsers() {
@@ -61,7 +60,6 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
-
 	@Override
 	public User findUserByEmail(String email) {
 		List<User> users = userRepository.findByEmail(email);
@@ -78,9 +76,10 @@ public class UserServiceImpl implements UserService {
 		QUser quser = QUser.user;
 
 		User currentUser = SecurityUtils.getCurrentUser();
-		
+
 		Predicate predicate = null;
-		//to do...
+		// to do...
 		return userRepository.findAll(predicate, pageable);
 	}
+
 }

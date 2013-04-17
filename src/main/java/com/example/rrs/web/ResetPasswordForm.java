@@ -1,11 +1,15 @@
 package com.example.rrs.web;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class ResetPasswordForm {
 	
-	@NotEmpty 
+
+	@NotEmpty
+	@NotNull
 	@Email
 	private String email;
 

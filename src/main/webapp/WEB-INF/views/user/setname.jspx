@@ -42,9 +42,9 @@
 				<label class="control-label" for="salutationLine">Salutation
 					Line:</label>
 				<div class="controls">
-					<form:radiobuttons id="salutationLine"  items="${salutationLines}" itemLabel="desc" path="salutationLine"
+					<form:select id="salutationLine"  items="${salutationLines}" itemLabel="desc" path="salutationLine"
 						class="input-block-level">
-					</form:radiobuttons>
+					</form:select>
 					<div class="help-block">
 						<form:errors path="salutationLine" />
 					</div>

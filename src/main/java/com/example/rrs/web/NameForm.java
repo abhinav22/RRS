@@ -11,7 +11,7 @@ public class NameForm {
 	@NotEmpty
 	private String lastName;
 	
-	private SalutationLine salutationLine;
+	private SalutationLine salutationLine=SalutationLine.NONE;
 
 	public String getFirstName() {
 		return firstName;

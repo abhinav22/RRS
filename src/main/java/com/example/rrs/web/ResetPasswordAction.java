@@ -85,21 +85,21 @@ public class ResetPasswordAction {
 			return "redirect:/user/home";
 		}
 
-		uiModel.addAttribute("resetpwdForm", new ResetPasswordForm());
+		uiModel.addAttribute("resetPasswordForm", new ResetPasswordForm());
 		return "resetpwd";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String resetPassword(@Valid() ResetPasswordForm resetpwdForm,
+	public String resetPassword(@Valid() ResetPasswordForm resetPasswordForm,
 			BindingResult bindingResult, Model uiModel, RedirectAttributes atts) {
-		String email = resetpwdForm.getEmail();
+		String email = resetPasswordForm.getEmail();
 
 		if (log.isDebugEnabled()) {
 			log.debug(" send reset passwordemail to @" + email);
 		}
 		
 		if (bindingResult.hasErrors()) {
-			uiModel.addAttribute("resetpwdForm", resetpwdForm);
+			uiModel.addAttribute("resetPasswordForm", resetPasswordForm);
 			return "resetpwd";
 		}
 
@@ -109,7 +109,7 @@ public class ResetPasswordAction {
 					"email is not existed in the application",
 					"email is not existed in the application");
 
-			uiModel.addAttribute("resetpwdForm", resetpwdForm);
+			uiModel.addAttribute("resetPasswordForm", resetPasswordForm);
 			return "resetpwd";
 		}
 

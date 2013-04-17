@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +25,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.example.rrs.web.LinkForm;
 
 @Document
 @Persistent
@@ -62,6 +66,36 @@ public class User implements UserDetails, Serializable {
 	private String email;
 
 	private String confirmationCode;
+
+	private Map<String, Link> links = new HashMap<String, Link>();
+	
+	private Map<String, Phone> phones = new HashMap<String, Phone>();
+
+	private Map<String, EmailAddress> emails = new HashMap<String, EmailAddress>();
+
+	public Map<String, Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(Map<String, Link> urls) {
+		this.links = urls;
+	}
+
+	public Map<String, Phone> getPhones() {
+		return phones;
+	}
+
+	public void setPhones(Map<String, Phone> phones) {
+		this.phones = phones;
+	}
+
+	public Map<String, EmailAddress> getEmails() {
+		return emails;
+	}
+
+	public void setEmails(Map<String, EmailAddress> emails) {
+		this.emails = emails;
+	}
 
 	public SalutationLine getSalutationLine() {
 		if (salutationLine == null) {
@@ -195,6 +229,31 @@ public class User implements UserDetails, Serializable {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		return true;
+	}
+
+	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this,
 				ToStringStyle.SHORT_PREFIX_STYLE);
@@ -205,4 +264,28 @@ public class User implements UserDetails, Serializable {
 		return sdf.format(this.getCreationDate());
 	}
 
+	public void addLink(String url, Link link) {
+		this.links.put(url, link);
+	}
+
+	public void removeLink(String url) {
+		this.links.remove(url);
+	}
+
+	public void addEmail(String email, EmailAddress e) {
+		this.emails.put(email, e);
+	}
+
+	public void removeEmail(String url) {
+		this.emails.remove(email);
+	}
+
+	
+	public void addPhone(String num, Phone e) {
+		this.phones.put(num, e);
+	}
+
+	public void removePhone(String num) {
+		this.phones.remove(num);
+	}
 }

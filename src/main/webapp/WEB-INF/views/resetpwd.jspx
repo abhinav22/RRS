@@ -12,12 +12,11 @@
 	<div class="offset3 span6">
 		<spring:url value="/resetpwd" var="form_url" />
 		<form:form action="${form_url}" method="POST"
-			modelAttribute="resetpwdForm">
-			<spring:bind path="resetpwdForm"></spring:bind>
+			modelAttribute="resetPasswordForm">
 			<fieldset>
 				<legend> INPUT YOUR REGISTERED EMIAL </legend>
 				<div
-					class="control-group ${requestScope['org.springframework.validation.BindingResult.resetpwdForm'].hasFieldErrors('email') ? 'error' : ''}">
+					class="control-group ${requestScope['org.springframework.validation.BindingResult.resetPasswordForm'].hasFieldErrors('email') ? 'error' : ''}">
 					<label class="control-label" for="email">Email*:</label>
 					<div class="controls">
 						<form:input id="email" type="email" path="email"

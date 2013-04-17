@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.rrs.model.EmailAddress;
 import com.example.rrs.model.User;
 import com.example.rrs.web.SearchForm;
 

@@ -14,4 +14,20 @@
 		<put-attribute name="pageTitle" value="Setup Name"/>
 		<put-attribute name="body" value="/WEB-INF/views/user/setname.jspx" />
 	</definition>
+	
+	<definition extends="default" name="user/setemail">
+		<put-attribute name="pageTitle" value="Setup Another Email"/>
+		<put-attribute name="body" value="/WEB-INF/views/user/setemail.jspx" />
+	</definition>
+	
+	<definition extends="default" name="user/setlink">
+		<put-attribute name="pageTitle" value="Add A Social Network Link"/>
+		<put-attribute name="body" value="/WEB-INF/views/user/setlink.jspx" />
+	</definition>
+	
+	<definition extends="default" name="user/setphone">
+		<put-attribute name="pageTitle" value="Add A Phone Number"/>
+		<put-attribute name="body" value="/WEB-INF/views/user/setphone.jspx" />
+	</definition>
+	
 </tiles-definitions>

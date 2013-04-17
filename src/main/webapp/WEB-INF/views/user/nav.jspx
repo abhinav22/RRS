@@ -14,8 +14,8 @@
 				class="icon-bar"></span> <span class="icon-bar"></span>
 			</a>
 
-			<spring:url value="/user/profile" var="profile_url" />
-			<a class="brand" href="${profile_url}">${sessionScope['SPRING_SECURITY_CONTEXT'].authentication.principal.name}</a>
+			<spring:url value="/user/home" var="home_url" />
+			<a class="brand" href="${home_url}">${sessionScope['SPRING_SECURITY_CONTEXT'].authentication.principal.name}</a>
 
 			<spring:url value="/user/invite" var="invite_url" />
 			<div class="nav-collapse collapse">

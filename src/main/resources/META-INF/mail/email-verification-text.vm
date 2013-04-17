@@ -1,0 +1,10 @@
+Dear ${userName},
+
+You have just added a new email to your account, please copy the following url to your browser to verify it:
+
+${url}
+
+
+Regards, 
+RRS Support Team
+${appUrl} 

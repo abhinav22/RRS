@@ -12,8 +12,11 @@
 		<div class="span3">
 			<tiles:insertTemplate template="/WEB-INF/views/user/sidebar.jspx" />
 		</div>
-		<div class="span9">
-			Activities...
+		<div class="span1"></div>
+		<div class="span8">
+			<div class="tabs">
+				
+			</div>
 		</div>
 	</div>
 </div>

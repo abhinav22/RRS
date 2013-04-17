@@ -6,38 +6,41 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Phone {
+
+public class Link {
 
 	@NotNull
-	@Size(max = 20)
-	private String type;
+    @Size(min = 3, max = 60)
+	@org.hibernate.validator.constraints.URL
+    private String content;
 	
 	@NotNull
-	@Size(min = 3, max = 40)
-	private String content;
+    @Size(max = 20)
+    private String type;
 
-	public Phone() {
+	public Link() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public Phone(String type, String content) {
+	public Link(String type, String content) {
 		super();
 		this.type = type;
 		this.content = content;
 	}
 
 	public String getContent() {
-		return this.content;
-	}
-
-	public String getType() {
-		return this.type;
-	}
+        return this.content;
+    }
 
 	public void setContent(String content) {
-		this.content = content;
-	}
+        this.content = content;
+    }
 
+
+	public String getType() {
+		return type;
+	}
 
 	public void setType(String type) {
 		this.type = type;
@@ -59,7 +62,7 @@ public class Phone {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Phone other = (Phone) obj;
+		Link other = (Link) obj;
 		if (content == null) {
 			if (other.content != null)
 				return false;
@@ -70,7 +73,6 @@ public class Phone {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this,
-				ToStringStyle.SHORT_PREFIX_STYLE);
-	}
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }
