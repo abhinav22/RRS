@@ -3,8 +3,90 @@
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-	class="span9">
+	class="offset1 span10">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
+	<div class="alert alert-success">
+		Click the Edit button to edit your profile.
+		<button class="btn">Edit</button>
+	</div>
+	<div class="row-fluid">
+		<div class="span4">
+			<img id="avatar" src="{{}}" width="150" height="150" />
+		</div>
+		<div class="span8">
+			<address>
+				<strong>{{user.name}}</strong>
+				<p>{{user.firstName}}</p>
+				<p>{{user.lastName}}</p>
+				<p>{{user.salutationLine}}</p>
+			</address>
+			<button class="btn" ng-show="'isEditable'" ng-click="showNameDialog">Edit
+				Name</button>
+		</div>
+	</div>
+	<div class="row-fluid">
+
+		<h3>EMAIL</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>TYPE</th>
+					<th>EMAIL</th>
+					<th>VERIFED</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="'email in user.emails'">
+					<th>{{$index+1}}</th>
+					<td>{{email.value.content}}</td>
+					<td>{{email.value.content}}</td>
+					<td>{{email.value.content}}</td>
+					<td><button class="btn" ng-show="'isEditable'" ng-click="delEmail($index)">Delete</button></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h3>URL</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>TYPE</th>
+					<th>URL</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="'email in user.links'">
+					<th>{{$index+1}}</th>
+					<td>{{email.value.content}}</td>
+					<td>{{email.value.content}}</td>
+					<td><button class="btn" ng-show="'isEditable'" ng-click="delLink($index)">Delete</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<h3>PHONE</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>TYPE</th>
+					<th>PHONE NUMBER</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="'phone in user.phones'">
+					<th>{{$index+1}}</th>
+					<td>{{phone.value.content}}</td>
+					<td>{{phone.value.content}}</td>
+					<td><button class="btn" ng-show="'isEditable'" ng-click="delPhone($index)">Delete</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 

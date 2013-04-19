@@ -1,13 +1,13 @@
-<?DOCTYPE html?>
-<html xmlns:jsp="http://java.sun.com/JSP/Page"
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:tiles="http://tiles.apache.org/tags-tiles"
 	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" lang="en">
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0">
 
-<jsp:output doctype-root-element="HTML"
-	doctype-system="about:legacy-compat" />
+	<![CDATA[<?DOCTYPE html?>]]>
+	<html lang="en">
 
+<jsp:output omit-xml-declaration="yes" />
 <jsp:directive.page contentType="text/html;charset=UTF-8" />
 <jsp:directive.page pageEncoding="UTF-8" />
 
@@ -18,95 +18,54 @@
 <meta name="description" content="" />
 <meta name="author" content="" />
 
+<spring:url value="/" var="base_url" />
+
 <!-- Le styles -->
-<spring:url var="res_url"
-	value="${pageScope.request.contextPath}/resources" />
-<spring:url value="/resources/css/bootstrap.css" var="bootstrap_css_url">
-
-</spring:url>
+<spring:url value="/resources/css/bootstrap.min.css"
+	var="bootstrap_css_url" />
 <link href="${bootstrap_css_url}" rel="stylesheet" />
-<style type="text/css">
-body {
-	padding-top: 20px;
-	padding-bottom: 40px;
-}
 
-/* Custom container */
-.container-narrow {
-	margin: 0 auto;
-	max-width: 990px;
-}
+<spring:url value="/resources/css/bootstrap-responsive.min.css"
+	var="bootstrap_responsive_css_url" />
+<link href="${bootstrap_responsive_css_url}" rel="stylesheet" />
 
-.container-narrow>hr {
-	margin: 30px 0;
-}
-
-/* Main marketing message and sign up button */
-.jumbotron {
-	margin: 60px 0;
-	text-align: center;
-}
-
-.jumbotron h1 {
-	font-size: 72px;
-	line-height: 1;
-}
-
-.jumbotron .btn {
-	font-size: 21px;
-	padding: 14px 24px;
-}
-
-/* Supporting marketing content */
-.marketing {
-	margin: 60px 0;
-}
-
-.marketing p+h4 {
-	margin-top: 28px;
-}
-</style>
-
-<spring:url value="/resources/css/bootstrap-responsive.css"
-	var="bootstrap-responsive_css_url" />
-<link href="${bootstrap-responsive_css_url}" rel="stylesheet" />
-
-
+<spring:url value="/resources/css/main.css" var="main_css_url" />
+<link href="${main_css_url}" rel="stylesheet" />
 
 <spring:url value="/resources/js/html5shiv.js" var="html5shiv_js_url" />
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-<!--[if lt IE 9]>
-      <script src="${html5shiv_js_url}"></script>
+<![CDATA[<!--[if lt IE 9]>
+      <script src="${html5shiv_js_url}">/** **/  </script>
     <![endif]-->
-
+]]>
 <!-- Fav and touch icons -->
 <spring:url value="/resources/ico/apple-touch-icon-144-precomposed.png"
-	var="apple-touch-icon-144-precomposed_png_url" />
+	var="apple_touch_icon_144_precomposed_png_url" />
 <spring:url value="/resources/ico/apple-touch-icon-114-precomposed.png"
-	var="apple-touch-icon-114-precomposed_png_url" />
+	var="apple_touch_icon_114_precomposed_png_url" />
 <spring:url value="/resources/ico/apple-touch-icon-72-precomposed.png"
-	var="apple-touch-icon-72-precomposed_png_url" />
+	var="apple_touch_icon_72_precomposed_png_url" />
 <spring:url value="/resources/ico/apple-touch-icon-57-precomposed.png"
-	var="apple-touch-icon-57-precomposed_png_url" />
+	var="apple_touch_icon_57_precomposed_png_url" />
 <spring:url value="/resources/ico/favicon.png" var="favicon_png_url" />
 
 <link rel="apple-touch-icon-precomposed" sizes="144x144"
-	href="${apple-touch-icon-144-precomposed_png_url}" />
+	href="${apple_touch_icon_144_precomposed_png_url}" />
 <link rel="apple-touch-icon-precomposed" sizes="114x114"
-	href="${apple-touch-icon-114-precomposed_png_url}" />
+	href="${apple_touch_icon_114_precomposed_png_url}" />
 <link rel="apple-touch-icon-precomposed" sizes="72x72"
-	href="${apple-touch-icon-72-precomposed_png_url}" />
+	href="${apple_touch_icon_72_precomposed_png_url}" />
 <link rel="apple-touch-icon-precomposed"
-	href="${apple-touch-icon-57-precomposed_png_url}" />
+	href="${apple_touch_icon_57_precomposed_png_url}" />
 <link rel="shortcut icon" href="${favicon_png_url}" />
 </head>
 
-<body>
+<body data-base-url="${base_url}" ng-app>
+
+	<tiles:insertAttribute name="header" ignore="true" />
+
+	<tiles:insertAttribute name="menu" ignore="true" />
 	<div class="container-narrow">
-		<tiles:insertAttribute name="header" ignore="true" />
-
-		<tiles:insertAttribute name="menu" ignore="true" />
-
 		<tiles:importAttribute name="pageTitle" ignore="true" toName="title" />
 		<c:if test="${not empty title}">
 			<div class="page-header">
@@ -115,16 +74,18 @@ body {
 		</c:if>
 
 		<c:if test="${GLOBAL_MESSAGE!=null}">
-			<div class="alert">${GLOBAL_MESSAGE}</div>
+			<div class="alert alert-info">${GLOBAL_MESSAGE}</div>
 		</c:if>
 
 		<div class="row-fluid">
+			<tiles:insertAttribute name="sidebar" ignore="true" />
 			<tiles:insertAttribute name="body" />
 		</div>
-		<hr />
-		<tiles:insertAttribute name="footer" ignore="true" />
+
 	</div>
 	<!-- /container -->
+	<hr />
+	<tiles:insertAttribute name="footer" ignore="true" />
 
 
 	<!-- Placed at the end of the document so the pages load faster -->
@@ -132,8 +93,39 @@ body {
 	<spring:url value="/resources/js/bootstrap.min.js"
 		var="bootstrap_js_url" />
 
-	<script src="${jquery_js_url}"></script>
-	<script src="${bootstrap_js_url}"></script>
+	<spring:url value="/resources/js/holder.js" var="holder_js_url" />
 
+	<script type="text/javascript" src="${jquery_js_url}">
+		/** stop autoclosing **/
+	</script>
+	<script type="text/javascript" src="${bootstrap_js_url}">
+		<jsp:text/>
+	</script>
+	<script type="text/javascript" src="${holder_js_url}">
+		${null}
+	</script>
+	<script type="text/javascript">
+	var base_url="${base_url}";
+	var user_id="${pageContext.request.userPrincipal.id}";
+	</script>
+	<script type="text/javascript" src="${base_url}/resources/js/angular.min.js">${null}</script>
+	<tiles:importAttribute name="scripts" toName="includedScripts"
+		ignore="true" />
+	<c:if test="${not empty includedScripts}">
+		<c:forEach items="${includedScripts}" var="s">
+			<script src="${base_url}/${s}">
+			${null}
+			</script>
+		</c:forEach>
+	</c:if>
+
+	<tiles:importAttribute name="script" toName="includedScript"
+		ignore="true" />
+	<c:if test="${not empty includedScript}">
+		<script src="${base_url}/${includedScript}">
+			${null}
+		</script>
+	</c:if>
 </body>
-</html>
+	</html>
+</jsp:root>

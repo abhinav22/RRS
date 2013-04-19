@@ -1,4 +1,4 @@
-<div class="footer" xmlns:c="http://java.sun.com/jsp/jstl/core"
+<footer class="footer" xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:spring="http://www.springframework.org/tags"
@@ -7,21 +7,24 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 	<spring:url value="/" var="home" />
-	<p>
-		<strong>Company 2013</strong> 
-		<c:out value="     "/>
-		<span id="language"><spring:message
-				code="global_language" /> <c:out value=": " /> <util:language
-				label="English" locale="en" /> </span>
-		<!-- <util:theme /> -->
 
-		<spring:url value="/resources/img/roo_logo.png" var="logo" />
-		<spring:message code="global_sponsored" htmlEscape="false"
-			var="sponsored" />
-		<span> <a href="http://springsource.com"
-			title="${fn:escapeXml(sponsored)}"> <img align="right"
-				alt="${fn:escapeXml(sponsored)}" src="${logo}" />
-		</a>
-		</span>
-	</p>
-</div>
+	<div class="container-narrow">
+		<p>
+			<strong>Company 2013</strong>
+			<c:out value="     " />
+			<span id="language"><spring:message code="global_language" />
+				<c:out value=": " /> <util:language label="English" locale="en" />
+			</span>
+			<!-- <util:theme /> -->
+
+			<spring:url value="/resources/img/roo_logo.png" var="logo" />
+			<spring:message code="global_sponsored" htmlEscape="false"
+				var="sponsored" />
+			<span> <a href="http://springsource.com"
+				title="${fn:escapeXml(sponsored)}"> <img align="right"
+					alt="${fn:escapeXml(sponsored)}" src="${logo}" />
+			</a>
+			</span>
+		</p>
+	</div>
+</footer>

@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
-	<definition extends="default" name="user/home">	
+
+	<definition name="home" extends="default">
+		<put-attribute name="sidebar" value="/WEB-INF/views/user/sidebar.jspx" />
+	</definition>
+
+	<definition extends="home" name="user/home">
 		<put-attribute name="body" value="/WEB-INF/views/user/home.jspx" />
 	</definition>
-	
-	<definition extends="default" name="user/invite">
-		<put-attribute name="pageTitle" value="Invite Friends to Join RRS"></put-attribute>
+
+	<definition extends="home" name="user/invite">
+		<!-- <put-attribute name="pageTitle" value="Invite Friends to Join RRS"></put-attribute> -->
 		<put-attribute name="body" value="/WEB-INF/views/user/invite.jspx" />
 	</definition>
-	
-	<definition extends="default" name="user/setname">
-		<put-attribute name="pageTitle" value="Setup Name"/>
+
+	<definition extends="home" name="user/setname">
+		<!-- <put-attribute name="pageTitle" value="Setup Name"/> -->
 		<put-attribute name="body" value="/WEB-INF/views/user/setname.jspx" />
 	</definition>
-	
-	<definition extends="default" name="user/setemail">
-		<put-attribute name="pageTitle" value="Setup Another Email"/>
+
+	<definition extends="home" name="user/setemail">
+		<!-- <put-attribute name="pageTitle" value="Setup Another Email"/> -->
 		<put-attribute name="body" value="/WEB-INF/views/user/setemail.jspx" />
 	</definition>
-	
-	<definition extends="default" name="user/setlink">
-		<put-attribute name="pageTitle" value="Add A Social Network Link"/>
+
+	<definition extends="home" name="user/setlink">
+		<!-- <put-attribute name="pageTitle" value="Add A Social Network Link"/> -->
 		<put-attribute name="body" value="/WEB-INF/views/user/setlink.jspx" />
 	</definition>
-	
-	<definition extends="default" name="user/setphone">
-		<put-attribute name="pageTitle" value="Add A Phone Number"/>
+
+	<definition extends="home" name="user/setphone">
+		<!-- <put-attribute name="pageTitle" value="Add A Phone Number"/> -->
 		<put-attribute name="body" value="/WEB-INF/views/user/setphone.jspx" />
 	</definition>
+
+	<definition extends="home" name="user/setavatar">
+		<!-- <put-attribute name="pageTitle" value="Add A Picture"/> -->
+		<put-attribute name="body" value="/WEB-INF/views/user/setavatar.jspx" />
+	</definition>
+
+
+	<definition extends="home" name="user/setpassword">
+		<!-- <put-attribute name="pageTitle" value="Set "/> -->
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/setpassword.jspx" />
+	</definition>
 	
+	<definition extends="default" name="user/profile">
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/profile.jspx" />
+	</definition>
 </tiles-definitions>

@@ -9,8 +9,8 @@
 
 	<!-- The controllers are autodetected POJOs labeled with the @Controller 
 		annotation. -->
-	<context:component-scan base-package="com.example.rrs.web"
-		use-default-filters="true">
+	<context:component-scan base-package="com.example.rrs"
+		use-default-filters="false">
 		<context:include-filter expression="org.springframework.stereotype.Controller"
 			type="annotation" />
 	</context:component-scan>
@@ -26,6 +26,19 @@
 				</constructor-arg>
 			</bean>
 		</mvc:argument-resolvers>
+
+<!-- 		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>image/jpeg</value>
+						<value>image/png</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters> -->
+
 	</mvc:annotation-driven>
 
 	<bean class="com.example.rrs.web.ApplicationConversionServiceFactoryBean"
@@ -51,6 +64,8 @@
 		controller -->
 	<!-- <mvc:view-controller path="/login" /> <mvc:view-controller path="/" 
 		view-name="index" /> -->
+		
+	<mvc:view-controller path="/user/profile" view-name="user/profile" />
 	<mvc:view-controller path="/registerOk" view-name="registerOk" />
 	<mvc:view-controller path="/activateFailed"
 		view-name="activateFailed" />

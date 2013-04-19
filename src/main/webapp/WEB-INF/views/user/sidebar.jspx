@@ -3,65 +3,43 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:form="http://www.springframework.org/tags/form"
 	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-	class="well well-small" style="max-width: 340px; padding: 8px 0;">
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0" class="span3">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<spring:url value="/resoruces/img/holder64.png" var="img_url" />
-	<ul class="nav nav-list">
-	<li>
-	<div class="block-level">
-		<img src="${img_url}" width="200" height="200" class="img-polaroid" />
+
+	<spring:url value="/" var="base_url" />
+	<div class="row-fluid" style="margin: 5px 0 !important;">
+		<div class="span4" style="min-height: 50px !important;">
+			<img src="${base_url}/api/pic-${user.avatar.id}" width="48"
+				height="48" class="img-polaroid" />
+		</div>
+		<div class="span8">
+			<strong>${user.name}</strong><br />
+		</div>
 	</div>
-	<address>
-		<strong>${user.name}</strong> <br />
-		<c:if test="${not empty user.emails }">
-			<strong>EMAIL</strong>
-			<br />
-			<ul class="unstyled">
-				<c:forEach var="e" items="${user.emails}">
-					<li><a href="mailto:${e.value.content}">${e.value.content}</a></li>
-				</c:forEach>
-			</ul>
-		</c:if>
-		<c:if test="${not empty user.phones }">
-			<strong>P</strong>
-			<br />
-			<ul class="unstyled">
-				<c:forEach var="e" items="${user.phones}">
-					<li>${e.value.content}</li>
-				</c:forEach>
-			</ul>
-		</c:if>
-		<c:if test="${not empty user.links }">
-			<strong>L</strong>
-			<br />
-			<ul class="unstyled">
-				<c:forEach var="e" items="${user.links}">
-					<li><a href="${e.value.content}">${e.value.content}</a></li>
-				</c:forEach>
-			</ul>
-		</c:if>
-	</address>
-	</li>
-		<li class="nav-header">Message Box</li>
-		<spring:url value="/user/messages" var="messages_url"></spring:url>
-		<spring:url value="/user/invitations" var="invitations_url"></spring:url>
-		<li class="acitve"><div>
-				<span><a href="${messages_url} ">Messages</a> </span><span
-					class="pull-right badge">4</span>
-			</div></li>
-		<li><div>
-				<a href="${invitation_url} ">Invitations<span class="badge">3</span></a>
-			</div></li>
-		<li class="divider"></li>
-		<spring:url value="/user/profile" var="profile_url"></spring:url>
-		<spring:url value="/user/password" var="password_url"></spring:url>
-		<li><div>
-				<a href="${profile_url}">Profile</a>
-			</div></li>
-		<li><div>
-				<a href="${password_url}">Change Password</a>
-			</div></li>
-	</ul>
+
+	<div class="row-fluid" style="margin: 5px 0 !important;">
+		<div class="span3">
+			<div class="num-heading">130</div>
+		</div>
+		<div class="span9">You have 130 connections.</div>
+	</div>
+	<hr />
+	<div class="row-fluid">
+		<div class="span3">
+			<div class="num-heading">13</div>
+		</div>
+		<div class="span9">You had been viewed 2 times in the past 7
+			days.</div>
+	</div>
+	<hr />
+	<div class="row-fluid">
+		<div class="span3">
+			<div class="num-heading">19</div>
+		</div>
+		<div class="span9">You had bean searched 2 times in the past 7
+			days.</div>
+	</div>
+
+	<hr />
 </div>

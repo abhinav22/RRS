@@ -10,7 +10,7 @@
 		<form-login login-processing-url="/resources/j_spring_security_check"
 			login-page="/login" authentication-failure-url="/login?login_error=t"
 			default-target-url="/user/home" always-use-default-target="true" />
-		<logout logout-url="/resources/j_spring_security_logout" />
+		<logout logout-url="/resources/j_spring_security_logout" logout-success-url="/login"/>
 		<!-- Configure these elements to secure URIs in your application -->
 		<intercept-url pattern="/user/**" access="isAuthenticated()" />
 		<intercept-url pattern="/**" access="permitAll" />

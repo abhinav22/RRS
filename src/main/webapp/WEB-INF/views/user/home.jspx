@@ -4,19 +4,13 @@
 	xmlns:form="http://www.springframework.org/tags/form"
 	xmlns:spring="http://www.springframework.org/tags"
 	xmlns:tiles="http://tiles.apache.org/tags-tiles"
-	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-	class="row-fluid">
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0" class="offset1 span6">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<div class="row-fluid">
-		<div class="span3">
-			<tiles:insertTemplate template="/WEB-INF/views/user/sidebar.jspx" />
-		</div>
-		<div class="span1"></div>
-		<div class="span8">
-			<div class="tabs">
-				
-			</div>
-		</div>
+
+	<div class="tabs">
+	
+	Actvites
 	</div>
+
 </div>

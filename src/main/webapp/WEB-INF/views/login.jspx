@@ -36,7 +36,7 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<div class="controls"></div>
+				<div class="controls"><div class="btn">Test<b class="icon-plus-sign"/></div></div>
 			</div>
 		</fieldset>
 		<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION.message}">

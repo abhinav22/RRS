@@ -1,33 +1,44 @@
 package com.example.rrs.web;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.rrs.Constants;
 import com.example.rrs.model.EmailAddress;
 import com.example.rrs.model.Link;
 import com.example.rrs.model.Phone;
+import com.example.rrs.model.Picture;
 import com.example.rrs.model.SalutationLine;
 import com.example.rrs.model.User;
+import com.example.rrs.repository.PictureRepository;
 import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.service.MailService;
 import com.example.rrs.service.UserService;
@@ -43,10 +54,25 @@ public class UserController {
 	UserService userService;
 
 	@Inject
+	PictureRepository pictureRepository;
+
+	@Inject
 	MailService emailService;
+
+	@Inject
+	PasswordEncoder passwordEncoder;
 
 	@Value("${app.baseUrl}")
 	String appUrl;
+
+	@InitBinder
+	public void initDataBinder(WebDataBinder dataBinder, WebRequest request) {
+		User user = SecurityUtils.getCurrentUser();
+		if (log.isDebugEnabled()) {
+			log.debug("call @initDataBinder, put user in request scope");
+		}
+		request.setAttribute("user", user, RequestAttributes.SCOPE_REQUEST);
+	}
 
 	@RequestMapping(value = { "/home" }, method = RequestMethod.GET, produces = { "text/html" })
 	public String home(Model uiModel, RedirectAttributes atts) {
@@ -60,6 +86,12 @@ public class UserController {
 			return "redirect:/user/setname";
 		}
 
+		if (!avatarIsSet(user)) {
+			atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+					"Choose a personalized picture as avatar");
+			return "redirect:/user/setavatar";
+		}
+
 		if (!alterEmailIsSet(user)) {
 			atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
 					" You can setup another email as an alternavite!");
@@ -71,14 +103,13 @@ public class UserController {
 					" Add a social link to your profile now !");
 			return "redirect:/user/setlink";
 		}
-		
+
 		if (!phoneIsSet(user)) {
 			atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
 					" Add a phone number !");
 			return "redirect:/user/setphone";
 		}
 
-		uiModel.addAttribute("user", user);
 		return "user/home";
 	}
 
@@ -89,8 +120,16 @@ public class UserController {
 
 	@RequestMapping(value = { "/setname" }, method = RequestMethod.GET, produces = { "text/html" })
 	public String setupName(Model uiModel) {
-		populateNameForm(uiModel, new NameForm());
-
+		if(log.isDebugEnabled()){
+			log.debug("call setupName....");
+		}
+		User user = SecurityUtils.getCurrentUser();
+		
+		NameForm nameForm=new NameForm();
+		nameForm.setFirstName(user.getFirstName());
+		nameForm.setLastName(user.getLastName());
+		nameForm.setSalutationLine(user.getSalutationLine());
+		populateNameForm(uiModel, nameForm);
 		return "user/setname";
 	}
 
@@ -317,8 +356,8 @@ public class UserController {
 	}
 
 	private void populatePhoneForm(Model uiModel, PhoneForm phoneForm) {
-		uiModel.addAttribute("phoneTypes", new String[] { "Google", "Twitter",
-				"Facebook", "Other" });
+		uiModel.addAttribute("phoneTypes", new String[] { "Home", "Office",
+				"Other" });
 		uiModel.addAttribute("phoneForm", phoneForm);
 	}
 
@@ -334,4 +373,130 @@ public class UserController {
 		return true;
 	}
 
+	@RequestMapping(value = { "/setavatar" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String setupAvatar(Model uiModel) {
+		if (log.isDebugEnabled()) {
+			log.debug("call @setupAvatar:");
+		}
+		uiModel.addAttribute("force execute this method.");
+		return "user/setavatar";
+	}
+
+	@RequestMapping(value = { "/setavatar" }, method = RequestMethod.POST, produces = { "text/html" })
+	public String saveAvatar(@NotNull @RequestParam("file") MultipartFile file,
+			RedirectAttributes atts) {
+		if (log.isDebugEnabled()) {
+			log.debug("call @saveAvatar:");
+		}
+
+		if (file.isEmpty()) {
+			return "user/setavatar";
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		Picture avatar = new Picture();
+
+		avatar.setName(file.getName());
+		try {
+			avatar.setContent(file.getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		avatar.setSize(file.getSize());
+		avatar.setMimeType(file.getContentType());
+
+		avatar = pictureRepository.save(avatar);
+
+		if (log.isDebugEnabled()) {
+			log.debug("avatar id @" + avatar.getId());
+		}
+
+		user.setAvatar(avatar);
+
+		userService.saveUser(user);
+
+		SecurityContextHolder.getContext().setAuthentication(
+				SecurityContextHolder.getContext().getAuthentication());
+
+		atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+				"avatar is set successfully");
+
+		return "redirect:/user/home";
+	}
+
+	// private void populateAvatarForm(Model uiModel, AvatarForm avatarForm) {
+	// uiModel.addAttribute("avatarTypes", new String[] { "Google", "Twitter",
+	// "Facebook", "Other" });
+	// uiModel.addAttribute("avatarForm", avatarForm);
+	// }
+
+	private boolean avatarIsSet(User user) {
+		if (log.isDebugEnabled()) {
+			log.debug("call @avatarIsSet");
+		}
+
+		if (user.getAvatar() == null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@RequestMapping(value = { "/setpassword" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String setupPassword(Model uiModel) {
+		populatePasswordForm(uiModel, new PasswordForm());
+		return "user/setpassword";
+	}
+
+	@RequestMapping(value = { "/setpassword" }, method = RequestMethod.POST, produces = { "text/html" })
+	public String savePassword(@Valid PasswordForm passwordForm,
+			BindingResult bindingResult, Model uiModel, HttpSession session,
+			RedirectAttributes atts) {
+		if (log.isDebugEnabled()) {
+			log.debug("call @savePassword to set up url:" + passwordForm);
+		}
+
+		if (bindingResult.hasErrors()) {
+			populatePasswordForm(uiModel, passwordForm);
+			return "user/setpassword";
+		}
+
+		if (!passwordForm.getPassword()
+				.equals(passwordForm.getRepeatPassword())) {
+			bindingResult.rejectValue("password", "password mismatch",
+					"password mismatch");
+			passwordForm.setPassword(null);
+			passwordForm.setRepeatPassword(null);
+			populatePasswordForm(uiModel, passwordForm);
+			return "user/setpassword";
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		String encrypted = passwordEncoder.encodePassword(
+				passwordForm.getPassword(), user.salt());
+		if (log.isDebugEnabled()) {
+			log.debug("new encoded password@" + encrypted);
+		}
+
+		user.setPassword(encrypted);
+
+		userService.saveUser(user);
+
+		SecurityContextHolder.getContext().setAuthentication(
+				SecurityContextHolder.getContext().getAuthentication());
+
+		atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+				"New password is set successfully, please login");
+
+		// session.invalidate();
+
+		return "redirect:/resources/j_spring_security_logout";
+	}
+
+	private void populatePasswordForm(Model uiModel, PasswordForm passwordForm) {
+		uiModel.addAttribute("passwordForm", passwordForm);
+	}
 }

@@ -20,6 +20,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
@@ -66,6 +67,9 @@ public class User implements UserDetails, Serializable {
 	private String email;
 
 	private String confirmationCode;
+	
+	@DBRef
+	private Picture avatar;
 
 	private Map<String, Link> links = new HashMap<String, Link>();
 	
@@ -287,5 +291,13 @@ public class User implements UserDetails, Serializable {
 
 	public void removePhone(String num) {
 		this.phones.remove(num);
+	}
+
+	public Picture getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Picture avatar) {
+		this.avatar = avatar;
 	}
 }
