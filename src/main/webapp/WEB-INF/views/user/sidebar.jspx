@@ -7,11 +7,17 @@
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 
-	<spring:url value="/" var="base_url" />
+	<c:url value="/" var="base_url" />
 	<div class="row-fluid" style="margin: 5px 0 !important;">
 		<div class="span4" style="min-height: 50px !important;">
-			<img src="${base_url}/api/pic-${user.avatar.id}" width="48"
-				height="48" class="img-polaroid" />
+			<c:if test="${empty user.avatarUrl}">
+				<img src="${base_url}resources/js/holder.js/64x64" width="48" height="48"
+					class="img-polaroid" />
+			</c:if>
+			<c:if test="${not empty user.avatarUrl}">
+				<img src="${base_url}${user.avatarUrl}" width="48" height="48"
+					class="img-polaroid" />
+			</c:if>
 		</div>
 		<div class="span8">
 			<strong>${user.name}</strong><br />

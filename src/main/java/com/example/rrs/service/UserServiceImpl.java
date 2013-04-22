@@ -2,26 +2,38 @@ package com.example.rrs.service;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.rrs.model.Avatar;
+import com.example.rrs.model.QAvatar;
 import com.example.rrs.model.QUser;
 import com.example.rrs.model.User;
+import com.example.rrs.repository.AvatarRepository;
 import com.example.rrs.repository.UserRepository;
 import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.web.SearchForm;
+import com.mysema.query.support.Expressions;
 import com.mysema.query.types.Predicate;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+	private static final Logger log = LoggerFactory
+			.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	UserRepository userRepository;
 
+	@Inject
+	AvatarRepository avatarRepository;
 
 	@Override
 	public long countAllUsers() {
@@ -80,6 +92,36 @@ public class UserServiceImpl implements UserService {
 		Predicate predicate = null;
 		// to do...
 		return userRepository.findAll(predicate, pageable);
+	}
+
+	@Override
+	public Avatar findUserAvatar(User _user) {
+		if (log.isDebugEnabled()) {
+			log.debug("find user avatar by user@" + _user);
+		}
+
+		List<Avatar> all = (List<Avatar>) avatarRepository.findAll();
+
+		if (log.isDebugEnabled()) {
+			log.debug("all  size @" + all.size());
+			for (Avatar a : all) {
+				log.debug(" avatar @ id=" + a.getId() + ", user id="
+						+ a.getUser().getId());
+			}
+		}
+
+		List<Avatar> avatars = (List<Avatar>) avatarRepository
+				.findAll(QAvatar.avatar.user.eq(_user));
+
+		if (log.isDebugEnabled()) {
+			log.debug("avatars size @" + avatars.size());
+		}
+
+		if (!avatars.isEmpty()) {
+			return avatars.get(0);
+		}
+
+		return null;
 	}
 
 }

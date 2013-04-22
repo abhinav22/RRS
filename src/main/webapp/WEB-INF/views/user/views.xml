@@ -50,5 +50,6 @@
 	<definition extends="default" name="user/profile">
 		<put-attribute name="body"
 			value="/WEB-INF/views/user/profile.jspx" />
+		<put-attribute name="script" value="/resources/js/ProfileCtrl.js" />
 	</definition>
 </tiles-definitions>

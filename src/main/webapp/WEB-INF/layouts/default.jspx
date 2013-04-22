@@ -60,7 +60,7 @@
 <link rel="shortcut icon" href="${favicon_png_url}" />
 </head>
 
-<body data-base-url="${base_url}" ng-app>
+<body data-base-url="${base_url}" ng-app='MyApp' ng-controller="AppCtrl">
 
 	<tiles:insertAttribute name="header" ignore="true" />
 
@@ -106,8 +106,10 @@
 	</script>
 	<script type="text/javascript">
 	var base_url="${base_url}";
-	var user_id="${pageContext.request.userPrincipal.id}";
+	var user_id="${sessionScope['SPRING_SECURITY_CONTEXT'].authentication.principal.name}";
+
 	</script>
+	
 	<script type="text/javascript" src="${base_url}/resources/js/angular.min.js">${null}</script>
 	<tiles:importAttribute name="scripts" toName="includedScripts"
 		ignore="true" />

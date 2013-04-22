@@ -2,10 +2,11 @@ package com.example.rrs.model;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Temporal;
@@ -20,14 +21,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.example.rrs.web.LinkForm;
 
 @Document
 @Persistent
@@ -67,37 +65,36 @@ public class User implements UserDetails, Serializable {
 	private String email;
 
 	private String confirmationCode;
-	
-	@DBRef
-	private Picture avatar;
 
-	private Map<String, Link> links = new HashMap<String, Link>();
-	
-	private Map<String, Phone> phones = new HashMap<String, Phone>();
+	private String avatarUrl;
 
-	private Map<String, EmailAddress> emails = new HashMap<String, EmailAddress>();
+	private List<Link> links = new ArrayList<Link>();
 
-	public Map<String, Link> getLinks() {
+	private List<Phone> phones = new ArrayList<Phone>();
+
+	private List<EmailAddress> emails = new ArrayList<EmailAddress>();
+
+	public List<Link> getLinks() {
 		return links;
 	}
 
-	public void setLinks(Map<String, Link> urls) {
-		this.links = urls;
+	public void setLinks(List<Link> links) {
+		this.links = links;
 	}
 
-	public Map<String, Phone> getPhones() {
+	public List<Phone> getPhones() {
 		return phones;
 	}
 
-	public void setPhones(Map<String, Phone> phones) {
+	public void setPhones(List<Phone> phones) {
 		this.phones = phones;
 	}
 
-	public Map<String, EmailAddress> getEmails() {
+	public List<EmailAddress> getEmails() {
 		return emails;
 	}
 
-	public void setEmails(Map<String, EmailAddress> emails) {
+	public void setEmails(List<EmailAddress> emails) {
 		this.emails = emails;
 	}
 
@@ -268,36 +265,36 @@ public class User implements UserDetails, Serializable {
 		return sdf.format(this.getCreationDate());
 	}
 
-	public void addLink(String url, Link link) {
-		this.links.put(url, link);
+	public void addLink(Link link) {
+		this.links.add(link);
 	}
 
 	public void removeLink(String url) {
 		this.links.remove(url);
 	}
 
-	public void addEmail(String email, EmailAddress e) {
-		this.emails.put(email, e);
+	public void addEmail(EmailAddress e) {
+		this.emails.add(e);
 	}
 
 	public void removeEmail(String url) {
 		this.emails.remove(email);
 	}
 
-	
-	public void addPhone(String num, Phone e) {
-		this.phones.put(num, e);
+	public void addPhone(Phone phone) {
+		this.phones.add(phone);
 	}
 
 	public void removePhone(String num) {
 		this.phones.remove(num);
 	}
 
-	public Picture getAvatar() {
-		return avatar;
+	public String getAvatarUrl() {
+		return avatarUrl;
 	}
 
-	public void setAvatar(Picture avatar) {
-		this.avatar = avatar;
+	public void setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
 	}
+
 }

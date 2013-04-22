@@ -1,13 +1,12 @@
 package com.example.rrs.api;
 
 import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +17,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.rrs.model.Picture;
+import com.example.rrs.model.Avatar;
 import com.example.rrs.model.User;
+import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.service.UserService;
 
 @Controller
-public class UserResource extends BaseApiController {
+@RequestMapping("/api/user")
+public class UserResource extends RestApiResource {
 	private static final Logger log = LoggerFactory
 			.getLogger(UserResource.class);
 
 	@Inject
 	UserService userService;
 
-	@RequestMapping(value = "/user/profile-{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/profile-{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<User> readProfile(@PathVariable("id") String id,
 			HttpServletResponse response) {
@@ -49,12 +50,80 @@ public class UserResource extends BaseApiController {
 		return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 	}
 
-	@RequestMapping(value = "/user/profile-{id}", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/profile-{id}", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	public ResponseEntity<User> saveProfile(@RequestBody User user,
 			HttpServletResponse response) {
 		userService.saveUser(user);
 		return new ResponseEntity<User>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/me", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ResponseBody
+	public ResponseEntity<User> readMyProfile() {
+		if (log.isDebugEnabled()) {
+			log.debug("call @readMyProfile:");
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		if (log.isDebugEnabled()) {
+			log.debug("current user@" + user.getId());
+		}
+
+		if (user != null) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			return new ResponseEntity<User>(user, headers, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+	}
+
+	@RequestMapping(value = "/me", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	@ResponseBody
+	public ResponseEntity<User> saveMyProfile(@RequestBody User user,
+			HttpServletResponse response) {
+		User _user = SecurityUtils.getCurrentUser();
+
+		BeanUtils.copyProperties(user, _user, new String[] { "id" });
+		userService.saveUser(_user);
+		return new ResponseEntity<User>(HttpStatus.OK);
+	}
+
+	@RequestMapping("/{id}/avatar")
+	@ResponseBody
+	public ResponseEntity<byte[]> readPicture(@PathVariable("id") String id,
+			HttpServletResponse response) {
+		if (log.isDebugEnabled()) {
+			log.debug("call @readPicture from user:" + id);
+		}
+
+		User user = userService.findUser(id);
+
+		if (user == null) {
+			if (log.isDebugEnabled()) {
+				log.debug("user is not found");
+			}
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+
+		Avatar data = userService.findUserAvatar(user);
+		
+		if(log.isDebugEnabled()){
+			log.debug("found data@" + data);
+		}
+
+		if (data != null) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentLength(data.getSize());
+			headers.setContentType(MediaType.valueOf(data.getMimeType()));
+
+			return new ResponseEntity<byte[]>(data.getContent(), headers,
+					HttpStatus.OK);
+		}
+
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 
 }

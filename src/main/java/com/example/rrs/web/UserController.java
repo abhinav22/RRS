@@ -25,20 +25,19 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.rrs.Constants;
+import com.example.rrs.model.Avatar;
 import com.example.rrs.model.EmailAddress;
 import com.example.rrs.model.Link;
 import com.example.rrs.model.Phone;
-import com.example.rrs.model.Picture;
 import com.example.rrs.model.SalutationLine;
 import com.example.rrs.model.User;
-import com.example.rrs.repository.PictureRepository;
+import com.example.rrs.repository.AvatarRepository;
 import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.service.MailService;
 import com.example.rrs.service.UserService;
@@ -54,7 +53,7 @@ public class UserController {
 	UserService userService;
 
 	@Inject
-	PictureRepository pictureRepository;
+	AvatarRepository avatarRepository;
 
 	@Inject
 	MailService emailService;
@@ -120,12 +119,12 @@ public class UserController {
 
 	@RequestMapping(value = { "/setname" }, method = RequestMethod.GET, produces = { "text/html" })
 	public String setupName(Model uiModel) {
-		if(log.isDebugEnabled()){
+		if (log.isDebugEnabled()) {
 			log.debug("call setupName....");
 		}
 		User user = SecurityUtils.getCurrentUser();
-		
-		NameForm nameForm=new NameForm();
+
+		NameForm nameForm = new NameForm();
 		nameForm.setFirstName(user.getFirstName());
 		nameForm.setLastName(user.getLastName());
 		nameForm.setSalutationLine(user.getSalutationLine());
@@ -185,9 +184,7 @@ public class UserController {
 			Model uiModel, RedirectAttributes atts) {
 		User currentUser = SecurityUtils.getCurrentUser();
 
-		if (!currentUser.getEmails().containsKey(email)) {
-
-			EmailAddress emailAddress = currentUser.getEmails().get(email);
+		for (EmailAddress emailAddress : currentUser.getEmails()) {
 			if (confirmationCode.equals(emailAddress.getConfirmationCode())
 					&& !emailAddress.isVerified()) {
 
@@ -195,7 +192,7 @@ public class UserController {
 				emailAddress.setVerified(true);
 
 				currentUser.removeEmail(email);
-				currentUser.addEmail(email, emailAddress);
+				currentUser.addEmail(emailAddress);
 
 				userService.saveUser(currentUser);
 
@@ -233,7 +230,7 @@ public class UserController {
 
 		BeanUtils.copyProperties(emailForm, email);
 
-		user.addEmail(emailForm.getContent(), email);
+		user.addEmail(email);
 
 		String confirmationCode = KeyGenerators.string().generateKey();
 		email.setConfirmationCode(confirmationCode);
@@ -289,8 +286,7 @@ public class UserController {
 
 		User user = SecurityUtils.getCurrentUser();
 
-		user.addLink(linkForm.getContent(), new Link(linkForm.getType(),
-				linkForm.getContent()));
+		user.addLink(new Link(linkForm.getType(), linkForm.getContent()));
 
 		userService.saveUser(user);
 
@@ -341,7 +337,7 @@ public class UserController {
 
 		User user = SecurityUtils.getCurrentUser();
 
-		user.addPhone(phoneForm.getContent(), new Phone(phoneForm.getType(),
+		user.addPhone(new Phone(phoneForm.getType(),
 				phoneForm.getContent()));
 
 		userService.saveUser(user);
@@ -378,24 +374,34 @@ public class UserController {
 		if (log.isDebugEnabled()) {
 			log.debug("call @setupAvatar:");
 		}
-		uiModel.addAttribute("force execute this method.");
+		populateAvatarForm(uiModel, new AvatarForm());
 		return "user/setavatar";
 	}
 
 	@RequestMapping(value = { "/setavatar" }, method = RequestMethod.POST, produces = { "text/html" })
-	public String saveAvatar(@NotNull @RequestParam("file") MultipartFile file,
+	public String saveAvatar(@NotNull AvatarForm avatarForm, Model uiModel,
 			RedirectAttributes atts) {
 		if (log.isDebugEnabled()) {
-			log.debug("call @saveAvatar:");
+			log.debug("call @saveAvatar @@@");
 		}
 
+		MultipartFile file = avatarForm.getFile();
 		if (file.isEmpty()) {
+			if (log.isDebugEnabled()) {
+				log.debug("file field is empty , return  to upload page.");
+			}
 			return "user/setavatar";
 		}
 
 		User user = SecurityUtils.getCurrentUser();
 
-		Picture avatar = new Picture();
+		Avatar avatar = userService.findUserAvatar(user);
+
+		if (avatar == null) {
+			populateAvatarForm(uiModel, new AvatarForm());
+			log.debug("call new a avatar orbject @@@");
+			avatar = new Avatar();
+		}
 
 		avatar.setName(file.getName());
 		try {
@@ -407,15 +413,16 @@ public class UserController {
 		avatar.setSize(file.getSize());
 		avatar.setMimeType(file.getContentType());
 
-		avatar = pictureRepository.save(avatar);
+		avatar.setUser(user);
 
-		if (log.isDebugEnabled()) {
-			log.debug("avatar id @" + avatar.getId());
-		}
+		avatar = avatarRepository.save(avatar);
 
-		user.setAvatar(avatar);
+		log.debug("avatar id @ " + avatar.getId() + " of user @"
+				+ avatar.getUser());
 
-		userService.saveUser(user);
+		user.setAvatarUrl("api/user/" + user.getId() + "/avatar");
+
+		user = userService.saveUser(user);
 
 		SecurityContextHolder.getContext().setAuthentication(
 				SecurityContextHolder.getContext().getAuthentication());
@@ -426,18 +433,16 @@ public class UserController {
 		return "redirect:/user/home";
 	}
 
-	// private void populateAvatarForm(Model uiModel, AvatarForm avatarForm) {
-	// uiModel.addAttribute("avatarTypes", new String[] { "Google", "Twitter",
-	// "Facebook", "Other" });
-	// uiModel.addAttribute("avatarForm", avatarForm);
-	// }
+	private void populateAvatarForm(Model uiModel, AvatarForm avatarForm) {
+		uiModel.addAttribute("avatarForm", avatarForm);
+	}
 
 	private boolean avatarIsSet(User user) {
 		if (log.isDebugEnabled()) {
 			log.debug("call @avatarIsSet");
 		}
 
-		if (user.getAvatar() == null) {
+		if (user.getAvatarUrl() == null || user.getAvatarUrl().length() == 0) {
 			return false;
 		}
 

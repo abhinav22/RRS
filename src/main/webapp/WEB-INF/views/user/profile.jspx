@@ -3,16 +3,21 @@
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-	class="offset1 span10">
+	class="offset1 span10" ng-controller="ProfileCtrl">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<div class="alert alert-success">
-		Click the Edit button to edit your profile.
-		<button class="btn">Edit</button>
+	<div class="alert" ng-class="{'alert-error':isDirty, 'alert-info':!isDirty}">
+		<span ng-show="!isEditable">Click the Edit button to edit your profile.</span>
+		<span ng-show="isEditable">Do not forget to save your change.</span>
+
+		<button class="btn btn-success btn-large" ng-show="!isEditable" ng-click="markEditable()">Edit</button>${' '}
+		<button class="btn btn-info btn-large" ng-show="isDirty" ng-click="save()">Save Change</button>${' '}
+		<button class="btn btn-large" ng-show="isEditable" ng-click="reset()">Cancel</button>
 	</div>
+	<c:url value="/" var="base_url"/>
 	<div class="row-fluid">
 		<div class="span4">
-			<img id="avatar" src="{{}}" width="150" height="150" />
+			<img id="avatar" src="${base_url}api/user/{{user.id}}/avatar" width="150" height="150" class="img-polaroid" />
 		</div>
 		<div class="span8">
 			<address>
@@ -21,30 +26,29 @@
 				<p>{{user.lastName}}</p>
 				<p>{{user.salutationLine}}</p>
 			</address>
-			<button class="btn" ng-show="'isEditable'" ng-click="showNameDialog">Edit
+			<button class="btn" ng-show="isEditable" ng-click="showNameDialog">Edit
 				Name</button>
 		</div>
 	</div>
 	<div class="row-fluid">
-
 		<h3>EMAIL</h3>
 		<table class="table">
 			<thead>
 				<tr>
-					<th></th>
-					<th>TYPE</th>
+					<th width="25px"></th>
+					<th  width="125px">TYPE</th>
 					<th>EMAIL</th>
 					<th>VERIFED</th>
-					<th></th>
+					<th width="50px"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="'email in user.emails'">
+				<tr ng-repeat="email in user.emails">
 					<th>{{$index+1}}</th>
-					<td>{{email.value.content}}</td>
-					<td>{{email.value.content}}</td>
-					<td>{{email.value.content}}</td>
-					<td><button class="btn" ng-show="'isEditable'" ng-click="delEmail($index)">Delete</button></td>
+					<td>{{email.type}}</td>
+					<td>{{email.content}}</td>
+					<td>{{email.verified}}</td>
+					<td><a ng-show="isEditable" ng-click="delEmail($index)"><b class="icon-remove-sign">${null}</b></a></td>
 				</tr>
 			</tbody>
 		</table>
@@ -53,18 +57,18 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th></th>
-					<th>TYPE</th>
+					<th  width="25px"></th>
+					<th  width="125px">TYPE</th>
 					<th>URL</th>
-					<th></th>
+					<th width="50px"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="'email in user.links'">
+				<tr ng-repeat="link in user.links">
 					<th>{{$index+1}}</th>
-					<td>{{email.value.content}}</td>
-					<td>{{email.value.content}}</td>
-					<td><button class="btn" ng-show="'isEditable'" ng-click="delLink($index)">Delete</button></td>
+					<td>{{link.type}}</td>
+					<td>{{link.content}}</td>
+					<td><a ng-show="isEditable" ng-click="delLink($index)"><b class="icon-remove-sign">${null}</b></a></td>
 				</tr>
 			</tbody>
 		</table>
@@ -72,18 +76,18 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th></th>
-					<th>TYPE</th>
+					<th width="25px"></th>
+					<th width="125px">TYPE</th>
 					<th>PHONE NUMBER</th>
-					<th></th>
+					<th width="50px"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="'phone in user.phones'">
+				<tr ng-repeat="phone in user.phones">
 					<th>{{$index+1}}</th>
-					<td>{{phone.value.content}}</td>
-					<td>{{phone.value.content}}</td>
-					<td><button class="btn" ng-show="'isEditable'" ng-click="delPhone($index)">Delete</button></td>
+					<td>{{phone.type}}</td>
+					<td>{{phone.content}}</td>
+					<td><a ng-show="isEditable" ng-click="delPhone($index)"><b class="icon-remove-sign">${null}</b></a></td>
 				</tr>
 			</tbody>
 		</table>

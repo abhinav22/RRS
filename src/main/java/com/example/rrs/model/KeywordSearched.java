@@ -2,12 +2,16 @@ package com.example.rrs.model;
 
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Document
 public class KeywordSearched {
+	
+	@Id
+	private String id;
 
 	private String keyword;
 

@@ -2,6 +2,7 @@ package com.example.rrs.model;
 
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,6 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Document
 public class UserSearched {
+	
+	@Id
+	private String id;
 
 	@DBRef
 	private User user;
@@ -41,6 +45,14 @@ public class UserSearched {
 
 	public void setSearchedDate(Date searchedDate) {
 		this.searchedDate = searchedDate;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

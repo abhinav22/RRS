@@ -18,6 +18,7 @@
 		<spring.version>3.2.2.RELEASE</spring.version>
 		<spring-security.version>3.1.1.RELEASE</spring-security.version>
 		<org.cloudfoundry-version>0.8.2</org.cloudfoundry-version>
+		<mongo>2.10.1</mongo>
 	</properties>
 	<repositories>
 		<repository>
@@ -116,15 +117,15 @@
 		<!-- <dependency> <groupId>org.springframework.roo</groupId> <artifactId>org.springframework.roo.annotations</artifactId> 
 			<version>${roo.version}</version> <scope>provided</scope> </dependency> -->
 		<!-- Spring dependencies -->
-		
+
 		<!-- CloudFoundry -->
 		<dependency>
-  			<groupId>org.cloudfoundry</groupId>
-  			<artifactId>cloudfoundry-runtime</artifactId>
-  			<version>${org.cloudfoundry-version}</version>
+			<groupId>org.cloudfoundry</groupId>
+			<artifactId>cloudfoundry-runtime</artifactId>
+			<version>${org.cloudfoundry-version}</version>
 		</dependency>
 		<!-- Spring -->
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -198,6 +199,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb-log4j</artifactId>
+			<version>1.2.0.RELEASE</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>com.mysema.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
 			<version>${querydsl.version}</version>
@@ -210,6 +218,13 @@
 			<version>${querydsl.version}</version>
 		</dependency>
 
+
+		<!-- MongoDB -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongo}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -398,17 +413,27 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.12</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>
-		
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-		
+
 		<plugins>
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
@@ -673,8 +698,8 @@
 				<mail.debug>false</mail.debug>
 			</properties>
 		</profile>
-		
-		<!-- Profile for CloudFoundry.com , DOES NOT WORK NOW-->
+
+		<!-- Profile for CloudFoundry.com , DOES NOT WORK NOW -->
 		<profile>
 			<id>cloud</id>
 			<properties>
