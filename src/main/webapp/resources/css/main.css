@@ -21,15 +21,15 @@ body {
     border-radius: 999px;
     behavior: url(./PIE.htc);  */
 
-    width: 36px auto;
-    height: 36px;
+    width: 40px auto;
+    height: 40px;
     padding: 2px;
 
     background: #fff;
 /*     border: 2px solid #666;  */
     color: #666;
-    text-align: center;
+    text-align: right;
 
-    font: 32px Arial, sans-serif bold
+    font: 36px Arial, sans-serif bold
 }
 

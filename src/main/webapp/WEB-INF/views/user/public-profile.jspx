@@ -1,0 +1,60 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	ng-controller="PublicProfileCtrl">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<c:url value="/" var="base_url" />
+	<div class="span8">
+		<div class="row-fluid">
+			<div class="span6">
+				<img id="avatar" src="${base_url}resources/js/holder.js/200x200"
+					width="200" height="200" class="img-polaroid" />
+
+			</div>
+
+			<div class="span6">
+				<address>
+					<strong>{{user.name}}</strong>
+				</address>
+			</div>
+		</div>
+		<h3>Activities</h3>
+	</div>
+	<div class="span4 well well-small">
+
+		<dl class="dl-horizontal">
+			<dt>
+				<b class=" icon-envelope">${null}</b>
+			</dt>
+			<dd>
+				<ul class="unstyled">
+					<li ng-repeat="e in user.emails">{{e.content}}</li>
+				</ul>
+			</dd>
+		</dl>
+
+		<dl class="dl-horizontal">
+			<dt>
+				<b class=" icon-flag">${null}</b>
+			</dt>
+			<dd>
+				<ul class="unstyled">
+					<li ng-repeat="e in user.links">{{e.content}}</li>
+				</ul>
+			</dd>
+		</dl>
+
+		<dl class="dl-horizontal">
+			<dt>
+				<abbr title="Phone">P:</abbr>
+			</dt>
+			<dd>
+				<ul class="unstyled">
+					<li ng-repeat="e in user.links">{{e.content}}</li>
+				</ul>
+			</dd>
+		</dl>
+	</div>

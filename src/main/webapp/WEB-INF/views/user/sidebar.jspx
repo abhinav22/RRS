@@ -8,6 +8,7 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 	<c:url value="/" var="base_url" />
+	
 	<div class="row-fluid" style="margin: 5px 0 !important;">
 		<div class="span4" style="min-height: 50px !important;">
 			<c:if test="${empty user.avatarUrl}">
@@ -23,27 +24,34 @@
 			<strong>${user.name}</strong><br />
 		</div>
 	</div>
+	<h4 style="border-bottom: 1px gray solid;">CONNECTIONS</h4>
 
 	<div class="row-fluid" style="margin: 5px 0 !important;">
-		<div class="span3">
+		<div class="span4">
 			<div class="num-heading">130</div>
 		</div>
-		<div class="span9">You have 130 connections.</div>
+		<div class="span8">You have 130 connections.</div>
 	</div>
-	<hr />
-	<div class="row-fluid">
-		<div class="span3">
+	<div class="row-fluid" style="margin: 5px 0 !important;">
+		<div class="span4">
 			<div class="num-heading">13</div>
 		</div>
-		<div class="span9">You had been viewed 2 times in the past 7
+		<div class="span8">13 pending connections.</div>
+	</div>
+	
+	<h4 style="border-bottom: 1px gray solid;">VIEWED BY OTHERS</h4>
+	<div class="row-fluid">
+		<div class="span4">
+			<div class="num-heading">13</div>
+		</div>
+		<div class="span8">You had been viewed 2 times in the past 7
 			days.</div>
 	</div>
-	<hr />
 	<div class="row-fluid">
-		<div class="span3">
+		<div class="span4">
 			<div class="num-heading">19</div>
 		</div>
-		<div class="span9">You had bean searched 2 times in the past 7
+		<div class="span8">You had bean searched 2 times in the past 7
 			days.</div>
 	</div>
 

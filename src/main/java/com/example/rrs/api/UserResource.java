@@ -80,10 +80,14 @@ public class UserResource extends RestApiResource {
 		return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
 	}
 
-	@RequestMapping(value = "/me", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(headers = { "Accept=application/json" }, value = "/me", method = RequestMethod.POST, consumes={MediaType.APPLICATION_JSON_VALUE})
 	@ResponseBody
 	public ResponseEntity<User> saveMyProfile(@RequestBody User user,
 			HttpServletResponse response) {
+		if (log.isDebugEnabled()) {
+			log.debug("save myProfile , consumes  data @" + user);
+		}
+
 		User _user = SecurityUtils.getCurrentUser();
 
 		BeanUtils.copyProperties(user, _user, new String[] { "id" });
@@ -91,7 +95,7 @@ public class UserResource extends RestApiResource {
 		return new ResponseEntity<User>(HttpStatus.OK);
 	}
 
-	@RequestMapping("/{id}/avatar")
+	@RequestMapping(value="/{id}/avatar", method=RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<byte[]> readPicture(@PathVariable("id") String id,
 			HttpServletResponse response) {
@@ -99,19 +103,11 @@ public class UserResource extends RestApiResource {
 			log.debug("call @readPicture from user:" + id);
 		}
 
-		User user = userService.findUser(id);
 
-		if (user == null) {
-			if (log.isDebugEnabled()) {
-				log.debug("user is not found");
-			}
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}
+		Avatar data = userService.findUserAvatar(id);
 
-		Avatar data = userService.findUserAvatar(user);
-		
-		if(log.isDebugEnabled()){
-			log.debug("found data@" + data);
+		if (log.isDebugEnabled()) {
+			log.debug("read avatar data@" + data);
 		}
 
 		if (data != null) {

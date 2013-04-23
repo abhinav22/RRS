@@ -31,5 +31,5 @@ public interface UserService {
 			Pageable pageable);
 
 	
-	public abstract Avatar findUserAvatar(User user);
+	public abstract Avatar findUserAvatar(String userId);
 }

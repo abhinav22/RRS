@@ -128,6 +128,8 @@
 			${null}
 		</script>
 	</c:if>
+	
+	<script type="text/javascript" src="${base_url}/resources/js/App.js">${null}</script>
 </body>
 	</html>
 </jsp:root>

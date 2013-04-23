@@ -30,13 +30,13 @@
 			</div>
 			<div class="control-group">
 				<div class="controls">
-					<input id="proceed" type="submit" value="Login"
-						class="btn btn-success btn-large" /> or <a
-						href="${fn:escapeXml(register_url)}">Register a new account </a>
+					<input id="proceed" type="submit" value="Sgin In"
+						class="btn btn-success btn-large btn-block" />
 				</div>
 			</div>
 			<div class="control-group">
-				<div class="controls"><div class="btn">Test<b class="icon-plus-sign"/></div></div>
+				<div class="controls"><a
+						href="${fn:escapeXml(register_url)}">Register a new account </a></div>
 			</div>
 		</fieldset>
 		<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION.message}">

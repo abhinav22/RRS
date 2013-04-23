@@ -16,6 +16,4 @@ public interface AvatarRepository extends MongoRepository<Avatar, String>,
 	@Override
 	List<Avatar> findAll();
 
-	List<Avatar> findByUser(User user);
-
 }

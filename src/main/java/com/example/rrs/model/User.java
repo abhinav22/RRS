@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,6 +15,8 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
@@ -29,6 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Document
 @Persistent
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class User implements UserDetails, Serializable {
 
 	@Id
@@ -110,6 +112,7 @@ public class User implements UserDetails, Serializable {
 	}
 
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
 	}
@@ -211,6 +214,7 @@ public class User implements UserDetails, Serializable {
 		return this.email;
 	}
 
+	@JsonIgnore()
 	public String getName() {
 		switch (this.getSalutationLine()) {
 		case FIRSTNAME:

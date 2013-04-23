@@ -52,4 +52,10 @@
 			value="/WEB-INF/views/user/profile.jspx" />
 		<put-attribute name="script" value="/resources/js/ProfileCtrl.js" />
 	</definition>
+	
+	<definition extends="default" name="user/public-profile">
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/public-profile.jspx" />
+		<put-attribute name="script" value="/resources/js/PublicProfileCtrl.js" />
+	</definition>
 </tiles-definitions>

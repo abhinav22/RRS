@@ -73,6 +73,17 @@ public class UserController {
 		request.setAttribute("user", user, RequestAttributes.SCOPE_REQUEST);
 	}
 
+	@RequestMapping(value = { "/public-profile-{id}" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String publicProfile(@PathVariable("id") String id, Model uiModel,
+			RedirectAttributes atts) {
+		if (log.isDebugEnabled()) {
+			log.debug("public profile @"+id);
+		}
+	
+		uiModel.addAttribute("profileId", id);
+		return "user/public-profile";
+	}
+
 	@RequestMapping(value = { "/home" }, method = RequestMethod.GET, produces = { "text/html" })
 	public String home(Model uiModel, RedirectAttributes atts) {
 
@@ -337,8 +348,7 @@ public class UserController {
 
 		User user = SecurityUtils.getCurrentUser();
 
-		user.addPhone(new Phone(phoneForm.getType(),
-				phoneForm.getContent()));
+		user.addPhone(new Phone(phoneForm.getType(), phoneForm.getContent()));
 
 		userService.saveUser(user);
 
@@ -395,7 +405,7 @@ public class UserController {
 
 		User user = SecurityUtils.getCurrentUser();
 
-		Avatar avatar = userService.findUserAvatar(user);
+		Avatar avatar = userService.findUserAvatar(user.getId());
 
 		if (avatar == null) {
 			populateAvatarForm(uiModel, new AvatarForm());
@@ -413,12 +423,12 @@ public class UserController {
 		avatar.setSize(file.getSize());
 		avatar.setMimeType(file.getContentType());
 
-		avatar.setUser(user);
+		avatar.setUserId(user.getId());
 
 		avatar = avatarRepository.save(avatar);
 
 		log.debug("avatar id @ " + avatar.getId() + " of user @"
-				+ avatar.getUser());
+				+ avatar.getUserId());
 
 		user.setAvatarUrl("api/user/" + user.getId() + "/avatar");
 

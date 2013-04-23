@@ -95,9 +95,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Avatar findUserAvatar(User _user) {
+	public Avatar findUserAvatar(String _userId) {
 		if (log.isDebugEnabled()) {
-			log.debug("find user avatar by user@" + _user);
+			log.debug("find user avatar by user@" + _userId);
 		}
 
 		List<Avatar> all = (List<Avatar>) avatarRepository.findAll();
@@ -105,13 +105,13 @@ public class UserServiceImpl implements UserService {
 		if (log.isDebugEnabled()) {
 			log.debug("all  size @" + all.size());
 			for (Avatar a : all) {
-				log.debug(" avatar @ id=" + a.getId() + ", user id="
-						+ a.getUser().getId());
+				log.debug(" avatar @ id=" + a.getId() + ", user id="+
+						a.getUserId());
 			}
 		}
 
 		List<Avatar> avatars = (List<Avatar>) avatarRepository
-				.findAll(QAvatar.avatar.user.eq(_user));
+				.findAll(QAvatar.avatar.userId.eq(_userId));
 
 		if (log.isDebugEnabled()) {
 			log.debug("avatars size @" + avatars.size());

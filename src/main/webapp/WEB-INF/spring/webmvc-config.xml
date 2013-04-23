@@ -2,8 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd                 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 	<context:property-placeholder location="classpath*:META-INF/spring/*.properties" />
 
@@ -17,7 +20,8 @@
 
 	<!-- Turns on support for mapping requests to Spring MVC @Controller methods 
 		Also registers default Formatters and Validators for use across all @Controllers -->
-	<mvc:annotation-driven conversion-service="applicationConversionService">
+	<mvc:annotation-driven conversion-service="applicationConversionService"
+		content-negotiation-manager="contentNegotiationManager">
 		<mvc:argument-resolvers>
 			<bean
 				class="org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter">
@@ -26,20 +30,20 @@
 				</constructor-arg>
 			</bean>
 		</mvc:argument-resolvers>
-
-<!-- 		<mvc:message-converters>
-			<bean
-				class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
-				<property name="supportedMediaTypes">
-					<list>
-						<value>image/jpeg</value>
-						<value>image/png</value>
-					</list>
-				</property>
-			</bean>
-		</mvc:message-converters> -->
-
 	</mvc:annotation-driven>
+
+	<bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="true" />
+		<property name="favorParameter" value="true" />
+		<property name="mediaTypes">
+			<value>
+				json=application/json
+				xml=application/xml
+			</value>
+		</property>
+	</bean>
+
 
 	<bean class="com.example.rrs.web.ApplicationConversionServiceFactoryBean"
 		id="applicationConversionService" />
@@ -64,8 +68,9 @@
 		controller -->
 	<!-- <mvc:view-controller path="/login" /> <mvc:view-controller path="/" 
 		view-name="index" /> -->
-		
-	<mvc:view-controller path="/user/profile" view-name="user/profile" />
+
+	<mvc:view-controller path="/user/profile"
+		view-name="user/profile" />
 	<mvc:view-controller path="/registerOk" view-name="registerOk" />
 	<mvc:view-controller path="/activateFailed"
 		view-name="activateFailed" />
