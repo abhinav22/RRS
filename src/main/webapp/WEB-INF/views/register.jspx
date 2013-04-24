@@ -83,7 +83,7 @@
 			</fieldset>
 			<div class="form-actions">
 				<input type="submit" value="Regsiter"
-					class="btn btn-success btn-large" />
+					class="btn btn-success btn-large btn-block" />
 			</div>
 		</form:form>
 	</div>

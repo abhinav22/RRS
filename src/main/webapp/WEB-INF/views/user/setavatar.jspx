@@ -16,7 +16,7 @@
 			<div class="control-group">
 				<label class="control-label" for="file">File:</label>
 				<div class="controls">
-					<form:input id="file" type="file" path="file" name="file" class="input-block-level" />
+					<form:input id="file" type="file" path="file" name="file" class="input-file" />
 					<div class="help-block">
 						<form:errors path="file"></form:errors>
 					</div>

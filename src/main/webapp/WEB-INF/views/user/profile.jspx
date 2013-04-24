@@ -2,8 +2,8 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-	class="offset1 span10" ng-controller="ProfileCtrl">
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0" class="span9"
+	ng-controller="ProfileCtrl">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 	<div class="alert"
@@ -27,16 +27,23 @@
 				width="200" height="200" class="img-polaroid" />
 		</div>
 		<div class="span8">
-			<address>
+			<p>
 				<strong>{{user.name}}</strong>
-				<p>{{user.firstName}}</p>
-				<p>{{user.lastName}}</p>
-				<p>{{user.salutationLine}}</p>
-			</address>
-			<button type="button" data-toggle="modal" class="btn"
-				ng-show="isEditable" data-target="#nameModal">Edit Name</button>
-			<br/>
-			<a href="${base_url}user/public-profile-${user.id}"> View my profile as others</a>
+			</p>
+			<dl class="dl-horizontal">
+				<dt>FIRST NAME</dt>
+				<dd>{{user.firstName}}</dd>
+				<dt>LAST NAME</dt>
+				<dd>{{user.lastName}}</dd>
+				<dt>SALUTATION LINE</dt>
+				<dd>{{user.salutationLine}}</dd>
+			</dl>
+			<p>
+				<button type="button" data-toggle="modal" class="btn"
+					ng-show="isEditable" data-target="#nameModal">Edit Name</button>
+				<br /> <a href="${base_url}user/public-profile-${user.id}">
+					View my profile as others</a>
+			</p>
 		</div>
 	</div>
 

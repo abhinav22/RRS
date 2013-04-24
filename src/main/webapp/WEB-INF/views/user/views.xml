@@ -47,7 +47,7 @@
 			value="/WEB-INF/views/user/setpassword.jspx" />
 	</definition>
 	
-	<definition extends="default" name="user/profile">
+	<definition extends="home" name="user/profile">
 		<put-attribute name="body"
 			value="/WEB-INF/views/user/profile.jspx" />
 		<put-attribute name="script" value="/resources/js/ProfileCtrl.js" />

@@ -8,12 +8,12 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 	<c:url value="/" var="base_url" />
-	
+
 	<div class="row-fluid" style="margin: 5px 0 !important;">
 		<div class="span4" style="min-height: 50px !important;">
 			<c:if test="${empty user.avatarUrl}">
-				<img src="${base_url}resources/js/holder.js/64x64" width="48" height="48"
-					class="img-polaroid" />
+				<img src="${base_url}resources/js/holder.js/64x64" width="48"
+					height="48" class="img-polaroid" />
 			</c:if>
 			<c:if test="${not empty user.avatarUrl}">
 				<img src="${base_url}${user.avatarUrl}" width="48" height="48"
@@ -24,6 +24,12 @@
 			<strong>${user.name}</strong><br />
 		</div>
 	</div>
+	<h4 style="border-bottom: 1px gray solid;">SETTINGS</h4>
+	<ul class="unstyled">
+		<li><a href="${base_url}/user/setpassword">Change Password</a></li>
+		<li><a href="${base_url}/user/setavatar">Set Avatar</a></li>
+		<li><a href="${base_url}/user/profile">Edit Profile</a></li>
+	</ul>
 	<h4 style="border-bottom: 1px gray solid;">CONNECTIONS</h4>
 
 	<div class="row-fluid" style="margin: 5px 0 !important;">
@@ -38,7 +44,7 @@
 		</div>
 		<div class="span8">13 pending connections.</div>
 	</div>
-	
+
 	<h4 style="border-bottom: 1px gray solid;">VIEWED BY OTHERS</h4>
 	<div class="row-fluid">
 		<div class="span4">
