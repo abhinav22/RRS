@@ -39,6 +39,7 @@ import com.example.rrs.model.SalutationLine;
 import com.example.rrs.model.User;
 import com.example.rrs.repository.AvatarRepository;
 import com.example.rrs.security.SecurityUtils;
+import com.example.rrs.service.ConnectionService;
 import com.example.rrs.service.MailService;
 import com.example.rrs.service.UserService;
 
@@ -51,6 +52,9 @@ public class UserController {
 
 	@Inject
 	UserService userService;
+
+	@Inject
+	ConnectionService connectionService;
 
 	@Inject
 	AvatarRepository avatarRepository;
@@ -71,17 +75,49 @@ public class UserController {
 			log.debug("call @initDataBinder, put user in request scope");
 		}
 		request.setAttribute("user", user, RequestAttributes.SCOPE_REQUEST);
+
+		long connectinsCount = connectionService.countConnectionsForUser(user
+				.getId());
+		long pendingConnectinsCount = connectionService.countPendingConnectionRequestsForUser(user
+				.getId());
+		
+		long viewedCount=userService.viewedCountForUser(user.getId());
+		
+		if(log.isDebugEnabled()){
+			log.debug("connectinsCount@"+connectinsCount);
+			log.debug("pendingConnectinsCount@"+pendingConnectinsCount);
+			log.debug("viewedCount@"+viewedCount);
+		}
+
+		request.setAttribute("connectinsCount", connectinsCount,
+				RequestAttributes.SCOPE_REQUEST);
+		
+		request.setAttribute("pendingConnectinsCount", pendingConnectinsCount,
+				RequestAttributes.SCOPE_REQUEST);
+		
+		request.setAttribute("viewedCount", pendingConnectinsCount,
+				RequestAttributes.SCOPE_REQUEST);
 	}
 
 	@RequestMapping(value = { "/public-profile-{id}" }, method = RequestMethod.GET, produces = { "text/html" })
 	public String publicProfile(@PathVariable("id") String id, Model uiModel,
 			RedirectAttributes atts) {
 		if (log.isDebugEnabled()) {
-			log.debug("public profile @"+id);
+			log.debug("public profile @" + id);
 		}
-	
+
+		userService.viewProfile(id);
 		uiModel.addAttribute("profileId", id);
 		return "user/public-profile";
+	}
+
+	@RequestMapping(value = { "/profile" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String readUserProfile(Model uiModel, RedirectAttributes atts) {
+		if (log.isDebugEnabled()) {
+			log.debug("read the profile of current user @");
+		}
+
+		return "user/profile";
 	}
 
 	@RequestMapping(value = { "/home" }, method = RequestMethod.GET, produces = { "text/html" })

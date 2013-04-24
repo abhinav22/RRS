@@ -2,34 +2,134 @@ package com.example.rrs.service;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.rrs.model.Avatar;
+import com.example.rrs.model.QAvatar;
+import com.example.rrs.model.QUser;
+import com.example.rrs.model.QUserViewed;
 import com.example.rrs.model.User;
+import com.example.rrs.model.UserViewed;
+import com.example.rrs.repository.AvatarRepository;
+import com.example.rrs.repository.UserRepository;
+import com.example.rrs.repository.UserViewedRepository;
+import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.web.SearchForm;
+import com.mysema.query.types.Predicate;
 
-public interface UserService {
+@Service
+@Transactional
+public class UserService {
+	private static final Logger log = LoggerFactory
+			.getLogger(UserService.class);
 
-	public abstract long countAllUsers();
+	@Autowired
+	UserRepository userRepository;
 
-	public abstract void deleteUser(User user);
+	@Inject
+	AvatarRepository avatarRepository;
 
-	public abstract List<User> findAllUsers();
+	@Inject
+	UserViewedRepository userViewedRepository;
 
-	public abstract User findUser(String id);
+	public long countAllUsers() {
+		return userRepository.count();
+	}
 
-	public abstract List<User> findUserEntries(int firstResult, int maxResults);
+	public void deleteUser(User user) {
+		userRepository.delete(user);
+	}
 
-	public abstract User saveUser(User user);
+	public List<User> findAllUsers() {
+		return userRepository.findAll();
+	}
 
-	public abstract User updateUser(User user);
+	public User findUser(String id) {
+		return userRepository.findOne(id);
+	}
 
-	public abstract User findUserByEmail(String email);
+	public List<User> findUserEntries(int firstResult, int maxResults) {
+		return userRepository.findAll(
+				new org.springframework.data.domain.PageRequest(firstResult
+						/ maxResults, maxResults)).getContent();
+	}
 
-	public abstract Page findConnectionsByKeywords(SearchForm searchForm,
-			Pageable pageable);
+	public User saveUser(User user) {
+		return userRepository.save(user);
+	}
 
+	public User updateUser(User user) {
+		return userRepository.save(user);
+	}
+
+	public User findUserByEmail(String email) {
+		List<User> users = userRepository.findByEmail(email);
+		if (!users.isEmpty()) {
+			return users.get(0);
+		}
+		return null;
+	}
+
+	public Page<User> findConnectionsByKeywords(SearchForm searchForm,
+			Pageable pageable) {
+
+		QUser quser = QUser.user;
+
+		User currentUser = SecurityUtils.getCurrentUser();
+
+		Predicate predicate = null;
+		// to do...
+		return userRepository.findAll(predicate, pageable);
+	}
+
+	public Avatar findUserAvatar(String _userId) {
+		if (log.isDebugEnabled()) {
+			log.debug("find user avatar by user@" + _userId);
+		}
+
+		List<Avatar> all = (List<Avatar>) avatarRepository.findAll();
+
+		if (log.isDebugEnabled()) {
+			log.debug("all  size @" + all.size());
+			for (Avatar a : all) {
+				log.debug(" avatar @ id=" + a.getId() + ", user id="
+						+ a.getUserId());
+			}
+		}
+
+		List<Avatar> avatars = (List<Avatar>) avatarRepository
+				.findAll(QAvatar.avatar.userId.eq(_userId));
+
+		if (log.isDebugEnabled()) {
+			log.debug("avatars size @" + avatars.size());
+		}
+
+		if (!avatars.isEmpty()) {
+			return avatars.get(0);
+		}
+
+		return null;
+	}
+
+	public void viewProfile(String id) {
+		User currentUser = SecurityUtils.getCurrentUser();
+		if (!currentUser.getId().equals(id)) {
+			userViewedRepository.save(new UserViewed(
+					userRepository.findOne(id), currentUser));
+		}
+	}
 	
-	public abstract Avatar findUserAvatar(String userId);
+	public long viewedCountForUser(String userId){
+		QUserViewed quv= QUserViewed.userViewed;
+		return userViewedRepository.count(quv.user.id.eq(userId));
+	}
+
 }

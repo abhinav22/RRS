@@ -2,17 +2,17 @@
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
 
+	<definition extends="default" name="user/invite">
+		<!-- <put-attribute name="pageTitle" value="Invite Friends to Join RRS"></put-attribute> -->
+		<put-attribute name="body" value="/WEB-INF/views/user/invite.jspx" />
+	</definition>
+
 	<definition name="home" extends="default">
 		<put-attribute name="sidebar" value="/WEB-INF/views/user/sidebar.jspx" />
 	</definition>
 
 	<definition extends="home" name="user/home">
 		<put-attribute name="body" value="/WEB-INF/views/user/home.jspx" />
-	</definition>
-
-	<definition extends="home" name="user/invite">
-		<!-- <put-attribute name="pageTitle" value="Invite Friends to Join RRS"></put-attribute> -->
-		<put-attribute name="body" value="/WEB-INF/views/user/invite.jspx" />
 	</definition>
 
 	<definition extends="home" name="user/setname">

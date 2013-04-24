@@ -1,0 +1,8 @@
+Dear ${profile.name},
+${user.name} has sent you a connection request, please login to process it.
+
+${appUrl}
+
+Regards, 
+RRS Support Team
+${appUrl} 

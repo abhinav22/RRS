@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.rrs.model.Avatar;
 import com.example.rrs.model.User;
 import com.example.rrs.security.SecurityUtils;
+import com.example.rrs.service.ConnectionService;
 import com.example.rrs.service.UserService;
 
 @Controller
@@ -31,7 +32,10 @@ public class UserResource extends RestApiResource {
 	@Inject
 	UserService userService;
 
-	@RequestMapping(value = "/profile-{id}", method = RequestMethod.GET)
+	@Inject
+	ConnectionService connectionService;
+
+	@RequestMapping(value = "/{id}/profile", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	public ResponseEntity<User> readProfile(@PathVariable("id") String id,
 			HttpServletResponse response) {
@@ -50,12 +54,71 @@ public class UserResource extends RestApiResource {
 		return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 	}
 
-	@RequestMapping(value = "/profile-{id}", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/{id}/connection-{profileId}/status", method = RequestMethod.GET, produces = { MediaType.TEXT_PLAIN_VALUE })
 	@ResponseBody
-	public ResponseEntity<User> saveProfile(@RequestBody User user,
+	public ResponseEntity<String> readConnectionStatus(
+			@PathVariable("id") String id,
+			@PathVariable("profileId") String profileId,
 			HttpServletResponse response) {
-		userService.saveUser(user);
-		return new ResponseEntity<User>(HttpStatus.OK);
+		if (log.isDebugEnabled()) {
+			log.debug("call read connection of@" + id + ", prorifle id @"
+					+ profileId);
+		}
+
+		String result = connectionService.connectionStatus(id, profileId);
+
+		if (log.isDebugEnabled()) {
+			log.debug("connection result@" + result);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		return new ResponseEntity<String>(result, headers, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/{id}/connection-{profileId}/accept", method = RequestMethod.GET, produces = { MediaType.TEXT_PLAIN_VALUE })
+	@ResponseBody
+	public ResponseEntity<String> acceptConnection(
+			@PathVariable("id") String id,
+			@PathVariable("profileId") String profileId,
+			HttpServletResponse response) {
+		if (log.isDebugEnabled()) {
+			log.debug("call read connection of@" + id + ", prorifle id @"
+					+ profileId);
+		}
+
+		connectionService.acceptConnection(profileId, id);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{id}/connection-{profileId}/ignore", method = RequestMethod.GET, produces = { MediaType.TEXT_PLAIN_VALUE })
+	@ResponseBody
+	public ResponseEntity<String> ignoreConnection(
+			@PathVariable("id") String id,
+			@PathVariable("profileId") String profileId,
+			HttpServletResponse response) {
+		if (log.isDebugEnabled()) {
+			log.debug("call read connection of@" + id + ", prorifle id @"
+					+ profileId);
+		}
+
+		connectionService.ignoreConnection(profileId, id);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{id}/connection-{profileId}/send", method = RequestMethod.GET, produces = { MediaType.TEXT_PLAIN_VALUE })
+	@ResponseBody
+	public ResponseEntity<String> sendConnection(@PathVariable("id") String id,
+			@PathVariable("profileId") String profileId,
+			HttpServletResponse response) {
+		if (log.isDebugEnabled()) {
+			log.debug("call read connection of@" + id + ", prorifle id @"
+					+ profileId);
+		}
+
+		connectionService.sendConnection(id, profileId);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/me", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -80,7 +143,7 @@ public class UserResource extends RestApiResource {
 		return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
 	}
 
-	@RequestMapping(headers = { "Accept=application/json" }, value = "/me", method = RequestMethod.POST, consumes={MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(headers = { "Accept=application/json" }, value = "/me", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	public ResponseEntity<User> saveMyProfile(@RequestBody User user,
 			HttpServletResponse response) {
@@ -90,19 +153,19 @@ public class UserResource extends RestApiResource {
 
 		User _user = SecurityUtils.getCurrentUser();
 
-		BeanUtils.copyProperties(user, _user, new String[] { "id" });
+		BeanUtils
+				.copyProperties(user, _user, new String[] { "id", "password" });
 		userService.saveUser(_user);
 		return new ResponseEntity<User>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value="/{id}/avatar", method=RequestMethod.GET)
+	@RequestMapping(value = "/{id}/avatar", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<byte[]> readPicture(@PathVariable("id") String id,
 			HttpServletResponse response) {
 		if (log.isDebugEnabled()) {
 			log.debug("call @readPicture from user:" + id);
 		}
-
 
 		Avatar data = userService.findUserAvatar(id);
 
@@ -119,7 +182,7 @@ public class UserResource extends RestApiResource {
 					HttpStatus.OK);
 		}
 
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
 	}
 
 }

@@ -1,140 +1,72 @@
-function ProfileCtrl($scope, $http) {
+function PublicProfileCtrl($scope, $http) {
 
 	$scope.user = {};
-
-	$scope.copy = {};
-
-	$scope.email = {};
-
-	$scope.link = {};
-
-	$scope.phone = {};
-
-	$scope.isEditable = false;
-
-	$scope.isDirty = false;
-
-	$scope.emailTypes = [ 'Private', 'Work' ];
-	$scope.linkTypes = [ 'Google Plus', 'Twitter', 'Facebook' ];
-	$scope.phoneTypes = [ 'Home', 'Office' ];	
-	$scope.salutationLines=[ 'NONE', 'FIRSTNAME',  'FIRSTNAME_AND_LASTNAME','FIRSTNAME_FIRST_CHAR_OF_LASTNAME'];
-
-	function checkDirty() {
-		if ($scope.isEditable && (!angular.equals($scope.user, $scope.copy))) {
-			$scope.isDirty = true;
-		} else {
-			$scope.isDirty = false;
-		}
+	$scope.connectionStatus='none';
+	var profile_id=$scope.profileId;
+	
+	$scope.isMySelf=false;
+	
+	function checkMySelf(){
+//		alert('(user_id==profile_id)'+(user_id==profile_id));
+//		alert('(user_id===profile_id)'+(user_id===profile_id));
+		return $scope.isMyself=(user_id==profile_id);
 	}
 	
-	$scope.setName=function(){
-		$('#nameModal').modal('hide');
-		checkDirty();
-	}
-
-	$scope.markEditable = function() {
-		$scope.isEditable = true;
-		// alert($scope.isEditable);
-	}
-
-	$scope.delEmail = function(index) {
-		$scope.user.emails.splice(index, 1);
-		checkDirty();
-	}
-
-	$scope.initAddEmail = function() {
-		$scope.email = {
-			type : '',
-			content : '',
-			verified : false
-		};
-		$('#emailModal').modal('show');
-	}
-
-	$scope.addEmail = function() {
-		$scope.user.emails.push($scope.email);
-		$('#emailModal').modal('hide');
-		checkDirty();
-	}
-
-	$scope.delLink = function(index) {
-		$scope.user.links.splice(index, 1);
-		checkDirty();
-	}
-
-	$scope.initAddLink = function() {
-		$scope.link = {
-			type : '',
-			content : ''
-		};
-		$('#linkModal').modal('show');
-	}
-
-	$scope.addLink = function() {
-		$scope.user.links.push($scope.link);
-		$('#linkModal').modal('hide');
-		checkDirty();
-	}
-
-	$scope.delPhone = function(index) {
-		$scope.user.phones.splice(index, 1);
-		checkDirty();
-	}
-
-	$scope.initAddPhone = function() {
-		$scope.phone = {
-			type : '',
-			content : ''
-		};
-		$('#phoneModal').modal('show');
-	}
-
-	$scope.addPhone = function() {
-		$scope.user.phones.push($scope.phone);
-		$('#phoneModal').modal('hide');
-		checkDirty();
-	}
-
-	$scope.save = function() {
-		$http.post(base_url + 'api/user/me.json', angular.toJson($scope.user))
-		     .success(
-				function(data, status, headers, config) {
-					reset();
-				}
-			)
-			.error(
-				function(data, status, headers, config) {
-					alert(data);
-					alert(status);
-				}
-			);
+	$scope.sendConnection = function() {
+		$http(
+				{
+					method : 'GET',
+					url : base_url + 'api/user/' + user_id + '/connection-'
+							+ profile_id + '/send'
+				}).success(function(data, status, headers, config) {
+			$scope.connectionStatus = data;
+		});
 
 	}
 
-	$scope.cancel = function() {
-		angular.copy($scope.copy, $scope.user);
-		$scope.isDirty = false;
-		$scope.isEditable = false;
+	$scope.acceptConnection = function() {
+		$http(
+				{
+					method : 'GET',
+					url : base_url + 'api/user/' + user_id + '/connection-'
+							+ profile_id + '/accept'
+				}).success(function(data, status, headers, config) {
+			$scope.connectionStatus = data;
+		});
+
+	}
+
+	function getConnectionStatus() {
+		$http(
+				{
+					method : 'GET',
+					url : base_url + 'api/user/' + user_id + '/connection-'
+							+ profile_id + '/status'
+				}).success(function(data, status, headers, config) {
+			$scope.connectionStatus = data;
+			//alert($scope.connectionStatus);
+		});
 	}
 
 	function reset() {
 		$http({
 			method : 'GET',
-			url : base_url + 'api/user/me.json'
+			url : base_url + 'api/user/' + user_id + '/profile.json'
 		}).success(function(data, status, headers, config) {
 			$scope.user = data;
-			angular.copy($scope.user, $scope.copy);
 			if ($scope.user.avatarUrl) {
 				$('#avatar').attr('src', base_url + $scope.user.avatarUrl);
 			}
-			// alert('avatar url@'+$scope.user.avatarUrl);
-			// alert('avatar src@'+$('#avatar').attr('src'));
+			
+			
 		});
 
-		$scope.isDirty = false;
-		$scope.isEditable = false;
 	}
 
+	//alert('$scope.connectionStatus @'+$scope.connectionStatus);
+	
 	reset();
+	getConnectionStatus();
+	checkMySelf();
+	
 }
-

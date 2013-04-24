@@ -106,8 +106,7 @@
 	</script>
 	<script type="text/javascript">
 	var base_url="${base_url}";
-	var user_id="${sessionScope['SPRING_SECURITY_CONTEXT'].authentication.principal.name}";
-
+	var user_id="${sessionScope['SPRING_SECURITY_CONTEXT'].authentication.principal.id}";
 	</script>
 	
 	<script type="text/javascript" src="${base_url}/resources/js/angular.min.js">${null}</script>

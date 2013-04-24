@@ -22,6 +22,17 @@ public class UserViewed {
 
 	@DateTimeFormat(iso = ISO.DATE)
 	private Date viewedDate;
+	
+	public UserViewed() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public UserViewed(User user, User viewedBy) {
+		this.user = user;
+		this.viewedBy = viewedBy;
+		this.viewedDate = new Date();
+	}
 
 	public User getUser() {
 		return user;

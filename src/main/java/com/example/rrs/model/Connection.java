@@ -1,41 +1,52 @@
 package com.example.rrs.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.util.Assert;
 
 @Document
 public class Connection {
+	public static final String CONNECTION_STATUS_NONE="none";
+	public static final String CONNECTION_STATUS_CONNECTED="connected";
+	public static final String CONNECTION_STATUS_WAITING="waiting";
+	public static final String CONNECTION_STATUS_BEING_WAITED="being-waited";
 
 	public enum Status {
-		PENDING, ACCEPTED;
+		PENDING, ACCEPTED, IGNORE;
 	}
 	
 	@Id
 	private String id;
 
-	@DBRef
 	@Size(min=2, max=2)
-	private List<User> users;
+	private List<String> userIds=new ArrayList<String>(2);
 
 	@DateTimeFormat(iso = ISO.DATE)
 	private Date connectedDate;
 
-	private Status status;
+	private Status status=Status.PENDING;
 
-	public List<User> getUsers() {
-		return users;
+	public Connection(String userId, String connectedTo) {
+		Assert.notNull(userId);
+		Assert.notNull(connectedTo);
+		this.userIds.add(userId);
+		this.userIds.add(connectedTo);	
 	}
 
-	public void setUsers(List<User> users) {
-		this.users = users;
+	public List<String> getUserIds() {
+		return userIds;
+	}
+
+	public void setUserIds(List<String> userIds) {
+		this.userIds = userIds;
 	}
 
 	public Date getConnectedDate() {

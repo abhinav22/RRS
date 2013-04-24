@@ -16,8 +16,9 @@ function ProfileCtrl($scope, $http) {
 
 	$scope.emailTypes = [ 'Private', 'Work' ];
 	$scope.linkTypes = [ 'Google Plus', 'Twitter', 'Facebook' ];
-	$scope.phoneTypes = [ 'Home', 'Office' ];	
-	$scope.salutationLines=[ 'NONE', 'FIRSTNAME',  'FIRSTNAME_AND_LASTNAME','FIRSTNAME_FIRST_CHAR_OF_LASTNAME'];
+	$scope.phoneTypes = [ 'Home', 'Office' ];
+	$scope.salutationLines = [ 'NONE', 'FIRSTNAME', 'FIRSTNAME_AND_LASTNAME',
+			'FIRSTNAME_FIRST_CHAR_OF_LASTNAME' ];
 
 	function checkDirty() {
 		if ($scope.isEditable && (!angular.equals($scope.user, $scope.copy))) {
@@ -26,8 +27,9 @@ function ProfileCtrl($scope, $http) {
 			$scope.isDirty = false;
 		}
 	}
-	
-	$scope.setName=function(){
+
+
+	$scope.setName = function() {
 		$('#nameModal').modal('hide');
 		checkDirty();
 	}
@@ -97,17 +99,12 @@ function ProfileCtrl($scope, $http) {
 
 	$scope.save = function() {
 		$http.post(base_url + 'api/user/me.json', angular.toJson($scope.user))
-		     .success(
-				function(data, status, headers, config) {
+				.success(function(data, status, headers, config) {
 					reset();
-				}
-			)
-			.error(
-				function(data, status, headers, config) {
+				}).error(function(data, status, headers, config) {
 					alert(data);
 					alert(status);
-				}
-			);
+				});
 
 	}
 
@@ -137,4 +134,3 @@ function ProfileCtrl($scope, $http) {
 
 	reset();
 }
-

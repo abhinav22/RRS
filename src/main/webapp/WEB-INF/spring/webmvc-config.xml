@@ -69,8 +69,6 @@
 	<!-- <mvc:view-controller path="/login" /> <mvc:view-controller path="/" 
 		view-name="index" /> -->
 
-	<mvc:view-controller path="/user/profile"
-		view-name="user/profile" />
 	<mvc:view-controller path="/registerOk" view-name="registerOk" />
 	<mvc:view-controller path="/activateFailed"
 		view-name="activateFailed" />

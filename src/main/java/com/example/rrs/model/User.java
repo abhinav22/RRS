@@ -59,6 +59,7 @@ public class User implements UserDetails, Serializable {
 	@NotNull
 	@NotEmpty
 	@Size(max = 20)
+	@JsonIgnore//ignore password to json stream for security.
 	private String password;
 
 	@NotNull
