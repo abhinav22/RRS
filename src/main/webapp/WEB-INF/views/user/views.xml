@@ -7,6 +7,12 @@
 		<put-attribute name="body" value="/WEB-INF/views/user/invite.jspx" />
 	</definition>
 
+	<definition extends="default" name="user/public-profile">
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/public-profile.jspx" />
+		<put-attribute name="script" value="/resources/js/PublicProfileCtrl.js" />
+	</definition>
+
 	<definition name="home" extends="default">
 		<put-attribute name="sidebar" value="/WEB-INF/views/user/sidebar.jspx" />
 	</definition>
@@ -46,16 +52,25 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/user/setpassword.jspx" />
 	</definition>
-	
+
 	<definition extends="home" name="user/profile">
-		<put-attribute name="body"
-			value="/WEB-INF/views/user/profile.jspx" />
+		<put-attribute name="body" value="/WEB-INF/views/user/profile.jspx" />
 		<put-attribute name="script" value="/resources/js/ProfileCtrl.js" />
 	</definition>
-	
-	<definition extends="default" name="user/public-profile">
+	<definition extends="home" name="user/viewed">
 		<put-attribute name="body"
-			value="/WEB-INF/views/user/public-profile.jspx" />
-		<put-attribute name="script" value="/resources/js/PublicProfileCtrl.js" />
+			value="/WEB-INF/views/user/viewed.jspx" />
 	</definition>
+	
+	<definition extends="home" name="user/connections">
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/connections.jspx" />
+	</definition>
+	
+	<definition extends="home" name="user/pending-connections">
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/pending-connections.jspx" />
+	</definition>
+	
+
 </tiles-definitions>

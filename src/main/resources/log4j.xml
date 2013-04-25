@@ -49,8 +49,8 @@
 		<level value="warn" />
 	</logger>
 
-	<logger name="org.springframework.web">
-		<level value="debug" />
+	<logger name="org.springframework">
+		<level value="info" />
 	</logger>
 
 	<root>

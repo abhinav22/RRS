@@ -1,9 +1,10 @@
 package com.example.rrs.model;
 
+import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -14,11 +15,11 @@ public class UserViewed {
 	@Id
 	private String id;
 
-	@DBRef
-	private User user;
+	
+	private String userId;
 
-	@DBRef
-	private User viewedBy;
+	
+	private String viewedBy;
 
 	@DateTimeFormat(iso = ISO.DATE)
 	private Date viewedDate;
@@ -28,25 +29,28 @@ public class UserViewed {
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserViewed(User user, User viewedBy) {
-		this.user = user;
+	public UserViewed(String user, String viewedBy) {
+		this.userId = user;
 		this.viewedBy = viewedBy;
-		this.viewedDate = new Date();
+		Date date=new Date();
+		
+		date=DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
+		this.viewedDate = date;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public User getViewedBy() {
+	public String getViewedBy() {
 		return viewedBy;
 	}
 
-	public void setViewedBy(User viewedBy) {
+	public void setViewedBy(String viewedBy) {
 		this.viewedBy = viewedBy;
 	}
 

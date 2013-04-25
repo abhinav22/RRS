@@ -1,7 +1,10 @@
 package com.example.rrs.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -20,23 +23,22 @@ import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.rrs.Constants;
 import com.example.rrs.model.Avatar;
+import com.example.rrs.model.Connection;
 import com.example.rrs.model.EmailAddress;
 import com.example.rrs.model.Link;
 import com.example.rrs.model.Phone;
 import com.example.rrs.model.SalutationLine;
 import com.example.rrs.model.User;
+import com.example.rrs.model.UserViewed;
 import com.example.rrs.repository.AvatarRepository;
 import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.service.ConnectionService;
@@ -68,36 +70,33 @@ public class UserController {
 	@Value("${app.baseUrl}")
 	String appUrl;
 
-	@InitBinder
-	public void initDataBinder(WebDataBinder dataBinder, WebRequest request) {
-		User user = SecurityUtils.getCurrentUser();
-		if (log.isDebugEnabled()) {
-			log.debug("call @initDataBinder, put user in request scope");
-		}
-		request.setAttribute("user", user, RequestAttributes.SCOPE_REQUEST);
-
-		long connectinsCount = connectionService.countConnectionsForUser(user
-				.getId());
-		long pendingConnectinsCount = connectionService.countPendingConnectionRequestsForUser(user
-				.getId());
-		
-		long viewedCount=userService.viewedCountForUser(user.getId());
-		
-		if(log.isDebugEnabled()){
-			log.debug("connectinsCount@"+connectinsCount);
-			log.debug("pendingConnectinsCount@"+pendingConnectinsCount);
-			log.debug("viewedCount@"+viewedCount);
-		}
-
-		request.setAttribute("connectinsCount", connectinsCount,
-				RequestAttributes.SCOPE_REQUEST);
-		
-		request.setAttribute("pendingConnectinsCount", pendingConnectinsCount,
-				RequestAttributes.SCOPE_REQUEST);
-		
-		request.setAttribute("viewedCount", pendingConnectinsCount,
-				RequestAttributes.SCOPE_REQUEST);
-	}
+	/*
+	 * @InitBinder() public void initDataBinder(WebDataBinder dataBinder,
+	 * WebRequest request) { User user = SecurityUtils.getCurrentUser(); if
+	 * (log.isDebugEnabled()) {
+	 * log.debug("call @initDataBinder, put user in request scope"); }
+	 * request.setAttribute("user", user, RequestAttributes.SCOPE_REQUEST);
+	 * 
+	 * long connectinsCount = connectionService.countConnectionsForUser(user
+	 * .getId()); long pendingConnectinsCount = connectionService
+	 * .countPendingConnectionRequestsForUser(user.getId());
+	 * 
+	 * long viewedCount = userService.viewedCountInSevenDaysForUser(user
+	 * .getId());
+	 * 
+	 * if (log.isDebugEnabled()) { log.debug("connectinsCount@" +
+	 * connectinsCount); log.debug("pendingConnectinsCount@" +
+	 * pendingConnectinsCount); log.debug("viewedCount@" + viewedCount); }
+	 * 
+	 * request.setAttribute("connectionsCount", connectinsCount,
+	 * RequestAttributes.SCOPE_REQUEST);
+	 * 
+	 * request.setAttribute("pendingConnectionsCount", pendingConnectinsCount,
+	 * RequestAttributes.SCOPE_REQUEST);
+	 * 
+	 * request.setAttribute("viewedCount", viewedCount,
+	 * RequestAttributes.SCOPE_REQUEST); }
+	 */
 
 	@RequestMapping(value = { "/public-profile-{id}" }, method = RequestMethod.GET, produces = { "text/html" })
 	public String publicProfile(@PathVariable("id") String id, Model uiModel,
@@ -549,5 +548,158 @@ public class UserController {
 
 	private void populatePasswordForm(Model uiModel, PasswordForm passwordForm) {
 		uiModel.addAttribute("passwordForm", passwordForm);
+	}
+
+	@RequestMapping(value = { "/setskill" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String setupSkill(Model uiModel) {
+		populateSkillForm(uiModel, new SkillForm());
+		return "user/setskill";
+	}
+
+	@RequestMapping(value = { "/setskill" }, method = RequestMethod.POST, produces = { "text/html" })
+	public String saveSkill(@Valid SkillForm skillForm,
+			BindingResult bindingResult, Model uiModel, RedirectAttributes atts) {
+		if (log.isDebugEnabled()) {
+			log.debug("call @saveSkill to set up url:" + skillForm);
+		}
+
+		if (bindingResult.hasErrors()) {
+			populateSkillForm(uiModel, skillForm);
+			return "user/setskill";
+		}
+
+		String skillStr = skillForm.getContent();
+
+		String[] skills = skillStr.split(",");
+
+		if (skills.length > 5) {
+			bindingResult.rejectValue("content",
+					"You can add 5 skills at most",
+					"You can add 5 skills at most");
+			populateSkillForm(uiModel, skillForm);
+			return "user/setskill";
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		user.getSkills().addAll(Arrays.asList(skills));
+
+		userService.saveUser(user);
+
+		SecurityContextHolder.getContext().setAuthentication(
+				SecurityContextHolder.getContext().getAuthentication());
+
+		atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+				"url is set successfully");
+
+		return "redirect:/user/home";
+	}
+
+	private void populateSkillForm(Model uiModel, SkillForm skillForm) {
+		uiModel.addAttribute("skillForm", skillForm);
+	}
+
+	private boolean skillIsSet(User user) {
+		if (log.isDebugEnabled()) {
+			log.debug("call @skillIsSet");
+		}
+
+		if (user.getSkills().isEmpty()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@RequestMapping(value = { "/viewed" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String viewed(Model uiModel, WebRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("viewed user");
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		List<UserViewed> viewed = userService
+				.viewedUsersInSevenDaysForUser(user.getId());
+
+		List<UserViewedResult> result = new ArrayList<UserViewedResult>();
+		for (UserViewed v : viewed) {
+			result.add(new UserViewedResult(v.getViewedDate(), userService
+					.findUser(v.getViewedBy())));
+		}
+
+		uiModel.addAttribute("viewedResult", result);
+
+		return "user/viewed";
+	}
+
+	@RequestMapping(value = { "/connections" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String connections(Model uiModel, WebRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("connections...");
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		String userId = user.getId();
+		List<Connection> conns = connectionService
+				.findConnectionsForUser(userId);
+
+		List<UserConnectionResult> result = new ArrayList<UserConnectionResult>();
+
+		for (Connection con : conns) {
+			List<String> ids = con.getUserIds();
+			String target = "";
+			for (String _id : ids) {
+				if (!_id.equals(userId)) {
+					target = _id;
+					break;
+				}
+			}
+
+			String connStatus = connectionService.connectionStatus(ids.get(0),
+					ids.get(1));
+			result.add(new UserConnectionResult(userService.findUser(target),
+					connStatus, con.getConnectedDate()));
+		}
+
+		uiModel.addAttribute("connResult", result);
+
+		return "user/connections";
+	}
+
+	@RequestMapping(value = { "/pending-connections" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String pendingConnections(Model uiModel, WebRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("connections...");
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		String userId = user.getId();
+		List<Connection> conns = connectionService
+				.findPendingConnectionsForUser(userId);
+
+		List<UserConnectionResult> result = new ArrayList<UserConnectionResult>();
+
+		for (Connection con : conns) {
+			List<String> ids = con.getUserIds();
+			String target = "";
+			for (String _id : ids) {
+				if (!_id.equals(userId)) {
+					target = _id;
+					break;
+				}
+			}
+
+			String connStatus = connectionService.connectionStatus(ids.get(0),
+					ids.get(1));
+			result.add(new UserConnectionResult(userService.findUser(target),
+					connStatus, con.getConnectedDate()));
+		}
+
+		uiModel.addAttribute("connResult", result);
+
+		return "user/pending-connections";
 	}
 }

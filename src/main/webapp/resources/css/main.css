@@ -15,21 +15,64 @@ body {
 	margin: 30px 0;
 }
 
+.setting-list li {
+	height: 32px !important;
+	vertical-align: middle;
+}
+
+.setting-list span {
+	font-size: 26px;
+	padding: 2px;
+}
+
 .num-heading {
-/* -webkit-border-radius: 999px;
+	/* -webkit-border-radius: 999px;
     -moz-border-radius: 999px;
     border-radius: 999px;
     behavior: url(./PIE.htc);  */
-
-    width: 40px auto;
-    height: 40px;
-    padding: 2px;
-
-    background: #fff;
-/*     border: 2px solid #666;  */
-    color: #666;
-    text-align: right;
-
-    font: 36px Arial, sans-serif bold
+	width: 36px auto;
+	height: 36px;
+	padding: 2px;
+	background: #fff;
+	/*     border: 2px solid #666;  */
+	color: #666;
+	text-align: right;
+	font: 32px Arial, sans-serif bold
 }
 
+/*Symbols web fonts  */
+@font-face {
+	font-family: 'LigatureSymbols';
+	src: url('LigatureSymbols-2.11.eot');
+	src: url('LigatureSymbols-2.11.eot?#iefix') format('embedded-opentype'),
+		url('LigatureSymbols-2.11.woff') format('woff'),
+		url('LigatureSymbols-2.11.ttf') format('truetype'),
+		url('LigatureSymbols-2.11.svg#LigatureSymbols') format('svg');
+	src: url('LigatureSymbols-2.11.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.lsf,.lsf-icon:before {
+	font-family: 'LigatureSymbols';
+	-webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	-ms-text-rendering: optimizeLegibility;
+	-o-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-ms-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+}
+
+.lsf-icon:before {
+	content: attr(title);
+	margin-right: 0.3em;
+	font-size: 130%;
+}
+
+.lsf-icon.amazon:before {
+	content: '\E007';
+}

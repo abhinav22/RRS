@@ -24,7 +24,7 @@ import com.example.rrs.service.ConnectionService;
 import com.example.rrs.service.UserService;
 
 @Controller
-@RequestMapping("/api/user")
+@RequestMapping(value = "/api/user")
 public class UserResource extends RestApiResource {
 	private static final Logger log = LoggerFactory
 			.getLogger(UserResource.class);
@@ -65,14 +65,20 @@ public class UserResource extends RestApiResource {
 					+ profileId);
 		}
 
-		String result = connectionService.connectionStatus(id, profileId);
+		String result = "";
 
+		if (id.equals(profileId)) {
+			result = "self";
+		} else {
+			result = connectionService.connectionStatus(id, profileId);
+		}
+		
 		if (log.isDebugEnabled()) {
 			log.debug("connection result@" + result);
 		}
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setContentType(MediaType.TEXT_PLAIN);
 		return new ResponseEntity<String>(result, headers, HttpStatus.OK);
 
 	}

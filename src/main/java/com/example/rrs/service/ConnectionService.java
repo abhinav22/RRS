@@ -1,5 +1,6 @@
 package com.example.rrs.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,6 +115,7 @@ public class ConnectionService {
 		Connection con = findConnectionByUsers(userId, connectedTo);
 		if (con != null) {
 			con.setStatus(Connection.Status.ACCEPTED);
+			con.setConnectedDate(new Date());
 			connectionRepository.save(con);
 		}
 	}
@@ -125,7 +127,7 @@ public class ConnectionService {
 
 		Connection con = findConnectionByUsers(userId, connectedTo);
 		if (con != null) {
-			con.setStatus(Connection.Status.IGNORE);
+			con.setStatus(Connection.Status.IGNORED);
 			connectionRepository.save(con);
 		}
 	}
@@ -157,19 +159,20 @@ public class ConnectionService {
 	public List<Connection> findConnectionsForUser(String userId) {
 		QConnection qcon = QConnection.connection;
 		List<Connection> cons = (List<Connection>) connectionRepository
-				.findAll(qcon.userIds.get(0).eq(userId)
-						.or(qcon.userIds.get(1).eq(userId)));
+				.findAll((qcon.userIds.get(0).eq(userId).or(qcon.userIds.get(1)
+						.eq(userId))).and(qcon.status.eq(Status.ACCEPTED)));
 		return cons;
 	}
 
 	public long countConnectionsForUser(String userId) {
 		QConnection qcon = QConnection.connection;
-		long consCount = connectionRepository.count(qcon.userIds.get(0)
-				.eq(userId).or(qcon.userIds.get(1).eq(userId)));
+		long consCount = connectionRepository.count((qcon.userIds.get(0).eq(
+				userId).or(qcon.userIds.get(1).eq(userId))).and(qcon.status
+				.eq(Status.ACCEPTED)));
 		return consCount;
 	}
 
-	public List<Connection> findPendingConnectionRequestsForUser(String userId) {
+	public List<Connection> findPendingConnectionsForUser(String userId) {
 		QConnection qcon = QConnection.connection;
 		List<Connection> cons = (List<Connection>) connectionRepository
 				.findAll((qcon.userIds.get(1).eq(userId)).and(qcon.status

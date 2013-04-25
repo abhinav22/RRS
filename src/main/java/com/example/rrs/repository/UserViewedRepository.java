@@ -10,7 +10,7 @@ import com.example.rrs.model.User;
 import com.example.rrs.model.UserViewed;
 
 @Repository
-public interface UserViewedRepository extends MongoRepository<UserViewed, String>, QueryDslPredicateExecutor<User> {
+public interface UserViewedRepository extends MongoRepository<UserViewed, String>, QueryDslPredicateExecutor<UserViewed> {
 
 	@Override
 	List<UserViewed> findAll();

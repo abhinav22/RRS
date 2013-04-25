@@ -1,16 +1,18 @@
 package com.example.rrs.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.rrs.model.Avatar;
 import com.example.rrs.model.QAvatar;
@@ -26,7 +28,6 @@ import com.example.rrs.web.SearchForm;
 import com.mysema.query.types.Predicate;
 
 @Service
-@Transactional
 public class UserService {
 	private static final Logger log = LoggerFactory
 			.getLogger(UserService.class);
@@ -122,14 +123,66 @@ public class UserService {
 	public void viewProfile(String id) {
 		User currentUser = SecurityUtils.getCurrentUser();
 		if (!currentUser.getId().equals(id)) {
-			userViewedRepository.save(new UserViewed(
-					userRepository.findOne(id), currentUser));
+			if (log.isDebugEnabled()) {
+				log.debug("save user viewed log for user @" + id);
+			}
+			Date today = new Date();
+			today = DateUtils.truncate(today, Calendar.DAY_OF_MONTH);
+
+			QUserViewed quv = QUserViewed.userViewed;
+			List<UserViewed> viewed = (List<UserViewed>) userViewedRepository
+					.findAll(quv.userId.eq(id).and(
+							quv.viewedBy.eq(currentUser.getId()).and(
+									quv.viewedDate.eq(today))));
+			if (log.isDebugEnabled()) {
+				log.debug("user viewed log@user id:" + id + ", viewed by @"
+						+ currentUser.getId() + ", today:" + today
+						+ " viewed count today@" + viewed.size());
+			}
+			if (viewed.isEmpty()) {
+				userViewedRepository.save(new UserViewed(id, currentUser
+						.getId()));
+			}
 		}
 	}
-	
-	public long viewedCountForUser(String userId){
-		QUserViewed quv= QUserViewed.userViewed;
-		return userViewedRepository.count(quv.user.id.eq(userId));
+
+	public long viewedCountInSevenDaysForUser(String userId) {
+		QUserViewed quv = QUserViewed.userViewed;
+
+		Date date = DateUtils.addDays(new Date(), -7);
+		date = DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
+
+		if (log.isDebugEnabled()) {
+			log.debug("7 days before is @" + date);
+		}
+
+		long cnt = userViewedRepository.count(quv.userId.eq(userId).and(
+				quv.viewedDate.after(date)));
+
+		if (log.isDebugEnabled()) {
+			log.debug("viewedCount @" + cnt);
+		}
+		return cnt;
+	}
+
+	public List<UserViewed> viewedUsersInSevenDaysForUser(String userId) {
+		QUserViewed quv = QUserViewed.userViewed;
+
+		Date date = DateUtils.addDays(new Date(), -7);
+		date = DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
+
+		if (log.isDebugEnabled()) {
+			log.debug("7 days before is @" + date);
+		}
+
+		List<UserViewed> viewed = (List<UserViewed>) userViewedRepository
+				.findAll(quv.userId.eq(userId).and(quv.viewedDate.after(date)));
+
+		if (log.isDebugEnabled()) {
+			log.debug("viewed resultCount @" + viewed.size());
+		}
+		
+		return viewed;
 	}
 
 }

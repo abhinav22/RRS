@@ -62,7 +62,12 @@
 		<bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" />
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
 			p:paramName="lang" />
+		<mvc:interceptor>
+			<mvc:mapping path="/user/*"/>
+			<bean class="com.example.rrs.web.UserHandlerInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
+	
 
 	<!-- Selects a static view for rendering without the need for an explicit 
 		controller -->

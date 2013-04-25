@@ -40,7 +40,6 @@
 
 	<mongo:db-factory id="mongoDbFactory" host="${mongo.host}"
 		port="${mongo.port}" dbname="${mongo.dbname}" username="${mongo.username}"
-		password="${mongo.password}" />
-
+		password="${mongo.password}" write-concern="FSYNC_SAFE"/>
 
 </beans>

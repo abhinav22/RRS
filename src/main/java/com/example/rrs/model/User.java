@@ -76,6 +76,16 @@ public class User implements UserDetails, Serializable {
 	private List<Phone> phones = new ArrayList<Phone>();
 
 	private List<EmailAddress> emails = new ArrayList<EmailAddress>();
+	
+	private List<String> skills = new ArrayList<String>();
+
+	public List<String> getSkills() {
+		return skills;
+	}
+
+	public void setSkills(List<String> skills) {
+		this.skills = skills;
+	}
 
 	public List<Link> getLinks() {
 		return links;

@@ -1,0 +1,38 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	class="offset1 span7">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<spring:url value="/user/setskill" var="setskill_url" />
+	<spring:url value="/user/home" var="home_url" />
+
+	<form:form name="f" action="${fn:escapeXml(setskill_url)}" method="POST"
+		modelAttribute="skillForm">
+		<fieldset>
+		<legend>ADD SKILLS</legend>
+			<div
+				class="control-group ${requestScope['org.springframework.validation.BindingResult.skillForm'].hasFieldErrors('content') ? 'error' : ''}">
+				<label class="control-label" for="content">Skills(split by ','):</label>
+				<div class="controls">
+					<form:input id="content" type='text' path='content'
+						class="input-block-level" />
+					<div class="help-block">
+						<form:errors path="content" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<div class="form-actions">
+			<input id="proceed" type="submit" value="Save"
+				class="btn btn-success btn-large" /> or <a
+				href="${fn:escapeXml(home_url)}">Cancel </a>
+		</div>
+	</form:form>
+</div>
+
