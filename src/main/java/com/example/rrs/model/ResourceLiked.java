@@ -17,6 +17,16 @@ public class ResourceLiked {
 
 	private Date likedDate;
 
+	public ResourceLiked() {
+		super();
+	}
+
+	public ResourceLiked(String userId2, String resourceId2) {
+		this.userId = userId2;
+		this.resourceId = resourceId2;
+		this.likedDate = new Date();
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -48,7 +58,5 @@ public class ResourceLiked {
 	public void setLikedDate(Date likedDate) {
 		this.likedDate = likedDate;
 	}
-	
-	
 
 }

@@ -7,16 +7,19 @@
 	class="offset1 span7">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<spring:url value="/" var="base_url" />
 
+	<c:set value="${pageContext.request.contextPath}" var="base_url" />
+
+	<h2 style="border-bottom: 1px gray solid">SETUP YOUR AVATAR</h2>
 	<form:form name="f" action="${base_url}/user/setavatar" method="POST"
-		class="form-horizontal" enctype="multipart/form-data" modelAttribute="avatarForm">
+		enctype="multipart/form-data" modelAttribute="avatarForm">
 		<fieldset>
-			<legend>UPLOAD A PICTURE AS YOUR AVATAR</legend>
 			<div class="control-group">
-				<label class="control-label" for="file">File:</label>
+				<label class="control-label" for="file">Choose a local image
+					file:</label>
 				<div class="controls">
-					<form:input id="file" type="file" path="file" name="file" class="input-file" />
+					<form:input id="file" type="file" path="file" name="file"
+						class="input-file" />
 					<div class="help-block">
 						<form:errors path="file"></form:errors>
 					</div>
@@ -25,9 +28,8 @@
 		</fieldset>
 
 		<div class="form-actions">
-			<input id="proceed" type="submit" value="Upload"
-				class="btn btn-success btn-large" /> or <a
-				href="${fn:escapeXml(base_url)}/user/home">Cancel </a>
+			<input id="proceed" type="submit" value="Upload Now!"
+				class="btn btn-success btn-large btn-block" />
 		</div>
 	</form:form>
 </div>

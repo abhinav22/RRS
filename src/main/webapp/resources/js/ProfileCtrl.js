@@ -9,6 +9,8 @@ function ProfileCtrl($scope, $http) {
 	$scope.link = {};
 
 	$scope.phone = {};
+	
+	$scope.skillStr='';
 
 	$scope.isEditable = false;
 
@@ -17,8 +19,6 @@ function ProfileCtrl($scope, $http) {
 	$scope.emailTypes = [ 'Private', 'Work' ];
 	$scope.linkTypes = [ 'Google Plus', 'Twitter', 'Facebook' ];
 	$scope.phoneTypes = [ 'Home', 'Office' ];
-	$scope.salutationLines = [ 'NONE', 'FIRSTNAME', 'FIRSTNAME_AND_LASTNAME',
-			'FIRSTNAME_FIRST_CHAR_OF_LASTNAME' ];
 
 	function checkDirty() {
 		if ($scope.isEditable && (!angular.equals($scope.user, $scope.copy))) {
@@ -28,9 +28,29 @@ function ProfileCtrl($scope, $http) {
 		}
 	}
 
-
 	$scope.setName = function() {
 		$('#nameModal').modal('hide');
+		checkDirty();
+	}
+
+	$scope.setPlace = function() {
+		$('#placeModal').modal('hide');
+		checkDirty();
+	}
+
+	$scope.setWork = function() {
+		$('#workModal').modal('hide');
+		checkDirty();
+	}
+
+	$scope.setSummary = function() {
+		$('#summaryModal').modal('hide');
+		checkDirty();
+	}
+	
+	$scope.setSkill = function() {
+		$scope.user.skills=$scope.skillStr.split(",", 5);
+		$('#skillModal').modal('hide');
 		checkDirty();
 	}
 
@@ -124,10 +144,11 @@ function ProfileCtrl($scope, $http) {
 			if ($scope.user.avatarUrl) {
 				$('#avatar').attr('src', base_url + $scope.user.avatarUrl);
 			}
-			// alert('avatar url@'+$scope.user.avatarUrl);
-			// alert('avatar src@'+$('#avatar').attr('src'));
+			
+			$scope.skillStr=$scope.user.skills.join(", ");
 		});
-
+		
+		
 		$scope.isDirty = false;
 		$scope.isEditable = false;
 	}

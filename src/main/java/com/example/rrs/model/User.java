@@ -30,36 +30,30 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Document
 @Persistent
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails, Serializable {
 
 	@Id
 	@Indexed
 	private String id;
 
+	@Size(max = 20)
+	private String name;
+
+	private Work currentWork;
+
+	private Place currentPlace;
+	
+	private String summary;
+
 	@NotNull
 	private boolean enabled = false;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(style = "M-")
-	private Date creationDate;
-
-	@Size(max = 20)
-	private String firstName;
-
-	@Size(max = 20)
-	private String lastName;
-
-	private SalutationLine salutationLine = SalutationLine.NONE;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(style = "M-")
-	private Date lastUpdateDate;
 
 	@NotNull
 	@NotEmpty
 	@Size(max = 20)
-	@JsonIgnore//ignore password to json stream for security.
+	@JsonIgnore
+	// ignore password to json stream for security.
 	private String password;
 
 	@NotNull
@@ -76,8 +70,48 @@ public class User implements UserDetails, Serializable {
 	private List<Phone> phones = new ArrayList<Phone>();
 
 	private List<EmailAddress> emails = new ArrayList<EmailAddress>();
-	
+
 	private List<String> skills = new ArrayList<String>();
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(style = "M-")
+	private Date creationDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(style = "M-")
+	private Date lastUpdateDate;
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Work getCurrentWork() {
+		return currentWork;
+	}
+
+	public void setCurrentWork(Work currentWork) {
+		this.currentWork = currentWork;
+	}
+
+	public Place getCurrentPlace() {
+		return currentPlace;
+	}
+
+	public void setCurrentPlace(Place currentPlace) {
+		this.currentPlace = currentPlace;
+	}
 
 	public List<String> getSkills() {
 		return skills;
@@ -111,17 +145,6 @@ public class User implements UserDetails, Serializable {
 		this.emails = emails;
 	}
 
-	public SalutationLine getSalutationLine() {
-		if (salutationLine == null) {
-			this.salutationLine = SalutationLine.NONE;
-		}
-		return salutationLine;
-	}
-
-	public void setSalutationLine(SalutationLine salutationLine) {
-		this.salutationLine = salutationLine;
-	}
-
 	@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -140,16 +163,8 @@ public class User implements UserDetails, Serializable {
 		return this.creationDate;
 	}
 
-	public String getFirstName() {
-		return this.firstName;
-	}
-
 	public String getId() {
 		return this.id;
-	}
-
-	public String getLastName() {
-		return this.lastName;
 	}
 
 	public Date getLastUpdateDate() {
@@ -192,16 +207,8 @@ public class User implements UserDetails, Serializable {
 		this.creationDate = creationDate;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 
 	public void setLastUpdateDate(Date lastUpdateDate) {
@@ -223,25 +230,6 @@ public class User implements UserDetails, Serializable {
 	@Override
 	public String getUsername() {
 		return this.email;
-	}
-
-	@JsonIgnore()
-	public String getName() {
-		switch (this.getSalutationLine()) {
-		case FIRSTNAME:
-			return this.firstName;
-
-		case FIRSTNAME_AND_LASTNAME:
-			return this.firstName + " " + this.lastName;
-
-		case FIRSTNAME_FIRST_CHAR_OF_LASTNAME:
-			return this.firstName + " "
-					+ String.valueOf(this.lastName.charAt(0)).toUpperCase();
-		case NONE:
-			return this.getEmail();
-		default:
-			return this.getEmail();
-		}
 	}
 
 	@Override

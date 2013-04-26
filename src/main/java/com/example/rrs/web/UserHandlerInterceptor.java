@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequestInterceptor;
 import com.example.rrs.model.User;
 import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.service.ConnectionService;
+import com.example.rrs.service.ResourceService;
 import com.example.rrs.service.UserService;
 
 public class UserHandlerInterceptor implements WebRequestInterceptor {
@@ -24,6 +25,9 @@ public class UserHandlerInterceptor implements WebRequestInterceptor {
 
 	@Inject
 	ConnectionService connectionService;
+
+	@Inject
+	ResourceService resourceService;
 
 	public UserHandlerInterceptor() {
 		// TODO Auto-generated constructor stub
@@ -50,11 +54,18 @@ public class UserHandlerInterceptor implements WebRequestInterceptor {
 
 		long viewedCount = userService.viewedCountInSevenDaysForUser(user
 				.getId());
+		
+		long sharedCount=resourceService.countSharedForUser(user.getId());
+		
+		long likedCount=resourceService.countLikedForUser(user.getId());
 
 		if (log.isDebugEnabled()) {
 			log.debug("connectinsCount@" + connectinsCount);
 			log.debug("pendingConnectinsCount@" + pendingConnectinsCount);
 			log.debug("viewedCount@" + viewedCount);
+			
+			log.debug("sharedCount@" + sharedCount);
+			log.debug("likedCount@" + likedCount);
 		}
 
 		request.setAttribute("connectionsCount", connectinsCount,
@@ -64,6 +75,12 @@ public class UserHandlerInterceptor implements WebRequestInterceptor {
 				RequestAttributes.SCOPE_REQUEST);
 
 		request.setAttribute("viewedCount", viewedCount,
+				RequestAttributes.SCOPE_REQUEST);
+		
+		request.setAttribute("sharedCount", sharedCount,
+				RequestAttributes.SCOPE_REQUEST);
+		
+		request.setAttribute("likedCount", likedCount,
 				RequestAttributes.SCOPE_REQUEST);
 
 	}

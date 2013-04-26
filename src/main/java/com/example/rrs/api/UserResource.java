@@ -1,5 +1,8 @@
 package com.example.rrs.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,10 +21,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.rrs.model.Avatar;
+import com.example.rrs.model.Resource;
 import com.example.rrs.model.User;
 import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.service.ConnectionService;
+import com.example.rrs.service.ResourceService;
 import com.example.rrs.service.UserService;
+import com.example.rrs.web.ResourceResult;
 
 @Controller
 @RequestMapping(value = "/api/user")
@@ -34,6 +40,9 @@ public class UserResource extends RestApiResource {
 
 	@Inject
 	ConnectionService connectionService;
+
+	@Inject
+	ResourceService resourceService;
 
 	@RequestMapping(value = "/{id}/profile", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
@@ -72,7 +81,7 @@ public class UserResource extends RestApiResource {
 		} else {
 			result = connectionService.connectionStatus(id, profileId);
 		}
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug("connection result@" + result);
 		}
@@ -190,5 +199,4 @@ public class UserResource extends RestApiResource {
 
 		return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
 	}
-
 }

@@ -1,0 +1,29 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	class="offset1 span8">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<c:url value="/" var="base_url" />
+
+	<h2 style="border-bottom: 1px gray solid">LIKED RESOURCE</h2>
+
+	<ul class="media-list">
+		<c:forEach items="${viewedResult}" var="result">
+			<li class="media">
+				<a class="pull-left" href="${base_url}/user/public-profile-${result.user.id}"> 
+					<img class="media-object img-polaroid" src="${base_url}/api/user/${result.user.id}/avatar" style="width:64px;height:64px" />
+				</a>
+				<div class="media-body">
+					<h4 class="media-heading">${result.user.firstName} <small>viewed your profile at ${result.viewedDate}</small></h4>
+					<p><a href="${base_url}/user/public-profile-${result.user.id}" class="btn btn-small">View Profile</a></p>
+				</div>
+			</li>
+		</c:forEach>
+	</ul>
+</div>
+

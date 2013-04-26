@@ -110,8 +110,7 @@ public class ApplicationConversionServiceFactoryBean extends
 			@Override
 			public String convert(User user) {
 				return new StringBuilder().append(user.getEmail()).append(' ')
-						.append(user.getFirstName()).append(' ')
-						.append(user.getLastName()).append(' ')
+						.append(user.getName()).append(' ')
 						.append(user.getPassword()).toString();
 			}
 		};

@@ -7,13 +7,13 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0" class="navbar">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<spring:url value="/" var="base_url" />
+	<c:url value="/" var="base_url" />
 
 	<div class="navbar-inner">
 		<div class="container-narrow">
 			<a href="#" class="btn btn-navbar" data-toggle="collapse"
-				data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-				class="icon-bar"></span> <span class="icon-bar"></span>
+				data-target=".nav-collapse"> <span class="icon-bar">${null}</span> <span
+				class="icon-bar">${null}</span> <span class="icon-bar">${null}</span>
 			</a> <a class="brand" href="${base_url}/user/home">${sessionScope['SPRING_SECURITY_CONTEXT'].authentication.principal.name}</a>
 
 			<div class="nav-collapse collapse">
@@ -30,12 +30,14 @@
 							<li><a href="${base_url}/user/profile">View Profile</a></li>
 						</ul></li>-->
 					<li><a href="${base_url}user/invite"><b class="icon-plus-sign">${null}</b>Invite</a></li>
+					<li><a href="${base_url}search/home"><b class="icon-search">${null}</b>Search</a></li>
 				</ul> 
-				<spring:url value="/search" var="form_url" />
+				<!--<spring:url value="/search" var="form_url" />
 				<form name="f" action="${fn:escapeXml(form_url)}" method="POST"
 					class="navbar-search pull-right">
 					<input type="text" name="keyword" class="input-medium search-query" />
 				</form>
+				-->
 			</div>
 		</div>
 	</div>

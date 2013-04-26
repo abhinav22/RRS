@@ -17,6 +17,10 @@
 		<put-attribute name="sidebar" value="/WEB-INF/views/user/sidebar.jspx" />
 	</definition>
 
+	<definition extends="home" name="user/setuser">
+		<put-attribute name="body" value="/WEB-INF/views/user/setuser.jspx" />
+	</definition>
+
 	<definition extends="home" name="user/home">
 		<put-attribute name="body" value="/WEB-INF/views/user/home.jspx" />
 	</definition>
@@ -58,19 +62,36 @@
 		<put-attribute name="script" value="/resources/js/ProfileCtrl.js" />
 	</definition>
 	<definition extends="home" name="user/viewed">
-		<put-attribute name="body"
-			value="/WEB-INF/views/user/viewed.jspx" />
+		<put-attribute name="body" value="/WEB-INF/views/user/viewed.jspx" />
 	</definition>
-	
+
 	<definition extends="home" name="user/connections">
 		<put-attribute name="body"
 			value="/WEB-INF/views/user/connections.jspx" />
 	</definition>
-	
+
 	<definition extends="home" name="user/pending-connections">
 		<put-attribute name="body"
 			value="/WEB-INF/views/user/pending-connections.jspx" />
 	</definition>
-	
 
+	<definition extends="home" name="user/liked">
+		<put-attribute name="body" value="/WEB-INF/views/user/liked.jspx" />
+	</definition>
+
+	<definition extends="home" name="user/shared">
+		<put-attribute name="body" value="/WEB-INF/views/user/shared.jspx" />
+	</definition>
+
+	<definition extends="home" name="user/share-resource">
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/share-resource.jspx" />
+	</definition>
+
+	<definition extends="home" name="user/recommended-resource">
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/recommended-resource.jspx" />
+		<put-attribute name="script"
+			value="/resources/js/RecommendedResCtrl.js" />
+	</definition>
 </tiles-definitions>

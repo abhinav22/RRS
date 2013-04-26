@@ -3,6 +3,7 @@ package com.example.rrs.web;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,13 +37,17 @@ import com.example.rrs.model.Connection;
 import com.example.rrs.model.EmailAddress;
 import com.example.rrs.model.Link;
 import com.example.rrs.model.Phone;
+import com.example.rrs.model.Resource;
+import com.example.rrs.model.ResourcePicture;
 import com.example.rrs.model.SalutationLine;
 import com.example.rrs.model.User;
 import com.example.rrs.model.UserViewed;
 import com.example.rrs.repository.AvatarRepository;
+import com.example.rrs.repository.ResourcePictureRepository;
 import com.example.rrs.security.SecurityUtils;
 import com.example.rrs.service.ConnectionService;
 import com.example.rrs.service.MailService;
+import com.example.rrs.service.ResourceService;
 import com.example.rrs.service.UserService;
 
 @Controller
@@ -59,7 +64,13 @@ public class UserController {
 	ConnectionService connectionService;
 
 	@Inject
+	ResourceService resourceService;
+
+	@Inject
 	AvatarRepository avatarRepository;
+
+	@Inject
+	ResourcePictureRepository resourcePictureRepository;
 
 	@Inject
 	MailService emailService;
@@ -127,39 +138,106 @@ public class UserController {
 		boolean nameAvailbility = nameIsSet(user);
 		if (!nameAvailbility) {
 			atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
-					"First name and last name is not given, set up now!");
-			return "redirect:/user/setname";
+					"Please setup your basic info!");
+			return "redirect:/user/setuser";
 		}
-
-		if (!avatarIsSet(user)) {
-			atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
-					"Choose a personalized picture as avatar");
-			return "redirect:/user/setavatar";
-		}
-
-		if (!alterEmailIsSet(user)) {
-			atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
-					" You can setup another email as an alternavite!");
-			return "redirect:/user/setemail";
-		}
-
-		if (!linkIsSet(user)) {
-			atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
-					" Add a social link to your profile now !");
-			return "redirect:/user/setlink";
-		}
-
-		if (!phoneIsSet(user)) {
-			atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
-					" Add a phone number !");
-			return "redirect:/user/setphone";
-		}
+		//
+		// if (!avatarIsSet(user)) {
+		// atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+		// "Choose a personalized picture as avatar");
+		// return "redirect:/user/setavatar";
+		// }
+		//
+		// if (!alterEmailIsSet(user)) {
+		// atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+		// " You can setup another email as an alternavite!");
+		// return "redirect:/user/setemail";
+		// }
+		//
+		// if (!linkIsSet(user)) {
+		// atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+		// " Add a social link to your profile now !");
+		// return "redirect:/user/setlink";
+		// }
+		//
+		// if (!phoneIsSet(user)) {
+		// atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+		// " Add a phone number !");
+		// return "redirect:/user/setphone";
+		// }
 
 		return "user/home";
 	}
 
-	void populateNameForm(Model uiModel, NameForm user) {
+	void populateUserForm(Model uiModel, UserForm user) {
 		uiModel.addAttribute("salutationLines", SalutationLine.values());
+		uiModel.addAttribute("userForm", user);
+	}
+
+	@RequestMapping(value = { "/setuser" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String setupUser(Model uiModel) {
+		if (log.isDebugEnabled()) {
+			log.debug("call setupUser....");
+		}
+
+		UserForm userForm = new UserForm();
+		populateUserForm(uiModel, userForm);
+		return "user/setuser";
+	}
+
+	@RequestMapping(value = { "/setuser" }, method = RequestMethod.POST, produces = { "text/html" })
+	public String saveUser(@Valid UserForm userForm,
+			BindingResult bindingResult, Model uiModel, RedirectAttributes atts) {
+		if (log.isDebugEnabled()) {
+			log.debug("call @saveUser to set up user:" + userForm);
+		}
+
+		if (bindingResult.hasErrors()) {
+			populateUserForm(uiModel, userForm);
+			return "user/setuser";
+		}
+
+		String[] skills = userForm.getSkillStr().split(",");
+
+		if (skills.length > 5) {
+			bindingResult.rejectValue("content",
+					"You can add 5 skills at most",
+					"You can add 5 skills at most");
+			populateUserForm(uiModel, userForm);
+			return "user/setuser";
+		}
+		User user = SecurityUtils.getCurrentUser();
+
+		user.getSkills().addAll(Arrays.asList(skills));
+
+		user.setName(userForm.getName());
+		user.setCurrentPlace(userForm.getCurrentPlace());
+		user.setCurrentWork(userForm.getCurrentWork());
+
+		if (userForm.getEmail() != null) {
+			user.addEmail(new EmailAddress("OTHER", userForm.getEmail()));
+		}
+
+		if (userForm.getLink() != null) {
+			user.addLink(new Link("OTHER", userForm.getLink()));
+		}
+
+		if (userForm.getPhoneNumber() != null) {
+			user.addPhone(new Phone("OTHER", userForm.getPhoneNumber()));
+		}
+
+		userService.saveUser(user);
+
+		SecurityContextHolder.getContext().setAuthentication(
+				SecurityContextHolder.getContext().getAuthentication());
+
+		atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+				"User info is set successfully");
+
+		return "redirect:/user/recommended-resource";
+	}
+
+	void populateNameForm(Model uiModel, NameForm user) {
 		uiModel.addAttribute("nameForm", user);
 	}
 
@@ -171,9 +249,9 @@ public class UserController {
 		User user = SecurityUtils.getCurrentUser();
 
 		NameForm nameForm = new NameForm();
-		nameForm.setFirstName(user.getFirstName());
-		nameForm.setLastName(user.getLastName());
-		nameForm.setSalutationLine(user.getSalutationLine());
+		// nameForm.setFirstName(user.getFirstName());
+		// nameForm.setLastName(user.getLastName());
+		// nameForm.setSalutationLine(user.getSalutationLine());
 		populateNameForm(uiModel, nameForm);
 		return "user/setname";
 	}
@@ -210,7 +288,7 @@ public class UserController {
 			log.debug("call @nameIsSet");
 		}
 
-		if (user.getFirstName() == null || user.getLastName() == null) {
+		if (user.getName() == null) {
 			return false;
 		}
 
@@ -550,65 +628,81 @@ public class UserController {
 		uiModel.addAttribute("passwordForm", passwordForm);
 	}
 
-	@RequestMapping(value = { "/setskill" }, method = RequestMethod.GET, produces = { "text/html" })
-	public String setupSkill(Model uiModel) {
-		populateSkillForm(uiModel, new SkillForm());
-		return "user/setskill";
+	@RequestMapping(value = { "/share-resource" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String setupResource(Model uiModel) {
+		populateResourceForm(uiModel, new ResourceForm());
+		return "user/share-resource";
 	}
 
-	@RequestMapping(value = { "/setskill" }, method = RequestMethod.POST, produces = { "text/html" })
-	public String saveSkill(@Valid SkillForm skillForm,
+	@RequestMapping(value = { "/share-resource" }, method = RequestMethod.POST, produces = { "text/html" })
+	public String saveResource(@Valid ResourceForm resourceForm,
 			BindingResult bindingResult, Model uiModel, RedirectAttributes atts) {
 		if (log.isDebugEnabled()) {
-			log.debug("call @saveSkill to set up url:" + skillForm);
+			log.debug("call @saveResource to set up url:" + resourceForm);
 		}
 
 		if (bindingResult.hasErrors()) {
-			populateSkillForm(uiModel, skillForm);
-			return "user/setskill";
+			populateResourceForm(uiModel, resourceForm);
+			return "user/share-resource";
 		}
 
-		String skillStr = skillForm.getContent();
+		String resourceStr = resourceForm.getTagStr();
 
-		String[] skills = skillStr.split(",");
+		String[] tags = resourceStr.split(",");
 
-		if (skills.length > 5) {
-			bindingResult.rejectValue("content",
-					"You can add 5 skills at most",
-					"You can add 5 skills at most");
-			populateSkillForm(uiModel, skillForm);
-			return "user/setskill";
+		if (tags.length > 5) {
+			bindingResult.rejectValue("tagSrc",
+					"You can add 5 resources at most",
+					"You can add 5 resources at most");
+			populateResourceForm(uiModel, resourceForm);
+			return "user/share-resource";
 		}
+
+		String pictureUrl = null;
+
+		MultipartFile file = resourceForm.getFile();
 
 		User user = SecurityUtils.getCurrentUser();
 
-		user.getSkills().addAll(Arrays.asList(skills));
+		Resource res = new Resource();
 
-		userService.saveUser(user);
+		res.setCreatedDate(new Date());
+		res.setDescription(resourceForm.getDescription());
+		res.setExternalLink(resourceForm.getLink());
+		res.setLongDesc(resourceForm.getLongDesc());
+		res.setName(resourceForm.getName());
+		res.setUserId(user.getId());
+		res.getTags().addAll(Arrays.asList(tags));
 
-		SecurityContextHolder.getContext().setAuthentication(
-				SecurityContextHolder.getContext().getAuthentication());
+		res = resourceService.saveResource(res);
+
+		if (!file.isEmpty()) {
+			ResourcePicture pic = new ResourcePicture();
+			try {
+				pic.setContent(file.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			pic.setMimeType(file.getContentType());
+			pic.setName(file.getName());
+			pic.setResourceId(res.getId());
+			pic.setSize(file.getSize());
+			pic.setResourceId(res.getId());
+
+			pic = resourcePictureRepository.save(pic);
+
+			res.setPictureUrl("api/picture/" + pic.getId());
+			res = resourceService.saveResource(res);
+		}
 
 		atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
-				"url is set successfully");
+				"Resource is shared successfully");
 
-		return "redirect:/user/home";
+		return "redirect:/user/shared";
 	}
 
-	private void populateSkillForm(Model uiModel, SkillForm skillForm) {
-		uiModel.addAttribute("skillForm", skillForm);
-	}
-
-	private boolean skillIsSet(User user) {
-		if (log.isDebugEnabled()) {
-			log.debug("call @skillIsSet");
-		}
-
-		if (user.getSkills().isEmpty()) {
-			return false;
-		}
-
-		return true;
+	private void populateResourceForm(Model uiModel, ResourceForm resourceForm) {
+		uiModel.addAttribute("resourceForm", resourceForm);
 	}
 
 	@RequestMapping(value = { "/viewed" }, method = RequestMethod.GET, produces = { "text/html" })
@@ -702,4 +796,42 @@ public class UserController {
 
 		return "user/pending-connections";
 	}
+
+	@RequestMapping(value = { "/shared" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String shared(Model uiModel, WebRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("shared resource");
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		List<Resource> result = resourceService.sharedResourceForUser(user
+				.getId());
+
+		uiModel.addAttribute("sharedResult", result);
+
+		return "user/shared";
+	}
+
+	@RequestMapping(value = { "/liked" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String liked(Model uiModel, WebRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("liked resource");
+		}
+
+		User user = SecurityUtils.getCurrentUser();
+
+		List<Resource> result = resourceService.likedResourcesForUser(user
+				.getId());
+
+		uiModel.addAttribute("likedResult", result);
+
+		return "user/liked";
+	}
+	
+	@RequestMapping(value = { "/recommended-resource" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String recommendedResource(Model uiModel) {
+		return "user/recommended-resource";
+	}
+
 }

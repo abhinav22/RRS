@@ -40,7 +40,7 @@
 
 	</div>
 
-	<div class="offset1 span5 well">
+	<div class="offset1 span5 well well-large">
 		<spring:url value="/register" var="form_url" />
 		<form:form action="${form_url}" modelAttribute="registerForm"
 			method="POST">
@@ -53,7 +53,7 @@
 					class="control-group ${requestScope['org.springframework.validation.BindingResult.registerForm'].hasFieldErrors('email') ? 'error' : ''}">
 					<label class="control-label" for="email">Email*:</label>
 					<div class="controls">
-						<form:input path="email" class="input-block-level"/>
+						<form:input path="email" class="input-block-level" />
 						<div class="help-block">
 							<form:errors path="email" />
 						</div>
@@ -63,7 +63,8 @@
 					class="control-group ${requestScope['org.springframework.validation.BindingResult.registerForm'].hasFieldErrors('password') ? 'error' : ''}">
 					<label class="control-label" for="password">Password*:</label>
 					<div class="controls">
-						<form:input path="password" type="password" class="input-block-level"/>
+						<form:input path="password" type="password"
+							class="input-block-level" />
 						<div class="help-block">
 							<form:errors path="password" />
 						</div>
@@ -74,17 +75,21 @@
 					<label class="control-label" for="repeatPassword">Confirm
 						Password*:</label>
 					<div class="controls">
-						<form:input path="repeatPassword" type="password" class="input-block-level"/>
+						<form:input path="repeatPassword" type="password"
+							class="input-block-level" />
 						<div class="help-block">
 							<form:errors path="repeatPassword" />
 						</div>
 					</div>
 				</div>
+
+				<div class="control-group">
+					<div class="controls">
+						<input type="submit" value="Regsiter"
+							class="btn btn-success btn-large btn-block" />
+					</div>
+				</div>
 			</fieldset>
-			<div class="form-actions">
-				<input type="submit" value="Regsiter"
-					class="btn btn-success btn-large btn-block" />
-			</div>
 		</form:form>
 	</div>
 </div>

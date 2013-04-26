@@ -152,7 +152,7 @@ public class ConnectionService {
 		model.put("user", user);
 		model.put("profile", connected);
 
-		mailSender.sendEmail(connected.getEmail(), user.getFirstName()
+		mailSender.sendEmail(connected.getEmail(), user.getName()
 				+ " requested to connect you!", "connection-request", model);
 	}
 

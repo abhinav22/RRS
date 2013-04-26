@@ -1,0 +1,45 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	class="offset1 span8" ng-controller="RecommendedResCtrl">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<c:set value="${pageContext.request.contextPath}" var="base_url" />
+	<h2 style="border-bottom: 1px gray solid">RECOMMENED RESOURCE</h2>
+
+	<div class="nav">
+		<a href="${base_url}/user/share-resource" class="btn btn-success"><b
+			class="icon-plus-sign">${null}</b>Share Resource</a>
+	</div>
+	<ul class="media-list">
+
+		<li class="media" ng-repeat="item in res">
+			<a class="pull-left"
+				href="${base_url}/resource/${result.id}"> <img
+					class="media-object img-polaroid" src=""
+					style="width: 64px; height: 64px" />
+			</a>
+			<div class="media-body">
+				<h4 class="media-heading">
+					{{item.resource.name}} <small>{{item.sharedBy.name}} shared
+						at {{item.resource.createdDate}}</small>
+				</h4>
+				<p>{{item.resouce.description}}</p>
+				<p>
+				<ul class="inline">
+					<li ng-repeat="tag in item.resource.tags">{{tag}}</li>
+				</ul>
+				</p>
+				<p>
+				 <span> <a href="${base_url}/resource/${result.id}" class="btn btn-small">View
+						Details</a></span> <span class="pull-right"><span class="lsf">love</span> {{item.likedCount}}<button ng-show="!item.liked" ng-click="like($index)">Like This</button></span>
+				</p>
+			</div></li>
+
+	</ul>
+</div>
+

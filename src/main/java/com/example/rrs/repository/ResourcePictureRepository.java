@@ -6,13 +6,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.example.rrs.model.Avatar;
+import com.example.rrs.model.ResourcePicture;
 
 @Repository
-public interface AvatarRepository extends MongoRepository<Avatar, String>,
-		QueryDslPredicateExecutor<Avatar> {
+public interface ResourcePictureRepository extends MongoRepository<ResourcePicture, String>,
+		QueryDslPredicateExecutor<ResourcePicture> {
 
 	@Override
-	List<Avatar> findAll();
+	List<ResourcePicture> findAll();
 
 }

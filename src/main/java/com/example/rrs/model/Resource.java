@@ -18,8 +18,13 @@ public class Resource {
 
 	private String description;
 
-	@DBRef
-	private User user;
+	private String longDesc;
+
+	private String externalLink;
+
+	private String pictureUrl;
+
+	private String userId;
 
 	private List<String> tags = new ArrayList<String>();
 
@@ -49,12 +54,12 @@ public class Resource {
 		this.description = description;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public List<String> getTags() {
@@ -72,6 +77,29 @@ public class Resource {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
+
+	public String getLongDesc() {
+		return longDesc;
+	}
+
+	public void setLongDesc(String longDesc) {
+		this.longDesc = longDesc;
+	}
+
+	public String getExternalLink() {
+		return externalLink;
+	}
+
+	public void setExternalLink(String externalLink) {
+		this.externalLink = externalLink;
+	}
+
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
+	}
 
 }

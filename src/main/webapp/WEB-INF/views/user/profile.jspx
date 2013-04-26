@@ -6,45 +6,78 @@
 	ng-controller="ProfileCtrl">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<div class="alert"
-		ng-class="{'alert-error':isDirty, 'alert-info':!isDirty}">
-		<span ng-show="!isEditable">Click the Edit button to edit your
+	<c:set value="${pageContext.request.contextPath}" var="base_url" />
+
+	<div class="alert alert-block "
+		ng-class="alert-error:isDirty, alert-info:!isDirty">
+		<span ng-show="!isEditable">Hit the Edit button to edit your
 			profile.</span> <span ng-show="isEditable">Do not forget to save your
 			change.</span>
 
 		<button class="btn btn-success btn-large" ng-show="!isEditable"
-			ng-click="markEditable()">Edit</button>
-		${' '}
-		<button class="btn btn-info btn-large" ng-show="isDirty"
+			ng-click="markEditable()">Edit Profile</button>
+		<button class="btn btn-primary btn-large" ng-show="isDirty"
 			ng-click="save()">Save Change</button>
-		${' '}
+
 		<button class="btn btn-large" ng-show="isEditable" ng-click="cancel()">Cancel</button>
 	</div>
-	<c:url value="/" var="base_url" />
+
+
 	<div class="row-fluid">
-		<div class="span4">
-			<img id="avatar" src="${base_url}resources/js/holder.js/200x200"
-				width="200" height="200" class="img-polaroid" />
+		<div class="span12 well">
+			<div class="span4">
+				<img id="avatar" src="${base_url}resources/js/holder.js/200x200"
+					width="200" height="200" class="img-polaroid" />
+			</div>
+			<div class="span8">
+				<p>
+				<h2>
+					{{user.name}} <small><a type="button" data-toggle="modal"
+						ng-show="isEditable" href="#nameModal"><b class="icon-edit">${null
+								}</b></a></small>
+				</h2>
+				</p>
+				<p>
+				<ul class="unstyled">
+					<li><span style="width: 30px; font-size: 24px" class="lsf">geo</span>
+						{{user.currentPlace.city}}, {{user.currentPlace.country}} <a
+						type="button" data-toggle="modal" ng-show="isEditable"
+						href="#placeModal"><b class="icon-edit">${null }</b></a></li>
+					<li><span style="width: 30px; font-size: 24px" class="lsf">bag</span>
+						{{user.currentWork.position}} at {{user.currentWork.company}} <a
+						type="button" data-toggle="modal" ng-show="isEditable"
+						href="#workModal"><b class="icon-edit">${null }</b></a></li>
+				</ul>
+				</p>
+				<p>
+					<a href="${base_url}/user/public-profile-${user.id}"> View my
+						profile as others</a>
+				</p>
+
+			</div>
 		</div>
-		<div class="span8">
-			<p>
-				<strong>{{user.name}}</strong>
-			</p>
-			<dl class="dl-horizontal">
-				<dt>FIRST NAME</dt>
-				<dd>{{user.firstName}}</dd>
-				<dt>LAST NAME</dt>
-				<dd>{{user.lastName}}</dd>
-				<dt>SALUTATION LINE</dt>
-				<dd>{{user.salutationLine}}</dd>
-			</dl>
-			<p>
-				<button type="button" data-toggle="modal" class="btn"
-					ng-show="isEditable" data-target="#nameModal">Edit Name</button>
-				<br /> <a href="${base_url}user/public-profile-${user.id}">
-					View my profile as others</a>
-			</p>
-		</div>
+	</div>
+
+	<div class="row-fluid">
+		<h3 style="border-bottom: 1px gray solid;">SUMMARY</h3>
+		<p>{{user.summary}}</p>
+		<p>
+			<button ng-show="isEditable" data-toggle="modal"
+				data-target="#summaryModal" class="btn btn-success">
+				<b class="icon-edit">${null}</b>Edit Summary
+			</button>
+		</p>
+	</div>
+	
+	<div class="row-fluid">
+		<h3 style="border-bottom: 1px gray solid;">SKILLS</h3>
+		<p><ul class="inline"><li ng-repeat="s in user.skills">{{s}} </li></ul></p>
+		<p>
+			<button ng-show="isEditable" data-toggle="modal"
+				data-target="#skillModal" class="btn btn-success">
+				<b class="icon-edit">${null}</b>Edit Skill
+			</button>
+		</p>
 	</div>
 
 	<div id="nameModal" class="modal hide fade">
@@ -53,42 +86,123 @@
 				aria-hidden="true">
 				<![CDATA[&times;]]>
 			</button>
-			<h3>Edit Name</h3>
+			<h3>Display Name</h3>
 		</div>
-		<div class="modal-body form-horizontal">
-
+		<div class="modal-body">
 			<fieldset>
 				<div class="control-group">
-					<label class="control-label" for="firstname">First Name</label>
 					<div class="controls">
-						<input id="firstname" type="text" class="input-block-level"
-							ng-model="user.firstName" required="true">${null}</input>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="lastname">Last Name</label>
-					<div class="controls">
-						<input id="lastname" class="input-block-level"
-							ng-model="user.lastName" required="true">${null}</input>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="salutationLine">Salutation
-						Line</label>
-					<div class="controls">
-						<select id="salutationLine" ng-model="user.salutationLine"
-							ng-options="e for e in salutationLines">${null}
-						</select>
+						<input id="name" type="text" class="input-block-level"
+							ng-model="user.name" required="true">${null}</input>
 					</div>
 				</div>
 			</fieldset>
-
 		</div>
 		<div class="modal-footer">
-
 			<a href="#" class="btn btn-primary" ng-click="setName()">Save</a>
 		</div>
 	</div>
+
+	<div id="placeModal" class="modal hide fade">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">
+				<![CDATA[&times;]]>
+			</button>
+			<h3>Current Place</h3>
+		</div>
+		<div class="modal-body">
+			<fieldset>
+				<div class="control-group">
+					<div class="controls">
+						<input id="city" type="text" class="span6" placeholder="City"
+							ng-model="user.currentPlace.city" required="true">${null}</input>
+						<input id="country" type="text" class="span6"
+							placeholder="Country" ng-model="user.currentPlace.country"
+							required="true">${null}</input>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn btn-primary" ng-click="setPlace()">Save</a>
+		</div>
+	</div>
+
+	<div id="workModal" class="modal hide fade">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">
+				<![CDATA[&times;]]>
+			</button>
+			<h3>Current Work</h3>
+		</div>
+		<div class="modal-body">
+			<fieldset>
+				<div class="control-group">
+					<div class="controls">
+						<input id="city" type="text" class="span6" placeholder="Position"
+							ng-model="user.currentWork.position" required="true">${null}</input>
+						<input id="country" type="text" class="span6"
+							placeholder="Company" ng-model="user.currentWork.company"
+							required="true">${null}</input>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn btn-primary" ng-click="setWork()">Save</a>
+		</div>
+	</div>
+
+	<div id="summaryModal" class="modal hide fade">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">
+				<![CDATA[&times;]]>
+			</button>
+			<h3>Summary</h3>
+		</div>
+		<div class="modal-body">
+			<fieldset>
+				<div class="control-group">
+					<div class="controls">
+						<textarea rows="8" id="city" type="text" class="input-block-level"
+							placeholder="In simple introduction to yourself"
+							ng-model="user.summary" required="true">${null}</textarea>
+
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn btn-primary" ng-click="setSummary()">Save</a>
+		</div>
+	</div>
+	<div id="skillModal" class="modal hide fade">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">
+				<![CDATA[&times;]]>
+			</button>
+			<h3>Skill <small>split by comma</small></h3>
+		</div>
+		<div class="modal-body">
+			<fieldset>
+				<div class="control-group">
+					<div class="controls">
+						<input id="skill" type="text" class="input-block-level"
+							placeholder="Skills, such as Java, Spring, Java EE"
+							ng-model="skillStr" required="true">${null}</input>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn btn-primary" ng-click="setSkill()">Save</a>
+		</div>
+	</div>
+
 	<div class="row-fluid">
 		<h4 style="border-bottom: 1px gray solid;">EMAIL</h4>
 		<table class="table">
@@ -103,7 +217,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="email in user.emails">
-					<th>{{$index+1}}</th>
+					<td>{{$index+1}}</td>
 					<td>{{email.type}}</td>
 					<td>{{email.content}}</td>
 					<td>{{email.verified}}</td>
@@ -113,8 +227,10 @@
 			</tbody>
 		</table>
 		<p>
-			<button type="button" class="btn" ng-show="isEditable"
-				ng-click="initAddEmail()">Add Email</button>
+			<button type="button" class="btn btn-success" ng-show="isEditable"
+				ng-click="initAddEmail()">
+				<b class="icon-plus-sign">${null}</b>Add Email
+			</button>
 		</p>
 		<div id="emailModal" class="modal hide fade">
 			<div class="modal-header">
@@ -147,8 +263,7 @@
 
 			</div>
 			<div class="modal-footer">
-
-				<a href="#" class="btn btn-primary" ng-click="addEmail()">Save</a>
+				<a href="#" class="btn btn-primary" ng-click="addEmail()"> Save</a>
 			</div>
 		</div>
 
@@ -164,7 +279,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="link in user.links">
-					<th>{{$index+1}}</th>
+					<td>{{$index+1}}</td>
 					<td>{{link.type}}</td>
 					<td>{{link.content}}</td>
 					<td><a ng-show="isEditable" ng-click="delLink($index)"><b
@@ -174,8 +289,10 @@
 		</table>
 
 		<p>
-			<button type="button" class="btn" ng-show="isEditable"
-				ng-click="initAddLink()">Add Link</button>
+			<button type="button" class="btn btn-success" ng-show="isEditable"
+				ng-click="initAddLink()">
+				<b class="icon-plus-sign">${null}</b> Add Link
+			</button>
 		</p>
 		<div id="linkModal" class="modal hide fade">
 			<div class="modal-header">
@@ -225,7 +342,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="phone in user.phones">
-					<th>{{$index+1}}</th>
+					<td>{{$index+1}}</td>
 					<td>{{phone.type}}</td>
 					<td>{{phone.content}}</td>
 					<td><a ng-show="isEditable" ng-click="delPhone($index)"><b
@@ -235,8 +352,10 @@
 		</table>
 
 		<p>
-			<button type="button" class="btn" ng-show="isEditable"
-				ng-click="initAddPhone()">Add Phone</button>
+			<button type="button" class="btn btn-success" ng-show="isEditable"
+				ng-click="initAddPhone()">
+				<b class="icon-plus-sign">${null}</b>Add Phone
+			</button>
 		</p>
 		<div id="phoneModal" class="modal hide fade">
 			<div class="modal-header">
@@ -265,7 +384,6 @@
 						</div>
 					</div>
 				</fieldset>
-
 			</div>
 			<div class="modal-footer">
 				<a href="#" class="btn btn-primary" ng-click="addPhone()">Save</a>

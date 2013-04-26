@@ -19,7 +19,7 @@
 				<ul class="dropdown-menu">
 				</ul>
 			</div>
-			<input class="span2" id="appendedPrependedDropdownButton" type="text">
+			<input class="span2" id="keyword" name="keyword" type="text">
 			<div class="btn-group">
 				<button class="btn" >
 					GO
