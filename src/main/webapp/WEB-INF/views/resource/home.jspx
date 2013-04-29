@@ -1,0 +1,88 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0" class="span12"
+	style="padding-top: 20px;" ng-controller="ResourceCtrl">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+
+	<div class="row-fluid">
+		<div class="offset3 span6">
+			
+				<div class="input-append">
+					<input class="input-block-level" id="keyword" name="keyword"
+						ng-model="keyword" type="text">${null}</input>
+					<div class="btn-group">
+						<button class="btn" ng-click="go()">GO</button>
+					</div>
+				</div>
+			
+		</div>
+	</div>
+	<div class="row-fluid">
+		<ul class="media-list">
+
+			<li class="media" ng-repeat="item in res"><a class="pull-left"
+				href="#" ng-click="viewDetails($index)"> <img
+					class="media-object img-polaroid"
+					ng-src="{{base_url+item.resource.pictureUrl}}"
+					style="width: 64px; height: 64px" />
+			</a>
+				<div class="media-body">
+					<h4 class="media-heading">
+						{{item.resource.name}} <small>{{item.sharedBy.name}}
+							shared at {{item.resource.createdDate|date:'MMM dd, yyyy'}}</small>
+					</h4>
+					<p>{{item.resource.description}}</p>
+					<p>
+					<ul class="inline">
+						<li ng-repeat="tag in item.resource.tags">{{tag}}</li>
+					</ul>
+					</p>
+					<p>
+						<span> <a href="#" ng-click="viewDetails($index)"
+							class="btn btn-small">View Details</a></span> <span class="pull-right">
+							<span class="lsf">love</span> {{item.likedCount}}
+							<button class="btn btn-small" ng-show="!item.liked"
+								ng-click="like($index)">Like This</button> <span class="lsf">comment</span>
+							{{item.commentedCount}}
+							<button class="btn btn-small" ng-click="initAddComment($index)">Comment</button>
+						</span>
+					</p>
+				</div></li>
+		</ul>
+		<div class="nav">
+			<div class="pull-right">
+				<button class="btn btn-small" ng-click="more()" ng-show="isHasMore">More</button>
+			</div>
+		</div>
+
+		<div id="commentModal" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">
+					<![CDATA[&times;]]>
+				</button>
+				<h3>Comment</h3>
+			</div>
+			<div class="modal-body">
+				<fieldset>
+					<div class="control-group">
+						<div class="controls">
+							<textarea id="commentContent" rows="8" type="text"
+								class="input-block-level" ng-model="commentContent"
+								required="true">${null}</textarea>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn btn-primary" ng-click="comment()">Save</a>
+			</div>
+		</div>
+	</div>
+</div>
+

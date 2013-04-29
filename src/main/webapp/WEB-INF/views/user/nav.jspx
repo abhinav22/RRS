@@ -30,7 +30,7 @@
 							<li><a href="${base_url}/user/profile">View Profile</a></li>
 						</ul></li>-->
 					<li><a href="${base_url}user/invite"><b class="icon-plus-sign">${null}</b>Invite</a></li>
-					<li><a href="${base_url}search/home"><b class="icon-search">${null}</b>Search</a></li>
+					<li><a href="${base_url}resource">Resource</a></li>
 				</ul> 
 				<!--<spring:url value="/search" var="form_url" />
 				<form name="f" action="${fn:escapeXml(form_url)}" method="POST"

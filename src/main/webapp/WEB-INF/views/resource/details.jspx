@@ -1,0 +1,88 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	class="offset1 span10 " style="padding-top: 20px;"
+	ng-init="item_id='${resourceId}'">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<c:url value="/" var="base_url" />
+	<div class="row-fluid" ng-controller="ResourceDetailCtrl">
+		<div class="row-fluid well">
+			<div class="span4">
+				<img id="avatar" ng-src="{{base_url+item.resource.pictureUrl}}"
+					width="200" height="200" class="img-polaroid" />
+			</div>
+			<div class="span8">
+				<h2>{{item.resource.name}}</h2>
+				<p>{{item.sharedBy.name}} shared at
+					{{item.resource.createdDate|date:'MMM dd, yyyy'}}</p>
+				<p>{{item.resource.description}}</p>
+				<p>
+				<ul class="inline">
+					<li ng-repeat="tag in item.resource.tags">{{tag}}</li>
+				</ul>
+				</p>
+				<p>
+					<span class="pull-right"> <span class="lsf">love</span>
+						{{item.likedCount}}
+						<button class="btn btn-small" ng-show="!item.liked"
+							ng-click="like($index)">Like This</button> <span class="lsf">comment</span>
+						{{item.commentedCount}}
+						<button class="btn btn-small" data-toggle="modal"
+							data-target="#commentModal">Comment</button>
+					</span>
+				</p>
+			</div>
+		</div>
+		<div id="commentModal" class="modal hide fade">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">
+				<![CDATA[&times;]]>
+			</button>
+			<h3>Comment</h3>
+		</div>
+		<div class="modal-body">
+			<fieldset>
+				<div class="control-group">
+					<div class="controls">
+						<textarea id="commentContent" rows="8" type="text"
+							class="input-block-level" ng-model="commentContent"
+							required="true">${null}</textarea>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn btn-primary" ng-click="comment()">Save</a>
+		</div>
+	</div>
+		<div class="row-fluid">
+			<div class="span12">{{item.resource.longDesc}}</div>
+		</div>
+		<div class="row-fluid">
+			<ul class="media-list">
+				<li class="media" ng-repeat="comment in comments"><a
+					class="pull-left" href="#" ng-click="viewUserProfile($index)">
+						<img class="media-object img-polaroid"
+						ng-src="{{base_url+comment.user.avatarUrl}}"
+						style="width: 64px; height: 64px" />
+				</a>
+					<div class="media-body">
+						<h4 class="media-heading">
+							{{comment.user.name}} <small> shared at
+								{{comment.comment.commentedDate|date:'MMM dd, yyyy'}}</small>
+						</h4>
+						<p>{{comment.comment.comment}}</p>
+					</div></li>
+			</ul>
+		</div>
+	</div>
+
+	
+</div>
+

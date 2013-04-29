@@ -6,7 +6,7 @@
 	ng-controller="ProfileCtrl">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<c:set value="${pageContext.request.contextPath}" var="base_url" />
+	<c:set value="${pageContext.request.contextPath}/" var="base_url" />
 
 	<div class="alert alert-block "
 		ng-class="alert-error:isDirty, alert-info:!isDirty">

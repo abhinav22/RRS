@@ -1,0 +1,98 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	ng-init="profileId='${profileId}'" class="offset1 span10">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<c:url value="/" var="base_url" />
+	<div class="row-fluid" ng-controller="PublicProfileCtrl">
+		<div class="span8">
+			<div class="row-fluid">
+				<div class="span6">
+					<img id="avatar" src="${base_url}resources/js/holder.js/200x200"
+						width="200" height="200" class="img-polaroid" />
+				</div>
+				<div class="span6">
+					<address>
+						<strong>{{user.firstName}} {{user.lastName}}</strong>
+					</address>
+				</div>
+			</div>
+			<h3>Activities</h3>
+		</div>
+		<div class="span4 well well-small">
+
+
+			<div class="row-fluid" ng-show="connectionStatus=='none'">
+				<p>Connect to {{user.firstName}} Now!</p>
+				<p>
+					<button class="btn btn-primary btn-small btn-block"
+						ng-click="sendConnection()">Send Connection Request</button>
+				</p>
+			</div>
+
+			<div class="row-fluid" ng-show="connectionStatus=='self'">
+				<p>Welcome back, {{user.firstName}}!</p>
+				<p>
+					<a href="${base_url}user/profile"
+						class="btn btn-primary btn-small btn-block">Edit
+						Profile</a>
+				</p>
+			</div>
+			<div class="row-fluid" ng-show="connectionStatus=='connected'">
+				<p>{{user.firstName}} is in your connections.</p>
+				<p>
+					<button class="btn btn-primary btn-small btn-block"
+						onclick="alert('send a message, to be implemented')">Send
+						a message</button>
+				</p>
+			</div>
+
+			<div class="row-fluid" ng-show="connectionStatus=='waiting'">
+				<p>You have sent connection request to {{user.firstName}},
+					please wait for his response.</p>
+			</div>
+			<div class="row-fluid" ng-show="connectionStatus=='being-waited'">
+				<p>{{user.firstName}} had requested to connect you, you can
+					accept it or ignore it.</p>
+				<p>
+				<div class="btn-group">
+					<button class="btn btn-small btn-primary"
+						ng-click="acceptConnection()">Accept</button>
+					<button class="btn btn-small" ng-click="sendConnection()">Ignore</button>
+				</div>
+				</p>
+			</div>
+
+			<hr />
+			<dl>
+				<dt>EMAILS</dt>
+				<dd>
+					<ul class="unstyled">
+						<li ng-repeat="e in user.emails">{{e.content}}</li>
+					</ul>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt>LINKS</dt>
+				<dd>
+					<ul class="unstyled">
+						<li ng-repeat="e in user.links">{{e.content}}</li>
+					</ul>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt>PHONE</dt>
+				<dd>
+					<ul class="unstyled">
+						<li ng-repeat="e in user.phones">{{e.content}}</li>
+					</ul>
+				</dd>
+			</dl>
+		</div>
+	</div>
+</div>

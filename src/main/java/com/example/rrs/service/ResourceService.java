@@ -12,10 +12,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.rrs.model.QResource;
+import com.example.rrs.model.QResourceComment;
 import com.example.rrs.model.QResourceLiked;
 import com.example.rrs.model.Resource;
+import com.example.rrs.model.ResourceComment;
 import com.example.rrs.model.ResourceLiked;
 import com.example.rrs.model.User;
+import com.example.rrs.repository.ResourceCommentRepository;
 import com.example.rrs.repository.ResourceLikedRepository;
 import com.example.rrs.repository.ResourceRepository;
 import com.example.rrs.security.SecurityUtils;
@@ -30,6 +33,9 @@ public class ResourceService {
 
 	@Inject
 	ResourceLikedRepository resourceLikedRepository;
+
+	@Inject
+	ResourceCommentRepository commentRepository;
 
 	public List<Resource> sharedResourceForUser(String userId) {
 		if (log.isDebugEnabled()) {
@@ -105,6 +111,17 @@ public class ResourceService {
 		return resourceLikedRepository.count(qlike.resourceId.eq(resourceId));
 	}
 
+	public long countCommentedForResource(String resourceId) {
+		QResourceComment qcomment = QResourceComment.resourceComment;
+		return commentRepository.count(qcomment.resourceId.eq(resourceId));
+	}
+
+	public List<ResourceComment> commentsForResource(String resourceId) {
+		QResourceComment qcomment = QResourceComment.resourceComment;
+		return (List<ResourceComment>) commentRepository
+				.findAll(qcomment.resourceId.eq(resourceId));
+	}
+
 	public long countLikedForUser(String userId) {
 		QResourceLiked qlike = QResourceLiked.resourceLiked;
 
@@ -134,15 +151,66 @@ public class ResourceService {
 
 		List<Resource> results = resourceRepository.findAll(
 				qres.name.containsIgnoreCase(randomSkill)
-						.or(qres.tags.any().equalsIgnoreCase(randomSkill))
+						.or(qres.tags.any().containsIgnoreCase(randomSkill))
 						.or(qres.description.containsIgnoreCase(randomSkill))
-						.or(qres.longDesc.containsIgnoreCase(randomSkill)), pr).getContent();
+						.or(qres.longDesc.containsIgnoreCase(randomSkill)), pr)
+				.getContent();
 
 		if (log.isDebugEnabled()) {
 			log.debug("result size() @" + results.size());
 		}
 
 		return results;
+	}
+
+	public void commentResource(String userId, String resourceId, String comment) {
+		if (log.isDebugEnabled()) {
+			log.debug("comment resource @userId =" + userId + ", resource id@"
+					+ resourceId + ", comment=" + comment);
+		}
+
+		commentRepository
+				.save(new ResourceComment(userId, resourceId, comment));
+	}
+
+	public List<Resource> searchResource(String keyword, int page, int size) {
+		if (log.isDebugEnabled()) {
+			log.debug("search  resource by keyword @keyword =" + keyword
+					+ ", page@" + page + ", size=" + size);
+		}
+		QResource qres = QResource.resource;
+
+		PageRequest pr = new PageRequest(page, size);
+
+		List<Resource> results = resourceRepository.findAll(
+				qres.name.containsIgnoreCase(keyword)
+						.or(qres.tags.any().containsIgnoreCase(keyword))
+						.or(qres.description.containsIgnoreCase(keyword))
+						.or(qres.longDesc.containsIgnoreCase(keyword)), pr)
+				.getContent();
+
+		if (log.isDebugEnabled()) {
+			log.debug("result size() @" + results.size());
+		}
+
+		return results;
+	}
+
+	public long countSearchResource(String keyword) {
+		if (log.isDebugEnabled()) {
+			log.debug("search  resource by keyword @keyword =" + keyword + "");
+		}
+
+		QResource qres = QResource.resource;
+
+		return resourceRepository.count(qres.name.containsIgnoreCase(keyword)
+				.or(qres.tags.any().containsIgnoreCase(keyword))
+				.or(qres.description.containsIgnoreCase(keyword))
+				.or(qres.longDesc.containsIgnoreCase(keyword)));
+	}
+
+	public Resource findResource(String id) {
+		return resourceRepository.findOne(id);
 	}
 
 }

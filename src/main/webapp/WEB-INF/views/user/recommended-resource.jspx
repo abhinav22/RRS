@@ -19,27 +19,54 @@
 
 		<li class="media" ng-repeat="item in res">
 			<a class="pull-left"
-				href="${base_url}/resource/${result.id}"> <img
-					class="media-object img-polaroid" src=""
+				href="#" ng-click="viewDetails($index)"> <img
+					class="media-object img-polaroid" ng-src="{{base_url+item.resource.pictureUrl}}"
 					style="width: 64px; height: 64px" />
 			</a>
 			<div class="media-body">
 				<h4 class="media-heading">
 					{{item.resource.name}} <small>{{item.sharedBy.name}} shared
-						at {{item.resource.createdDate}}</small>
+						at {{item.resource.createdDate|date:'MMM dd, yyyy'}}</small>
 				</h4>
-				<p>{{item.resouce.description}}</p>
+				<p>{{item.resource.description}}</p>
 				<p>
 				<ul class="inline">
 					<li ng-repeat="tag in item.resource.tags">{{tag}}</li>
 				</ul>
 				</p>
 				<p>
-				 <span> <a href="${base_url}/resource/${result.id}" class="btn btn-small">View
-						Details</a></span> <span class="pull-right"><span class="lsf">love</span> {{item.likedCount}}<button ng-show="!item.liked" ng-click="like($index)">Like This</button></span>
+				 <span> <a href="#" ng-click="viewDetails($index)" class="btn btn-small">View
+						Details</a></span> 
+						<span class="pull-right">
+						<span class="lsf">love</span> {{item.likedCount}}<button class="btn btn-small" ng-show="!item.liked" ng-click="like($index)">Like This</button>
+						
+						<span class="lsf">comment</span> {{item.commentedCount}}<button class="btn btn-small" ng-click="initAddComment($index)">Comment</button>
+						</span>
 				</p>
 			</div></li>
-
 	</ul>
+	
+	<div id="commentModal" class="modal hide fade">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">
+				<![CDATA[&times;]]>
+			</button>
+			<h3>Comment</h3>
+		</div>
+		<div class="modal-body">
+			<fieldset>
+				<div class="control-group">
+					<div class="controls">
+						<textarea id="commentContent" rows="8" type="text" class="input-block-level"
+							ng-model="commentContent" required="true">${null}</textarea>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn btn-primary" ng-click="comment()">Save</a>
+		</div>
+	</div>
 </div>
 

@@ -117,7 +117,7 @@
 					','.</small>
 			</legend>
 			<div
-				class="control-group ${requestScope['org.springframework.validation.BindingResult.skillForm'].hasFieldErrors('skillStr') ? 'error' : ''}">
+				class="control-group ${requestScope['org.springframework.validation.BindingResult.userForm'].hasFieldErrors('skillStr') ? 'error' : ''}">
 				<label class="control-label" for="skillStr">Skills*:</label>
 				<div class="controls">
 					<form:input id="skillStr" type='text' path='skillStr'

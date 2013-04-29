@@ -200,7 +200,7 @@ public class UserController {
 		String[] skills = userForm.getSkillStr().split(",");
 
 		if (skills.length > 5) {
-			bindingResult.rejectValue("content",
+			bindingResult.rejectValue("skillStr",
 					"You can add 5 skills at most",
 					"You can add 5 skills at most");
 			populateUserForm(uiModel, userForm);

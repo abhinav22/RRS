@@ -122,8 +122,8 @@ function ProfileCtrl($scope, $http) {
 				.success(function(data, status, headers, config) {
 					reset();
 				}).error(function(data, status, headers, config) {
-					alert(data);
-					alert(status);
+					//alert(data);
+					//alert(status);
 				});
 
 	}

@@ -11,7 +11,7 @@
 	<c:set value="${pageContext.request.contextPath}" var="base_url" />
 	<h2 style="border-bottom: 1px gray solid">SHARED RESOURCE</h2>
 
-	<div class="row-fluid">
+	<div class="row-fluid nav">
 		<a href="${base_url}/user/share-resource" class="btn btn-success"><b class="icon-plus-sign">${null}</b>Share Resource</a>
 	</div>
 	<ul class="media-list">

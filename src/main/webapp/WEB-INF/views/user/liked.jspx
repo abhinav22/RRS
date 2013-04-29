@@ -12,17 +12,32 @@
 
 	<h2 style="border-bottom: 1px gray solid">LIKED RESOURCE</h2>
 
+	<div class="row-fluid nav">
+		<a href="${base_url}/user/share-resource" class="btn btn-success"><b class="icon-plus-sign">${null}</b>Share Resource</a>
+	</div>
 	<ul class="media-list">
-		<c:forEach items="${viewedResult}" var="result">
-			<li class="media">
-				<a class="pull-left" href="${base_url}/user/public-profile-${result.user.id}"> 
-					<img class="media-object img-polaroid" src="${base_url}/api/user/${result.user.id}/avatar" style="width:64px;height:64px" />
-				</a>
+		<c:forEach items="${likedResult}" var="result">
+			<li class="media"><a class="pull-left"
+				href="${base_url}/resource/${result.id}"> <img
+					class="media-object img-polaroid"
+					src="${base_url}/${result.pictureUrl}"
+					style="width: 64px; height: 64px" />
+			</a>
 				<div class="media-body">
-					<h4 class="media-heading">${result.user.firstName} <small>viewed your profile at ${result.viewedDate}</small></h4>
-					<p><a href="${base_url}/user/public-profile-${result.user.id}" class="btn btn-small">View Profile</a></p>
-				</div>
-			</li>
+					<h4 class="media-heading">
+						${result.name} <small>shared at ${result.createdDate}</small>
+					</h4>
+					<p>${result.description}</p>
+					<p><ul class="inline">
+						<c:forEach items="${result.tags}" var="item">
+							<li>${item}</li>
+						</c:forEach>
+					</ul>
+					</p>
+	<p>
+					  <a href="${base_url}/resource/${result.id}" class="btn btn-small">View Details</a>
+					</p>
+				</div></li>
 		</c:forEach>
 	</ul>
 </div>
