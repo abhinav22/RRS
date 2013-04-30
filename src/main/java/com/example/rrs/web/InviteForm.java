@@ -1,24 +1,38 @@
 package com.example.rrs.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class InviteForm {
 
 	@NotEmpty
-	private String emails;
+	private List<String> emails=new ArrayList<String>();
 
 	@NotEmpty
 	private String title;
 
 	@NotEmpty
 	private String content;
+	
+	private String extra;
+	
 
-	public String getEmails() {
+	public List<String> getEmails() {
 		return emails;
 	}
 
-	public void setEmails(String emails) {
+	public void setEmails(List<String> emails) {
 		this.emails = emails;
+	}
+
+	public String getExtra() {
+		return extra;
+	}
+
+	public void setExtra(String extra) {
+		this.extra = extra;
 	}
 
 	public String getTitle() {

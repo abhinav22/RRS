@@ -109,12 +109,12 @@
 	var user_id="${sessionScope['SPRING_SECURITY_CONTEXT'].authentication.principal.id}";
 	</script>
 	
-	<script type="text/javascript" src="${base_url}/resources/js/angular.min.js">${null}</script>
+	<script type="text/javascript" src="${base_url}resources/js/angular.min.js">${null}</script>
 	<tiles:importAttribute name="scripts" toName="includedScripts"
 		ignore="true" />
 	<c:if test="${not empty includedScripts}">
 		<c:forEach items="${includedScripts}" var="s">
-			<script src="${base_url}/${s}">
+			<script src="${base_url}${s}">
 			${null}
 			</script>
 		</c:forEach>
@@ -123,12 +123,12 @@
 	<tiles:importAttribute name="script" toName="includedScript"
 		ignore="true" />
 	<c:if test="${not empty includedScript}">
-		<script src="${base_url}/${includedScript}">
+		<script src="${base_url}${includedScript}">
 			${null}
 		</script>
 	</c:if>
 	
-	<script type="text/javascript" src="${base_url}/resources/js/App.js">${null}</script>
+	<script type="text/javascript" src="${base_url}resources/js/App.js">${null}</script>
 </body>
 	</html>
 </jsp:root>

@@ -28,6 +28,18 @@ function PublicProfileCtrl($scope, $http) {
 		});
 
 	}
+	
+	$scope.ignoreConnection = function() {
+		$http(
+				{
+					method : 'GET',
+					url : base_url + 'api/user/' + user_id + '/connection-'
+							+ profile_id + '/ignore'
+				}).success(function(data, status, headers, config) {
+					getConnectionStatus();
+		});
+
+	}
 
 	function getConnectionStatus() {
 		$http(

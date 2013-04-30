@@ -10,13 +10,17 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class RegisterForm {
 
+	private String inviterName;
+
+	private String inviterId;
+
 	@NotNull
-	@Size(min=6, max = 20)
+	@Size(min = 6, max = 20)
 	@NotEmpty
 	private String password;
 
 	@NotNull
-	@Size(min=6, max = 20)
+	@Size(min = 6, max = 20)
 	@NotEmpty
 	private String repeatPassword;
 
@@ -24,7 +28,6 @@ public class RegisterForm {
 	@Size(min = 3, max = 100)
 	@Email
 	private String email;
-
 
 	public String getPassword() {
 		return password;
@@ -50,6 +53,21 @@ public class RegisterForm {
 		this.email = email;
 	}
 
+	public String getInviterName() {
+		return inviterName;
+	}
+
+	public void setInviterName(String inviterName) {
+		this.inviterName = inviterName;
+	}
+
+	public String getInviterId() {
+		return inviterId;
+	}
+
+	public void setInviterId(String inviterId) {
+		this.inviterId = inviterId;
+	}
 
 	@Override
 	public String toString() {

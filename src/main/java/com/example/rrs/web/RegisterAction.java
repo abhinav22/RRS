@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
@@ -32,8 +31,11 @@ import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
 import com.example.rrs.Constants;
+import com.example.rrs.model.Connection;
+import com.example.rrs.model.Connection.Status;
 import com.example.rrs.model.User;
 import com.example.rrs.security.SecurityUtils;
+import com.example.rrs.service.ConnectionService;
 import com.example.rrs.service.MailService;
 import com.example.rrs.service.UserService;
 
@@ -46,6 +48,9 @@ public class RegisterAction {
 
 	@Inject
 	private UserService userService;
+
+	@Inject
+	private ConnectionService connectionService;
 
 	@Inject
 	private MailService emailService;
@@ -83,8 +88,9 @@ public class RegisterAction {
 		}
 
 		String email = registerForm.getEmail();
-		
-		if(!registerForm.getPassword().equals(registerForm.getRepeatPassword())){
+
+		if (!registerForm.getPassword()
+				.equals(registerForm.getRepeatPassword())) {
 			bindingResult.rejectValue("password", "password mismatch",
 					"password mismatch");
 			registerForm.setPassword(null);
@@ -114,48 +120,87 @@ public class RegisterAction {
 		user.setConfirmationCode(confirmationCode);
 
 		// save user data
+		String inviterId = registerForm.getInviterId();
+		if (inviterId != null) {
+			user.setEnabled(true);
+		}
 		user = userService.saveUser(user);
 
-		//get configured property: app.baseUrl.
-		//String appUrl=env.getProperty("app.baseUrl");
+		// if registered from other people in the RRS, skip the email activation
+		// step.
+		// and also add connection between them directly.
+		if (inviterId != null) {
+			if (log.isDebugEnabled()) {
+				log.debug("register from inviter@"
+						+ inviterId);
+			}
+			Connection conn = new Connection();
+			conn.setConnectedDate(new Date());
+			conn.setStatus(Status.ACCEPTED);
+			conn.getUserIds().add(inviterId);
+			conn.getUserIds().add(user.getId());
+			connectionService.saveConnection(conn);
+			
+			return "redirect:/user/home";
+
+		} else {
+
+			// sending the activation email to user.
+			if (log.isDebugEnabled()) {
+				log.debug("sending activatation emal@" + email + ",code@"
+						+ confirmationCode + ",baseUrl@" + appUrl);
+			}
+
+			Map emailModel = new HashMap();
+			emailModel.put("email", email);
+			emailModel.put("url", appUrl + "register/activate/"
+					+ encodeUrlPathSegment(email, httpServletRequest) + "-"
+					+ confirmationCode);
+			emailModel.put("appUrl", appUrl);
+
+			try {
+				emailService.sendEmail(email, "Welcome to RSS",
+						"signup-welcome", emailModel);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return "redirect:/registerOk";
+		}
 		
-		// sending the activation email to user.
-		if (log.isDebugEnabled()) {
-			log.debug("sending activatation emal@" + email + ",code@"
-					+ confirmationCode + ",baseUrl@" + appUrl);
-		}
-
-		Map emailModel = new HashMap();
-		emailModel.put("email", email);
-		emailModel.put("url", appUrl + "register/activate/"
-				+ encodeUrlPathSegment(email, httpServletRequest) + "-"
-				+ confirmationCode);
-		emailModel.put("appUrl", appUrl);
-
-		try {
-			emailService.sendEmail(email, "Welcome to RSS", "signup-welcome",
-					emailModel);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "redirect:/registerOk";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { "text/html" })
 	public String createForm(Model uiModel) {
 		if (SecurityUtils.isAuthenticated()) {
 			log.debug("redirect to user home page.");
-			return "redirect:/user/home";
+			
 		}
 
 		populateEditForm(uiModel, new RegisterForm());
 		return "register";
 	}
 
+	@RequestMapping(value = "/invitation-{inviterId}", method = RequestMethod.GET, produces = { "text/html" })
+	public String createFormFromInvitation(
+			@PathVariable("inviterId") String inviterId, Model uiModel) {
+		if (SecurityUtils.isAuthenticated()) {
+			log.debug("redirect to user home page.");
+			return "redirect:/user/home";
+		}
+
+		RegisterForm form = new RegisterForm();
+		form.setInviterId(inviterId);
+		form.setInviterName(userService.findUser(inviterId).getName());
+		populateEditForm(uiModel, form);
+		return "register";
+	}
+
 	@RequestMapping(value = "/activate/{email}-{confirmationCode}", method = RequestMethod.GET, produces = { "text/html" })
 	public String activate(
 			@PathVariable("email") @NotNull @NotEmpty String email,
-			@PathVariable("confirmationCode") @NotNull @NotEmpty String confirmationCode, RedirectAttributes  attrs) {
+			@PathVariable("confirmationCode") @NotNull @NotEmpty String confirmationCode,
+			RedirectAttributes attrs) {
 
 		if (log.isDebugEnabled()) {
 			log.debug("Activate the user account.");
@@ -169,8 +214,9 @@ public class RegisterAction {
 			user.setConfirmationCode(null);
 			userService.saveUser(user);
 
-			attrs.addFlashAttribute(Constants.GLOBAL_MESSAGE, "User account is activated successfully.");
-			
+			attrs.addFlashAttribute(Constants.GLOBAL_MESSAGE,
+					"User account is activated successfully.");
+
 			return "redirect:/login";
 		}
 

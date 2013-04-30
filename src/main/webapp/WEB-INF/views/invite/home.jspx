@@ -1,0 +1,76 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	class="offset1 span10 " style="padding-top: 20px;" ng-controller="InviteCtrl">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<c:url value="/invite" var="invite_url" />
+
+
+	<h2 style="border-bottom: 1px solid gray">INVITE FRIENDS TO RRS</h2>
+
+	<form name="f" ng-submit="go()">
+		<fieldset>
+			<div class="control-group" ng-class="{error:!hasOneEmail}">
+				<label class="control-label" for="email">Emails:</label>
+				<div class="controls">
+					<ul class="inline">
+						<li ng-repeat="e in data.emails"><span>{{e}} <a href="#"
+								ng-click="delEmail($index)"><b class="icon-remove">${null}</b></a></span>
+						</li>
+					</ul>
+					<div class="help-block" ng-show="!hasOneEmail">You must add at least one email.</div>
+				</div>
+			</div>
+			<div class="control-group"
+				ng-class="{error:f.email.$invalid || existed}">
+				<div class="controls">
+					<div class="input-append">
+						<input id="email" name="email" type="email"
+							class="input-block-level" placeholder="Email" ng-model="email"/>
+						<button type="button" ng-click="addEmail()" class="btn">Add</button>
+					</div>
+					<div class="help-block" ng-show="f.email.$error.email">Email
+						invalid.</div>
+					<div class="help-block" ng-show="existed">Email existed.</div>
+				</div>
+			</div>
+			<div class="control-group"
+				ng-class="{error:f.title.$invalid}">
+				<label class="control-label" for="title">Title:</label>
+				<div class="controls">
+					<input id="title" name="title" type="text"
+						class="input-block-level" ng-model="data.title" required="true">${null }</input>
+					<div class="help-block" ng-show="f.title.$error.required">Required</div>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="content">Invitation Message Preview:</label>
+				<div class="controls">
+					<p ng-bind-html-unsafe="data.content"  class="well"><jsp:text/></p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="extra">Additional
+					Message:</label>
+				<div class="controls">
+					<textarea id="extra" name="extra" type="textarea"
+						class="input-block-level" rows="6" ng-model="data.extra" >
+						${null}
+					</textarea>
+					<div class="help-block"></div>
+				</div>
+			</div>
+		</fieldset>
+
+		<div class="form-actions">
+			<input id="proceed" type="submit" value="Send Invitation Now"
+				class="btn btn-success btn-large btn-block" ng-disabled="f.$invalid || !hasOneEmail">${null}</input>
+		</div>
+	</form>
+</div>
+

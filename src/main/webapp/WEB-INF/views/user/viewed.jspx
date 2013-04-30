@@ -19,7 +19,7 @@
 					<img class="media-object img-polaroid" src="${base_url}/api/user/${result.user.id}/avatar" style="width:64px;height:64px" />
 				</a>
 				<div class="media-body">
-					<h4 class="media-heading">${result.user.firstName} <small>viewed your profile at ${result.viewedDate}</small></h4>
+					<h4 class="media-heading">${result.user.name} <small>viewed your profile at ${result.viewedDate}</small></h4>
 					<p><a href="${base_url}/user/public-profile-${result.user.id}" class="btn btn-small">View Profile</a></p>
 				</div>
 			</li>

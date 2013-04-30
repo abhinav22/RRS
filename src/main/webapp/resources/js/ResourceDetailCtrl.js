@@ -11,7 +11,7 @@ function ResourceDetailCtrl($scope, $http) {
 		var user_id = $scope.comments[index].user.id;
 
 		window.location.href = window.location.protocol + '//'
-				+ window.location.host + base_url + 'people/' + user_id+'/detail';
+				+ window.location.host + base_url + 'user/public-profile-' + user_id+'';
 		// });
 	}
 

@@ -21,9 +21,10 @@
         </p>
         
         <pre>
-   ${url}
+${url}
         </pre> 
-
+<hr/>
+		$!{extra}
         <p style="font-size: 14px; font-family: Arial, color: #3d4c4c; font-family: Arial, Helvetica, 'Helvetica Neue', 'Myriad PRO', sans-serif; line-height: 20px;">
             Regards, <br/>
             <a style="color: #000000;" href="${appUrl}"> RRS Support Team </a>

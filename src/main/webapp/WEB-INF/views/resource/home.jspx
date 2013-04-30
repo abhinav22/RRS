@@ -11,15 +11,15 @@
 
 	<div class="row-fluid">
 		<div class="offset3 span6">
-			
+			<form ng-submit="go()">
 				<div class="input-append">
 					<input class="input-block-level" id="keyword" name="keyword"
-						ng-model="keyword" type="text">${null}</input>
+						ng-model="keyword" type="text"  placeholder="Search shared resource">${null}</input>
 					<div class="btn-group">
-						<button class="btn" ng-click="go()">GO</button>
+						<button class="btn" type="submit">GO</button>
 					</div>
 				</div>
-			
+			</form>
 		</div>
 	</div>
 	<div class="row-fluid">

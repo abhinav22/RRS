@@ -3,9 +3,10 @@
 <tiles-definitions>
 	<definition extends="default" name="people/home">
 		<put-attribute name="body" value="/WEB-INF/views/people/home.jspx" />
+		<put-attribute name="script" value="/resources/js/UserSearchCtrl.js" />
 	</definition>
-	<definition extends="default" name="people/details">
+	<!-- <definition extends="default" name="people/details">
 		<put-attribute name="body" value="/WEB-INF/views/people/details.jspx" />
 		<put-attribute name="script" value="/resources/js/PublicProfileCtrl.js" />
-	</definition>
+	</definition> -->
 </tiles-definitions>

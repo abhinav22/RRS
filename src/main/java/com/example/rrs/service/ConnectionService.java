@@ -187,4 +187,8 @@ public class ConnectionService {
 		return consCount;
 	}
 
+	public Connection saveConnection(Connection conn) {
+		return connectionRepository.save(conn);
+	}
+
 }

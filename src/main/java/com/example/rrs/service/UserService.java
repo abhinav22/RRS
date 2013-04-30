@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -181,8 +182,49 @@ public class UserService {
 		if (log.isDebugEnabled()) {
 			log.debug("viewed resultCount @" + viewed.size());
 		}
-		
+
 		return viewed;
+	}
+
+	public List<User> searchUser(String keyword, int page, int size) {
+
+		if (log.isDebugEnabled()) {
+			log.debug("search user @" + keyword + ", page @" + page + ", size@"
+					+ size);
+		}
+
+		QUser quser = QUser.user;
+		PageRequest pr = new PageRequest(page, size);
+
+		List<User> users = userRepository
+				.findAll(
+						quser.name
+								.containsIgnoreCase(keyword)
+								.or(quser.summary.containsIgnoreCase(keyword))
+								.or(quser.skills.any().containsIgnoreCase(
+										keyword)), pr).getContent();
+
+		if (log.isDebugEnabled()) {
+			log.debug("list size @" + users.size());
+		}
+		return users;
+	}
+
+	public long countSearchUser(String keyword) {
+		if (log.isDebugEnabled()) {
+			log.debug("count user @" + keyword);
+		}
+
+		QUser quser = QUser.user;
+
+		long cnt = userRepository.count(quser.name.containsIgnoreCase(keyword)
+				.or(quser.summary.containsIgnoreCase(keyword))
+				.or(quser.skills.any().containsIgnoreCase(keyword)));
+
+		if (log.isDebugEnabled()) {
+			log.debug("count  @" + cnt);
+		}
+		return cnt;
 	}
 
 }

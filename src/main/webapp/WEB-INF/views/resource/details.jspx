@@ -74,7 +74,7 @@
 				</a>
 					<div class="media-body">
 						<h4 class="media-heading">
-							{{comment.user.name}} <small> shared at
+							{{comment.user.name}} <small> commented at
 								{{comment.comment.commentedDate|date:'MMM dd, yyyy'}}</small>
 						</h4>
 						<p>{{comment.comment.comment}}</p>

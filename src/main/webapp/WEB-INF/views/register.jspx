@@ -49,6 +49,19 @@
 				<legend>
 					REGISTER NOW! <small>starred fields are required.</small>
 				</legend>
+				<c:if test="${registerForm.inviterId !=null }">
+					<div
+						class="control-group ${requestScope['org.springframework.validation.BindingResult.registerForm'].hasFieldErrors('inviterId') ? 'error' : ''}">
+						<label class="control-label" for="email">Inviter:</label>
+						<div class="controls">
+							<p>${registerForm.inviterName}</p>
+							<form:hidden path="inviterId" class="input-block-level" />
+							<div class="help-block">
+								<form:errors path="inviterId" />
+							</div>
+						</div>
+					</div>
+				</c:if>
 				<div
 					class="control-group ${requestScope['org.springframework.validation.BindingResult.registerForm'].hasFieldErrors('email') ? 'error' : ''}">
 					<label class="control-label" for="email">Email*:</label>
