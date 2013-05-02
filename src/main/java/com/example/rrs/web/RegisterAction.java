@@ -150,22 +150,25 @@ public class RegisterAction {
 				log.debug("sending activatation emal@" + email + ",code@"
 						+ confirmationCode + ",baseUrl@" + appUrl);
 			}
-
-			Map emailModel = new HashMap();
-			emailModel.put("email", email);
-			emailModel.put("url", appUrl + "register/activate/"
-					+ encodeUrlPathSegment(email, httpServletRequest) + "-"
-					+ confirmationCode);
-			emailModel.put("appUrl", appUrl);
-
-			try {
-				emailService.sendEmail(email, "Welcome to RSS",
-						"signup-welcome", emailModel);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//
+//			Map emailModel = new HashMap();
+//			emailModel.put("email", email);
+//			emailModel.put("url", appUrl + "register/activate/"
+//					+ encodeUrlPathSegment(email, httpServletRequest) + "-"
+//					+ confirmationCode);
+//			emailModel.put("appUrl", appUrl);
+//
+//			try {
+//				emailService.sendEmail(email, "Welcome to RSS",
+//						"signup-welcome", emailModel);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 			
-			return "redirect:/registerOk";
+			log.info("email verification is disable now.");
+			
+			return "redirect:/login";
+			//return "redirect:/registerOk";
 		}
 		
 	}

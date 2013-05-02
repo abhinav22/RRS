@@ -47,7 +47,7 @@ public class User implements UserDetails, Serializable {
 	private String summary;
 
 	@NotNull
-	private boolean enabled = false;
+	private boolean enabled = true;
 
 	@NotNull
 	@NotEmpty

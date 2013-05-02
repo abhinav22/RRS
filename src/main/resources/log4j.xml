@@ -54,7 +54,7 @@
 	</logger>
 	
 	<logger name="org.springframework.data">
-		<level value="debug" />
+		<level value="@lo4j.level@" />
 	</logger>
 
 	<root>

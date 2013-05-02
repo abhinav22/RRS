@@ -49,7 +49,7 @@
 
 			<div
 				class="control-group ${requestScope['org.springframework.validation.BindingResult.userForm'].hasFieldErrors('currentPlace') ? 'error' : ''}">
-				<label class="control-label" for="currentWork">Current Work
+				<label class="control-label" for="currentWork">Current Place
 					*:</label>
 				<div class="controls">
 					<form:input id="city" type='text' path='currentPlace.city'
