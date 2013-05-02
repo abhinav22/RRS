@@ -42,7 +42,8 @@
   * In user home page, there is a page to display the connections of user.
   * There is a page to display the pending connection sent by others in the application. 
 
-##Build Project##     
+
+## Build Project ##     
 
 Clone the codes from github, [https://github.com/abhinav22/RRS.git](https://github.com/abhinav22/RRS.git).
 
