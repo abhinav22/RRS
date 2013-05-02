@@ -88,7 +88,7 @@ public class User{
 Spring Data MongDB provides a specific `MongoRepository` for Repository.
 
 <pre>
- public interface UserRepository extends MongoRepository<User, String>{
+ public interface UserRepository extends MongoRepository&lt;User, String>{
  }
 </pre>
 
