@@ -1,6 +1,6 @@
 #RRS#
 
-##Feature##
+##Feature
 
 1. Register
   * register by input email, password. After registered, a email verification will be sent by email, user have to activate the account by links provided in the email.
@@ -43,7 +43,7 @@
   * There is a page to display the pending connection sent by others in the application. 
 
 
-## Build Project ##     
+##Build Project     
 
 Clone the codes from github, [https://github.com/abhinav22/RRS.git](https://github.com/abhinav22/RRS.git).
 
@@ -53,7 +53,7 @@ git clone https://github.com/abhinav22/RRS.git
 
 More detailed setup steps, please refer to the wiki page [Developer Guide](https://github.com/abhinav22/RRS/wiki/Development-Setup-Guide).
 
-##Overview of Source Code##
+##Overview of Source Code
 
 All of the codes follows the multi layered architecture.
 
