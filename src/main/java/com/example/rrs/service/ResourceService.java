@@ -213,4 +213,8 @@ public class ResourceService {
 		return resourceRepository.findOne(id);
 	}
 
+	public void deleteResource(String id) {
+		resourceRepository.delete(id);
+	}
+
 }

@@ -4,6 +4,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ResourceForm {
+	private String id;
+	
 	@NotEmpty
 	private String name;
 
@@ -66,6 +68,22 @@ public class ResourceForm {
 
 	public void setLongDesc(String longDesc) {
 		this.longDesc = longDesc;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "ResourceForm [id=" + id + ", name=" + name + ", tagStr="
+				+ tagStr + ", link=" + link + ", file=" + file
+				+ ", description=" + description + ", longDesc=" + longDesc
+				+ "]";
 	}
 
 }

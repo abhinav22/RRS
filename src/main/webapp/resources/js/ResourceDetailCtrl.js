@@ -6,6 +6,7 @@ function ResourceDetailCtrl($scope, $http) {
 	$scope.commentContent = '';
 
 	$scope.base_url = base_url;
+	
 
 	$scope.viewUserProfile = function(index) {
 		var user_id = $scope.comments[index].user.id;
@@ -14,6 +15,14 @@ function ResourceDetailCtrl($scope, $http) {
 				+ window.location.host + base_url + 'user/public-profile-' + user_id+'';
 		// });
 	}
+	
+	
+	$scope.viewExternalLink = function(index) {
+		//alert($scope.item.resource.externalLink);
+		window.location.href =  $scope.item.resource.externalLink;
+		// });
+	}
+
 
 	$scope.like = function() {
 		$http({

@@ -12,7 +12,8 @@
 	<h2 style="border-bottom: 1px gray solid">SHARED RESOURCE</h2>
 
 	<div class="row-fluid nav">
-		<a href="${base_url}/user/share-resource" class="btn btn-success"><b class="icon-plus-sign">${null}</b>Share Resource</a>
+		<a href="${base_url}/user/share-resource" class="btn btn-success"><b
+			class="icon-plus-sign">${null}</b>Share Resource</a>
 	</div>
 	<ul class="media-list">
 		<c:forEach items="${sharedResult}" var="result">
@@ -27,14 +28,21 @@
 						${result.name} <small>shared at ${result.createdDate}</small>
 					</h4>
 					<p>${result.description}</p>
-					<p><ul class="inline">
+					<p>
+					<ul class="inline">
 						<c:forEach items="${result.tags}" var="item">
 							<li>${item}</li>
 						</c:forEach>
 					</ul>
 					</p>
-	<p>
-					  <a href="${base_url}/resource/${result.id}" class="btn btn-small">View Details</a>
+					<p>
+					<div class="btn-group">
+						<a href="${base_url}/resource/${result.id}" class="btn btn-small">View
+							Details</a> <a href="${base_url}/user/edit-resource/${result.id}"
+							class="btn btn-small"><b class="icon-pencil">${null}</b>Edit</a>
+						<a href="${base_url}/user/delete-resource/${result.id}"
+							class="btn btn-small btn-danger"><b class="icon-remove">${null}</b>Edit</a>
+					</div>
 					</p>
 				</div></li>
 		</c:forEach>

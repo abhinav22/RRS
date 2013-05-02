@@ -26,6 +26,7 @@
 					<li ng-repeat="tag in item.resource.tags">{{tag}}</li>
 				</ul>
 				</p>
+				<p><a href="#" ng-show="item.resource.externalLink" ng-click="viewExternalLink()" ng-bind="item.resource.externalLink">${null}</a></p>
 				<p>
 					<span class="pull-right"> <span class="lsf">love</span>
 						{{item.likedCount}}

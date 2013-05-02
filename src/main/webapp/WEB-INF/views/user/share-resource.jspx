@@ -9,10 +9,19 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 	<c:set value="${pageContext.request.contextPath}" var="base_url" />
-	<h2 style="border-bottom: 1px gray solid">SHARE RESOURCE</h2>
+	<h2 style="border-bottom: 1px gray solid">
+		<c:choose>
+			<c:when test="${resourceForm.id ne null }">EDIT RESOURCE</c:when>
+			<c:otherwise>
+				SHARE RESOURCE
+			</c:otherwise>
+		</c:choose>
+	</h2>
 
-	<form:form name="f" action="${base_url}/user/share-resource" method="POST"
-			enctype="multipart/form-data" modelAttribute="resourceForm">
+	<form:form name="f" action="${base_url}/user/share-resource"
+		method="POST" enctype="multipart/form-data"
+		modelAttribute="resourceForm">
+		<form:hidden path="id" />
 		<fieldset>
 			<div
 				class="control-group ${requestScope['org.springframework.validation.BindingResult.resourceForm'].hasFieldErrors('name') ? 'error' : ''}">
@@ -30,55 +39,55 @@
 				<label class="control-label" for="tagStr">Tags*:</label>
 				<div class="controls">
 					<form:input id="tagStr" type='text' path='tagStr'
-						class="input-block-level" required="true"/>
+						class="input-block-level" required="true" />
 					<div class="help-block">
 						<form:errors path="tagStr" />
 					</div>
 				</div>
 			</div>
-			
+
 			<div
 				class="control-group ${requestScope['org.springframework.validation.BindingResult.resourceForm'].hasFieldErrors('link') ? 'error' : ''}">
 				<label class="control-label" for="link">External Link:</label>
 				<div class="controls">
 					<form:input id="link" type='text' path='link'
-						class="input-block-level"/>
+						class="input-block-level" />
 					<div class="help-block">
 						<form:errors path="link" />
 					</div>
 				</div>
 			</div>
-			
+
 			<div
 				class="control-group ${requestScope['org.springframework.validation.BindingResult.resourceForm'].hasFieldErrors('file') ? 'error' : ''}">
 				<label class="control-label" for="file">Picture:</label>
 				<div class="controls">
-					<form:input id="file" type='file' path='file'
-						class="input-file"/>
+					<form:input id="file" type='file' path='file' class="input-file" />
 					<div class="help-block">
 						<form:errors path="file" />
 					</div>
 				</div>
 			</div>
-			
+
 			<div
 				class="control-group ${requestScope['org.springframework.validation.BindingResult.resourceForm'].hasFieldErrors('description') ? 'error' : ''}">
 				<label class="control-label" for="description">Description*:</label>
 				<div class="controls">
 					<form:input id="description" type='text' path='description'
-						class="input-block-level" required="true"/>
+						class="input-block-level" required="true" />
 					<div class="help-block">
 						<form:errors path="description" />
 					</div>
 				</div>
 			</div>
-			
+
 			<div
 				class="control-group ${requestScope['org.springframework.validation.BindingResult.resourceForm'].hasFieldErrors('longDesc') ? 'error' : ''}">
-				<label class="control-label" for="longDesc">Long Description*:</label>
+				<label class="control-label" for="longDesc">Long
+					Description*:</label>
 				<div class="controls">
 					<form:textarea rows="8" id="longDesc" type='text' path='longDesc'
-						class="input-block-level" required="true"/>
+						class="input-block-level" required="true" />
 					<div class="help-block">
 						<form:errors path="longDesc" />
 					</div>
@@ -89,7 +98,7 @@
 
 		<div class="form-actions">
 			<input id="proceed" type="submit" value="Save"
-				class="btn btn-success btn-large btn-block" /> 
+				class="btn btn-success btn-large btn-block" />
 		</div>
 	</form:form>
 </div>

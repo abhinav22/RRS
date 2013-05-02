@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -634,6 +635,43 @@ public class UserController {
 		return "user/share-resource";
 	}
 
+	@RequestMapping(value = { "/delete-resource/{id}" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String deleteResource(@PathVariable("id") String id, Model uiModel) {
+
+		if (log.isDebugEnabled()) {
+			log.debug("delete resource id @" + id);
+		}
+		
+		resourceService.deleteResource(id);
+		
+		return "redirect:/user/shared";
+	}
+
+	@RequestMapping(value = { "/edit-resource/{id}" }, method = RequestMethod.GET, produces = { "text/html" })
+	public String editResource(@PathVariable("id") String id, Model uiModel) {
+
+		if (log.isDebugEnabled()) {
+			log.debug("edit resource id @" + id);
+		}
+
+		Resource res = resourceService.findResource(id);
+
+		ResourceForm resourceForm = new ResourceForm();
+
+		resourceForm.setId(res.getId());
+		resourceForm.setName(res.getName());
+		resourceForm.setDescription(res.getDescription());
+		resourceForm.setLongDesc(res.getLongDesc());
+		resourceForm.setLink(res.getExternalLink());
+
+		String tagStr = StringUtils.join(res.getTags(), ",");
+
+		resourceForm.setTagStr(tagStr);
+
+		populateResourceForm(uiModel, resourceForm);
+		return "user/share-resource";
+	}
+
 	@RequestMapping(value = { "/share-resource" }, method = RequestMethod.POST, produces = { "text/html" })
 	public String saveResource(@Valid ResourceForm resourceForm,
 			BindingResult bindingResult, Model uiModel, RedirectAttributes atts) {
@@ -664,7 +702,14 @@ public class UserController {
 
 		User user = SecurityUtils.getCurrentUser();
 
-		Resource res = new Resource();
+		Resource res = null;
+
+		String id = resourceForm.getId();
+		if (id != null && id.trim().length()>0) {
+			res = resourceService.findResource(id);
+		} else {
+			res = new Resource();
+		}
 
 		res.setCreatedDate(new Date());
 		res.setDescription(resourceForm.getDescription());
@@ -672,6 +717,7 @@ public class UserController {
 		res.setLongDesc(resourceForm.getLongDesc());
 		res.setName(resourceForm.getName());
 		res.setUserId(user.getId());
+		res.getTags().clear();
 		res.getTags().addAll(Arrays.asList(tags));
 
 		res = resourceService.saveResource(res);
@@ -696,7 +742,7 @@ public class UserController {
 		}
 
 		atts.addFlashAttribute(Constants.GLOBAL_MESSAGE,
-				"Resource is shared successfully");
+				"Resource is saved successfully");
 
 		return "redirect:/user/shared";
 	}
@@ -828,7 +874,7 @@ public class UserController {
 
 		return "user/liked";
 	}
-	
+
 	@RequestMapping(value = { "/recommended-resource" }, method = RequestMethod.GET, produces = { "text/html" })
 	public String recommendedResource(Model uiModel) {
 		return "user/recommended-resource";
