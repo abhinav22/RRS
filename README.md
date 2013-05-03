@@ -1,6 +1,6 @@
 #RRS#
 
-##Feature
+##Feature List
 
 1. Register
   * register by input email, password. After registered, a email verification will be sent by email, user have to activate the account by links provided in the email.
@@ -41,6 +41,35 @@
   * In the user public profile page, the connection status info will be displayed.
   * In user home page, there is a page to display the connections of user.
   * There is a page to display the pending connection sent by others in the application. 
+
+
+##Features
+
+###Create a Connection between A and B
+
+Assume there are two users in the system, A and B, there is no connection bwteen them.
+
+A search users in the "People" tab, and get the B in the list.
+
+Click view profile to the profile details of B.
+
+If there is no connection between them, on the top of the B's profile, there should display a "Send Connection" button for A.
+
+A can send connection request by click the "Send" button. A connection request will be sent soon. And at the same time, The "Send" button is disappeared,  A should see the connection status in B's profile is changed to "waiting for B's response". 
+
+A is waiting for the response of B now.
+
+When B logged in the system, he will find there is a pending connection from A in home page. In the user home page, there is a basic statistics for the pending connections.
+
+Click it to display all pending connection from others.
+
+B can select "Accept" or "Ignore" all the pending connection request one by one.
+
+If B "accept" the connection from A, there is connection created between A and B.
+
+In the user home of A and B, there is another statistics of "Connection" they have created, click it and it will display all connections of the logged user, they both can see each other in the "Connection" page.
+
+If B "ignore" the connection, the connection is ignored at all. There is no any connection info between A and B, they can create new connection if they like.
 
 
 ##Build Project     
