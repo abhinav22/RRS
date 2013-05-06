@@ -100,9 +100,6 @@ The classes for different purpose are categorized in different package.
 
 `com.example.rrs.model` includes all models in this project.
 
-All Mongo specific model(Document concept in MongoDB) was marked as `@Document` annotation on the class.
-
-And an `@Id` is applied on a field to indicate it is an identity field.
 
 <pre>
 @Docuemnt
@@ -115,7 +112,6 @@ public class User{
 
 `com.example.rrs.repository` includes repositories for the models.
 
-Spring Data MongDB provides a specific `MongoRepository` for Repository.
 
 <pre>
  public interface UserRepository extends MongoRepository&lt;User, String>{
