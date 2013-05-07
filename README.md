@@ -1,28 +1,3 @@
-#RRS#
-
-stem, A and B, there is no connection bwteen the
-
-##Build Project     
-
-Clone the codes from github, [https://github.com/abhinav22/RRS.git](https://github.com/abhinav22/RRS.git).
-
-<pre>
-git clone https://github.com/abhinav22/RRS.git
-</pre>
-
-More detailed setup steps, please refer to the wiki page [Developer Guide](https://github.com/abhinav22/RRS/wiki/Development-Setup-Guide).
-
-##Overview of Source Code
-
-All of the codes follows the multi layered architecture.
-
-MongoDb is selected as datastore for this project.
-
-Spring Data Mongo is used for MongoDB operations.
-
-Spring MVC is used as MVC dispatcher.
-
-In the presentation layer, JSP and Tiles are used for rendering the page.
 
 We also adopt the AngularJS and REST API(also produced by Spring MVC) to improve the user experience.
 
